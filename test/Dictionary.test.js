@@ -24,9 +24,10 @@ describe('Dictionary', () => {
       expect(source('meh $term meh $term meh $term meh')).toBe('^meh (.+) meh (.+) meh (.+) meh$');
     });
 
-    it('should delimit, but otherwise ignore an isolated term prefix', () => {
-      expect(source('$')).toBe('^\\$$');
-      expect(source('meh $ meh $ meh')).toBe('^meh \\$ meh \\$ meh$');
+    it('should ignore an isolated term prefix', () => {
+      expect(source('$')).toBe('^$$');
+      expect(source('meh $ meh $ meh')).toBe('^meh $ meh $ meh$');
+      expect(source('$ $term')).toBe('^$ (.+)$');
     });
 
     it('should subsitute simple terms', () => {
@@ -36,32 +37,40 @@ describe('Dictionary', () => {
       expect(source('$num meh $term meh $word', dictionary)).toBe('^(\\d+) meh (.+) meh (\\w+)$');
     });
 
-    xit('should subsitute complex terms', () => {
+    it('should subsitute complex terms', () => {
       const dictionary = new Dictionary()
         .define('address', '$number, $street')
         .define('number', /(\d+)/)
         .define('street', /(\w+)/);
-      expect(source('$address', dictionary)).toBe('^(\\d+) (\\w+)$');
+      expect(source('$address', dictionary)).toBe('^(\\d+), (\\w+)$');
+    });
+
+    it('should support custom prefix', () => {
+      expect(source(':term', new Dictionary({ prefix: ':' }))).toBe('^(.+)$');
+      expect(source('\\:term', new Dictionary({ prefix: ':' }))).toBe('^:term$');
     });
   });
 
   describe('Delimiting', () => {
     it('should delimit the term prefix', () => {
+      expect(source('\\$')).toBe('^$$');
+      expect(source('\\$ \\$ \\$')).toBe('^$ $ $$');
       expect(source('\\$term \\$term \\$term')).toBe('^$term $term $term$');
     });
 
     it('should delimit the delimiter', () => {
-      expect(source('\\\\meh')).toBe('^\\meh$');
+      expect(source('\\\\')).toBe('^\\$');
+      expect(source('\\\\\\')).toBe('^\\\\$');
       expect(source('\\\\\\\\$term')).toBe('^\\\\(.+)$');
     });
 
-    it('should delimit normal text', () => {
-      expect(source('\\x')).toBe('^x$');
-      expect(source('\\x \\y \\z')).toBe('^x y z$');
+    it('should maintain delimiter for non special characters', () => {
+      expect(source('\\w')).toBe('^\\w$');
     });
 
     it('should support custom delimiters', () => {
-      expect(source('^x', new Dictionary({ delimiter: '^' }))).toBe('^x$');
+      expect(source('^$', new Dictionary({ delimiter: '^' }))).toBe('^$$');
+      expect(source('^^', new Dictionary({ delimiter: '^' }))).toBe('^^$');
     });
   });
 
@@ -85,6 +94,15 @@ describe('Dictionary', () => {
     it('should report invalid patterns', () => {
       expect(() => source('(')).toThrow('Error parsing template [(]: Invalid regular expression: /^($/: Unterminated group');
       expect(() => source('\\\\$term')).toThrow('Error parsing template [\\\\$term]: Invalid regular expression: /^\\(.+)$/: Unmatched \')\'');
+    });
+
+    it('should report cyclic definitions', () => {
+      const dictionary = new Dictionary()
+        .define('a', '$a')
+        .define('b', '$c')
+        .define('c', '$b');
+      expect(() => source('$a', dictionary)).toThrow('Cyclic definition for term [a]');
+      expect(() => source('$b', dictionary)).toThrow('Indirect cyclic definition for term [b], with resolution history [b, c]');
     });
   });
 
