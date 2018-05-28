@@ -1,0 +1,19 @@
+{
+  "extends": "imperative-es6",
+  "plugins": [
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "ecmaFeatures": {
+       "experimentalObjectRestSpread": true,
+    }
+  },
+  "env": {
+    "mocha": true,
+  },
+  "rules": {
+    "semi": [2, "always"],
+    "comma-dangle": [2, "only-multiline"],
+    "no-unused-expressions": ["error", {"allowTernary": true}]
+  }
+}

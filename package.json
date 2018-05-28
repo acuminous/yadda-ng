@@ -1,0 +1,31 @@
+{
+  "name": "yadda-ng",
+  "version": "0.0.1",
+  "description": "const { Playbook, languages.English } = require('yadda'); const { OrganisationLibrary, GroupLibrary, MembershipLibrary } = require('./libraries') const { CommonDictionary } = require('./dictionaries')",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "mocha test/**/*.test.js",
+    "precommit": "npm run lint && npm run test"
+  },
+  "author": "Stephen Cresswell",
+  "engines": {
+    "node": ">=8"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-imperative-es6": "^2.0.0",
+    "expect": "^23.0.0",
+    "husky": "^0.14.3",
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "debug": "^3.1.0"
+  },
+  "directories": {
+    "example": "examples",
+    "lib": "lib",
+    "test": "test"
+  }
+}
