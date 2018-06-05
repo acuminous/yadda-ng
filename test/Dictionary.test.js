@@ -7,34 +7,42 @@ describe('Dictionary', () => {
   describe('Term Expansion', () => {
 
     it('should expand templates without terms to a fully matching pattern', () => {
-      expect(source('no terms here')).toBe('^no terms here$');
+      const dictionary = new Dictionary()
+        .define('no terms here', /.*/);
+      expect(dictionary.expand('no terms here').pattern.source).toBe('^no terms here$');
     });
 
     it('should expand undefined terms to a wild card pattern', () => {
-      expect(source('$term')).toBe('^(.+)$');
+      const dictionary = new Dictionary();
+      expect(dictionary.expand('$term').pattern.source).toBe('^(.+)$');
     });
 
     it('should expand multiple terms', () => {
-      expect(source('$term1 $term2 $term3')).toBe('^(.+) (.+) (.+)$');
-      expect(source('meh $term1 meh $term2 meh $term3 meh')).toBe('^meh (.+) meh (.+) meh (.+) meh$');
+      const dictionary = new Dictionary();
+      expect(dictionary.expand('$term1 $term2 $term3').pattern.source).toBe('^(.+) (.+) (.+)$');
+      expect(dictionary.expand('$term1 meh $term2 meh $term3').pattern.source).toBe('^(.+) meh (.+) meh (.+)$');
     });
 
     it('should expand the same term multiple times', () => {
-      expect(source('$term $term $term')).toBe('^(.+) (.+) (.+)$');
-      expect(source('meh $term meh $term meh $term meh')).toBe('^meh (.+) meh (.+) meh (.+) meh$');
+      const dictionary = new Dictionary();
+      expect(dictionary.expand('$term $term $term').pattern.source).toBe('^(.+) (.+) (.+)$');
+      expect(dictionary.expand('$term meh $term meh $term').pattern.source).toBe('^(.+) meh (.+) meh (.+)$');
     });
 
     it('should ignore an isolated term prefix', () => {
-      expect(source('$')).toBe('^$$');
-      expect(source('meh $ meh $ meh')).toBe('^meh $ meh $ meh$');
-      expect(source('$ $term')).toBe('^$ (.+)$');
+      const dictionary = new Dictionary();
+      expect(dictionary.expand('$').pattern.source).toBe('^$$');
+      expect(dictionary.expand('meh $ meh $ meh').pattern.source).toBe('^meh $ meh $ meh$');
+      expect(dictionary.expand('$ $term').pattern.source).toBe('^$ (.+)$');
     });
 
     it('should subsitute simple terms', () => {
-      const dictionary = new Dictionary().define('num', /(\d+)/).define('word', /(\w+)/);
-      expect(source('$num', dictionary)).toBe('^(\\d+)$');
-      expect(source('$num $term $num', dictionary)).toBe('^(\\d+) (.+) (\\d+)$');
-      expect(source('$num meh $term meh $word', dictionary)).toBe('^(\\d+) meh (.+) meh (\\w+)$');
+      const dictionary = new Dictionary()
+        .define('num', /(\d+)/)
+        .define('word', /(\w+)/);
+      expect(dictionary.expand('$num').pattern.source).toBe('^(\\d+)$');
+      expect(dictionary.expand('$num $term $num').pattern.source).toBe('^(\\d+) (.+) (\\d+)$');
+      expect(dictionary.expand('$num meh $term meh $word').pattern.source).toBe('^(\\d+) meh (.+) meh (\\w+)$');
     });
 
     it('should subsitute complex terms', () => {
@@ -42,35 +50,59 @@ describe('Dictionary', () => {
         .define('address', '$number, $street')
         .define('number', /(\d+)/)
         .define('street', /(\w+)/);
-      expect(source('$address', dictionary)).toBe('^(\\d+), (\\w+)$');
+      expect(dictionary.expand('$address').pattern.source).toBe('^(\\d+), (\\w+)$');
     });
 
     it('should support custom prefix', () => {
-      expect(source(':term', new Dictionary({ prefix: ':' }))).toBe('^(.+)$');
-      expect(source('\\:term', new Dictionary({ prefix: ':' }))).toBe('^:term$');
+      const dictionary = new Dictionary({ prefix: ':' });
+      expect(dictionary.expand(':term').pattern.source).toBe('^(.+)$');
+      expect(dictionary.expand('\\:term').pattern.source).toBe('^:term$');
+    });
+  });
+
+  xdescribe('Converters', () => {
+    it('should default term converters', () => {
+      const dictionary = new Dictionary()
+        .define('term', /(.*)/);
+      const expanded = dictionary.expand('$term $term');
+      expect(expanded.converters.length).toBe(2);
+      expect(expanded.conveters[0].convert({}, 1)).resolves.toBe(1);
+      expect(expanded.conveters[1].convert({}, 1)).resolves.toBe(1);
+    });
+
+    it('should use the specified term converter', () => {
+
+    });
+
+    xit('should raise an error when an expandable term is defined with the wrong number of converters', () => {
+      expect(new Dictionary().define('$term', /(.*)/, [])).toThrow('Meh!');
     });
   });
 
   describe('Delimiting', () => {
     it('should delimit the term prefix', () => {
-      expect(source('\\$')).toBe('^$$');
-      expect(source('\\$ \\$ \\$')).toBe('^$ $ $$');
-      expect(source('\\$term \\$term \\$term')).toBe('^$term $term $term$');
+      const dictionary = new Dictionary();
+      expect(dictionary.expand('\\$').pattern.source).toBe('^$$');
+      expect(dictionary.expand('\\$ \\$ \\$').pattern.source).toBe('^$ $ $$');
+      expect(dictionary.expand('\\$term \\$term \\$term').pattern.source).toBe('^$term $term $term$');
     });
 
     it('should delimit the delimiter', () => {
-      expect(source('\\\\')).toBe('^\\$');
-      expect(source('\\\\\\')).toBe('^\\\\$');
-      expect(source('\\\\\\\\$term')).toBe('^\\\\(.+)$');
+      const dictionary = new Dictionary();
+      expect(dictionary.expand('\\\\').pattern.source).toBe('^\\$');
+      expect(dictionary.expand('\\\\\\').pattern.source).toBe('^\\\\$');
+      expect(dictionary.expand('\\\\\\\\$term').pattern.source).toBe('^\\\\(.+)$');
     });
 
     it('should maintain delimiter for non special characters', () => {
-      expect(source('\\w')).toBe('^\\w$');
+      const dictionary = new Dictionary();
+      expect(dictionary.expand('\\w').pattern.source).toBe('^\\w$');
     });
 
     it('should support custom delimiters', () => {
-      expect(source('^$', new Dictionary({ delimiter: '^' }))).toBe('^$$');
-      expect(source('^^', new Dictionary({ delimiter: '^' }))).toBe('^^$');
+      const dictionary = new Dictionary({ delimiter: '^' });
+      expect(dictionary.expand('^$').pattern.source).toBe('^$$');
+      expect(dictionary.expand('^^').pattern.source).toBe('^^$');
     });
   });
 
@@ -92,8 +124,8 @@ describe('Dictionary', () => {
     });
 
     it('should report invalid patterns', () => {
-      expect(() => source('(')).toThrow('Error parsing template [(]: Invalid regular expression: /^($/: Unterminated group');
-      expect(() => source('\\\\$term')).toThrow('Error parsing template [\\\\$term]: Invalid regular expression: /^\\(.+)$/: Unmatched \')\'');
+      expect(() => new Dictionary().expand('(')).toThrow('Error parsing template [(]: Invalid regular expression: /^($/: Unterminated group');
+      expect(() => new Dictionary().expand('\\\\$term')).toThrow('Error parsing template [\\\\$term]: Invalid regular expression: /^\\(.+)$/: Unmatched \')\'');
     });
 
     it('should report cyclic definitions', () => {
@@ -101,12 +133,8 @@ describe('Dictionary', () => {
         .define('a', '$a')
         .define('b', '$c')
         .define('c', '$b');
-      expect(() => source('$a', dictionary)).toThrow('Cyclic definition for term [a]');
-      expect(() => source('$b', dictionary)).toThrow('Indirect cyclic definition for term [b], with resolution history [b, c]');
+      expect(() => dictionary.expand('$a')).toThrow('Cyclic definition for term [a]');
+      expect(() => dictionary.expand('$b')).toThrow('Indirect cyclic definition for term [b], with resolution history [b, c]');
     });
   });
-
-  function source(template, dictionary = new Dictionary()) {
-    return dictionary.expand(template).pattern.source;
-  }
 });
