@@ -128,8 +128,8 @@ describe('Dictionary', () => {
     });
 
     it('should report invalid patterns', () => {
-      expect(() => new Dictionary().expand('(')).toThrow('Error parsing template [(]: Invalid regular expression: /^($/: Unterminated group');
-      expect(() => new Dictionary().expand('\\\\$term')).toThrow('Error parsing template [\\\\$term]: Invalid regular expression: /^\\(.+)$/: Unmatched \')\'');
+      expect(() => new Dictionary().expand('(')).toThrow('Error expanding template [(]: Invalid regular expression: /^($/: Unterminated group');
+      expect(() => new Dictionary().expand('\\\\$term')).toThrow('Error expanding template [\\\\$term]: Invalid regular expression: /^\\(.+)$/: Unmatched \')\'');
     });
 
     it('should report cyclic definitions', () => {
