@@ -117,9 +117,9 @@ describe('Library', () => {
 
   it('should report duplicate step definitions', async () => {
     expect(() => new Library({ name: 'test' })
-      .define(/duplicate step/)
+      .define(/^duplicate step$/)
       .define('duplicate step')
-    ).toThrow('Duplicate step definition [duplicate step] in library [test]');
+    ).toThrow('Duplicate step definition [^duplicate step$] in library [test]');
   });
 
   it('should return matching candidate', async () => {
@@ -134,7 +134,6 @@ describe('Library', () => {
     expect(candidates.length).toBe(4);
   });
 
-  xit('should report duplicate patterns (not just templates)');
   xit('should report all duplicate patterns in the error message');
   xit('should be consistent with template, pattern, signature');
 });
