@@ -34,4 +34,6 @@ describe('Term', () => {
 
   it('should handle 0 in both directions');
 
+  it('should indicate whether it resolves an expression');
+
 });

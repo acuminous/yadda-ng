@@ -4,6 +4,10 @@ const { Dictionary } = require('..');
 
 describe('Dictionary', () => {
 
+  describe('Combination', () => {
+    xit('should combine multiple dictionaries');
+  });
+
   describe('Term Expansion', () => {
 
     it('should expand templates without terms to a fully matching pattern', () => {
