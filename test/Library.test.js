@@ -5,14 +5,6 @@ const { NumberConverter } = Converters;
 
 describe('Library', () => {
 
-  it('should answer to it\'s own name', () => {
-    expect(new Library({ name: 'Bob' }).answersTo('Bob')).toBe(true);
-  });
-
-  it('should not answer to another\'s name', () => {
-    expect(new Library({ name: 'Bob' }).answersTo('Jim')).toBe(false);
-  });
-
   it('should define a step using a single regular expressions and no matching groups', async () => {
     const state = { invocations: 0 };
     const library = new Library()
@@ -115,11 +107,18 @@ describe('Library', () => {
     expect(state.invocations).toBe(1);
   });
 
-  it('should report duplicate step definitions', async () => {
+  it('should report duplicate step definitions defined by templates', async () => {
     expect(() => new Library({ name: 'test' })
-      .define(/^duplicate step$/)
       .define('duplicate step')
-    ).toThrow('Duplicate step definition [^duplicate step$] in library [test]');
+      .define('duplicate step')
+    ).toThrow('Macro pattern [/^duplicate step$/] derived from template [duplicate step] defined in library [test] is a duplicate of pattern [/^duplicate step$/] derived from template [duplicate step] defined in library [test]');
+  });
+
+  it('should report duplicate step definitions defined by regular expressions', async () => {
+    expect(() => new Library({ name: 'test' })
+      .define(/duplicate step/)
+      .define(/duplicate step/)
+    ).toThrow('Macro pattern [/duplicate step/] defined in library [test] is a duplicate of pattern [/duplicate step/] defined in library [test]');
   });
 
   it('should return matching candidate', async () => {
