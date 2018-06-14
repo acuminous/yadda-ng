@@ -29,40 +29,40 @@ describe('Dictionary', () => {
     it('should expand templates without terms to a fully matching pattern', () => {
       const dictionary = new Dictionary()
         .define('no terms here', /.*/);
-      expect(dictionary.expand('no terms here').pattern.source).toBe('^no terms here$');
+      expect(dictionary.expand('no terms here').regexp.source).toBe('^no terms here$');
     });
 
     it('should expand undefined terms to a wild card pattern', () => {
       const dictionary = new Dictionary();
-      expect(dictionary.expand('$term').pattern.source).toBe('^(.+)$');
+      expect(dictionary.expand('$term').regexp.source).toBe('^(.+)$');
     });
 
     it('should expand multiple terms', () => {
       const dictionary = new Dictionary();
-      expect(dictionary.expand('$term1 $term2 $term3').pattern.source).toBe('^(.+) (.+) (.+)$');
-      expect(dictionary.expand('$term1 meh $term2 meh $term3').pattern.source).toBe('^(.+) meh (.+) meh (.+)$');
+      expect(dictionary.expand('$term1 $term2 $term3').regexp.source).toBe('^(.+) (.+) (.+)$');
+      expect(dictionary.expand('$term1 meh $term2 meh $term3').regexp.source).toBe('^(.+) meh (.+) meh (.+)$');
     });
 
     it('should expand the same term multiple times', () => {
       const dictionary = new Dictionary();
-      expect(dictionary.expand('$term $term $term').pattern.source).toBe('^(.+) (.+) (.+)$');
-      expect(dictionary.expand('$term meh $term meh $term').pattern.source).toBe('^(.+) meh (.+) meh (.+)$');
+      expect(dictionary.expand('$term $term $term').regexp.source).toBe('^(.+) (.+) (.+)$');
+      expect(dictionary.expand('$term meh $term meh $term').regexp.source).toBe('^(.+) meh (.+) meh (.+)$');
     });
 
     it('should ignore an isolated term prefix', () => {
       const dictionary = new Dictionary();
-      expect(dictionary.expand('$').pattern.source).toBe('^$$');
-      expect(dictionary.expand('meh $ meh $ meh').pattern.source).toBe('^meh $ meh $ meh$');
-      expect(dictionary.expand('$ $term').pattern.source).toBe('^$ (.+)$');
+      expect(dictionary.expand('$').regexp.source).toBe('^$$');
+      expect(dictionary.expand('meh $ meh $ meh').regexp.source).toBe('^meh $ meh $ meh$');
+      expect(dictionary.expand('$ $term').regexp.source).toBe('^$ (.+)$');
     });
 
     it('should subsitute simple terms', () => {
       const dictionary = new Dictionary()
         .define('num', /(\d+)/)
         .define('word', /(\w+)/);
-      expect(dictionary.expand('$num').pattern.source).toBe('^(\\d+)$');
-      expect(dictionary.expand('$num $term $num').pattern.source).toBe('^(\\d+) (.+) (\\d+)$');
-      expect(dictionary.expand('$num meh $term meh $word').pattern.source).toBe('^(\\d+) meh (.+) meh (\\w+)$');
+      expect(dictionary.expand('$num').regexp.source).toBe('^(\\d+)$');
+      expect(dictionary.expand('$num $term $num').regexp.source).toBe('^(\\d+) (.+) (\\d+)$');
+      expect(dictionary.expand('$num meh $term meh $word').regexp.source).toBe('^(\\d+) meh (.+) meh (\\w+)$');
     });
 
     it('should subsitute complex terms', () => {
@@ -70,13 +70,13 @@ describe('Dictionary', () => {
         .define('address', '$number, $street')
         .define('number', /(\d+)/)
         .define('street', /(\w+)/);
-      expect(dictionary.expand('$address').pattern.source).toBe('^(\\d+), (\\w+)$');
+      expect(dictionary.expand('$address').regexp.source).toBe('^(\\d+), (\\w+)$');
     });
 
     it('should support custom prefix', () => {
       const dictionary = new Dictionary({ prefix: ':' });
-      expect(dictionary.expand(':term').pattern.source).toBe('^(.+)$');
-      expect(dictionary.expand('\\:term').pattern.source).toBe('^:term$');
+      expect(dictionary.expand(':term').regexp.source).toBe('^(.+)$');
+      expect(dictionary.expand('\\:term').regexp.source).toBe('^:term$');
     });
   });
 
@@ -121,27 +121,27 @@ describe('Dictionary', () => {
   describe('Delimiting', () => {
     it('should delimit the term prefix', () => {
       const dictionary = new Dictionary();
-      expect(dictionary.expand('\\$').pattern.source).toBe('^$$');
-      expect(dictionary.expand('\\$ \\$ \\$').pattern.source).toBe('^$ $ $$');
-      expect(dictionary.expand('\\$term \\$term \\$term').pattern.source).toBe('^$term $term $term$');
+      expect(dictionary.expand('\\$').regexp.source).toBe('^$$');
+      expect(dictionary.expand('\\$ \\$ \\$').regexp.source).toBe('^$ $ $$');
+      expect(dictionary.expand('\\$term \\$term \\$term').regexp.source).toBe('^$term $term $term$');
     });
 
     it('should delimit the delimiter', () => {
       const dictionary = new Dictionary();
-      expect(dictionary.expand('\\\\').pattern.source).toBe('^\\$');
-      expect(dictionary.expand('\\\\\\').pattern.source).toBe('^\\\\$');
-      expect(dictionary.expand('\\\\\\\\$term').pattern.source).toBe('^\\\\(.+)$');
+      expect(dictionary.expand('\\\\').regexp.source).toBe('^\\$');
+      expect(dictionary.expand('\\\\\\').regexp.source).toBe('^\\\\$');
+      expect(dictionary.expand('\\\\\\\\$term').regexp.source).toBe('^\\\\(.+)$');
     });
 
     it('should maintain delimiter for non special characters', () => {
       const dictionary = new Dictionary();
-      expect(dictionary.expand('\\w').pattern.source).toBe('^\\w$');
+      expect(dictionary.expand('\\w').regexp.source).toBe('^\\w$');
     });
 
     it('should support custom delimiters', () => {
       const dictionary = new Dictionary({ delimiter: '^' });
-      expect(dictionary.expand('^$').pattern.source).toBe('^$$');
-      expect(dictionary.expand('^^').pattern.source).toBe('^^$');
+      expect(dictionary.expand('^$').regexp.source).toBe('^$$');
+      expect(dictionary.expand('^^').regexp.source).toBe('^^$');
     });
   });
 

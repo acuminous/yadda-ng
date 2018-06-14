@@ -16,8 +16,8 @@ describe('Pattern', () => {
 
   it('should execute repeatedly', () => {
     const pattern = new Pattern(/(.*) (.*)/);
-    expect(pattern.execute('a b').length).toBe(3);
-    expect(pattern.execute('a b').length).toBe(3);
+    expect(pattern.exec('a b').length).toBe(3);
+    expect(pattern.exec('a b').length).toBe(3);
   });
 
   it('should count matching groups', () => {
