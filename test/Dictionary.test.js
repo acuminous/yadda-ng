@@ -1,6 +1,6 @@
 const expect = require('expect');
-
-const { Dictionary } = require('..');
+const { Dictionary, Converters } = require('..');
+const { UpperCaseConverter, LowerCaseConverter, PassthroughConverter } = Converters;
 
 describe('Dictionary', () => {
 
@@ -80,22 +80,41 @@ describe('Dictionary', () => {
     });
   });
 
-  xdescribe('Converters', () => {
+  describe('Converters', () => {
+
     it('should default term converters', () => {
-      const dictionary = new Dictionary()
-        .define('term', /(.*)/);
-      const expanded = dictionary.expand('$term $term');
-      expect(expanded.converters.length).toBe(2);
-      expect(expanded.conveters[0].convert({}, 1)).resolves.toBe(1);
-      expect(expanded.conveters[1].convert({}, 1)).resolves.toBe(1);
+      const dictionary = new Dictionary().define('term', /(.*)/);
+      const { converters } = dictionary.expand('$term $term');
+      expect(converters.length).toBe(2);
+      expect(converters[0].convert({}, 1)).resolves.toEqual([1]);
+      expect(converters[1].convert({}, 2)).resolves.toEqual([2]);
     });
 
-    it('should use the specified term converter', () => {
-
+    it('should use the specified term converters', () => {
+      const dictionary = new Dictionary().define('term', /(.*) (.*)/, [ new UpperCaseConverter(), new LowerCaseConverter() ] );
+      const { converters } = dictionary.expand('$term $term');
+      expect(converters.length).toBe(4);
+      expect(converters[0].convert({}, 'a')).resolves.toEqual('A');
+      expect(converters[1].convert({}, 'A')).resolves.toEqual('a');
+      expect(converters[2].convert({}, 'b')).resolves.toEqual('B');
+      expect(converters[3].convert({}, 'B')).resolves.toEqual('b');
     });
 
-    xit('should raise an error when an expandable term is defined with the wrong number of converters', () => {
-      expect(new Dictionary().define('$term', /(.*)/, [])).toThrow('Meh!');
+    it('should allow singular term converters', () => {
+      const dictionary = new Dictionary().define('term', /(.*)/, new UpperCaseConverter() );
+      const { converters } = dictionary.expand('$term');
+      expect(converters.length).toBe(1);
+      expect(converters[0].convert({}, 'a')).resolves.toEqual('A');
+    });
+
+    it('should raise an error when an expandable term is defined with too few converter arguments', () => {
+      expect(() => new Dictionary().define('$term', /(.*)/, [])).toThrow('Pattern [(.*)] for term [$term] has 1 matching group, but only a total of 0 converter arguments were specified');
+      expect(() => new Dictionary().define('$term', /(.*) (.*) (.*)/, [ new PassthroughConverter({ demand: 2 }) ])).toThrow('Pattern [(.*) (.*) (.*)] for term [$term] has 3 matching groups, but only a total of 2 converter arguments were specified');
+    });
+
+    it('should raise an error when an expandable term is defined with many few converter arguments', () => {
+      expect(() => new Dictionary().define('$term', /(.*)/, [ new PassthroughConverter(), new PassthroughConverter() ])).toThrow('Pattern [(.*)] for term [$term] has only 1 matching group, but a total of 2 converter arguments were specified');
+      expect(() => new Dictionary().define('$term', /(.*)/, [ new PassthroughConverter({ demand: 2 }) ])).toThrow('Pattern [(.*)] for term [$term] has only 1 matching group, but a total of 2 converter arguments were specified');
     });
   });
 
