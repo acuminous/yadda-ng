@@ -5,7 +5,23 @@ const { Dictionary } = require('..');
 describe('Dictionary', () => {
 
   describe('Combination', () => {
-    xit('should combine multiple dictionaries');
+
+    it('should combine multiple dictionaries', () => {
+      const dictionary1 = new Dictionary().define('term1');
+      const dictionary2 = new Dictionary().define('term2');
+      const dictionary3 = new Dictionary().define('term3');
+
+      const master = Dictionary.combine([dictionary1, dictionary2, dictionary3]);
+      expect(master.defines('term1')).toBe(true);
+      expect(master.defines('term2')).toBe(true);
+      expect(master.defines('term3')).toBe(true);
+    });
+
+    it('should report duplicate definitions', () => {
+      const dictionary1 = new Dictionary().define('term1');
+      const dictionary2 = new Dictionary().define('term1');
+      expect(() => Dictionary.combine([dictionary1, dictionary2])).toThrow('Duplicate term [term1]');
+    });
   });
 
   describe('Term Expansion', () => {

@@ -1,16 +1,28 @@
 const expect = require('expect');
 
-const { Term, Converters } = require('..');
+const { Term, Converters, Dictionary } = require('..');
 const { PassthroughConverter } = Converters;
 
 describe('Term', () => {
+
+  it('should indicate whether it resolves an expression', () => {
+    expect(new Term({ expression: 'term' }).resolves('term')).toBe(true);
+    expect(new Term({ expression: 'term' }).resolves('xterm')).toBe(false);
+  });
 
   it('should permit the right number of converters', () => {
     const converters = [ new PassthroughConverter(), new PassthroughConverter({ demand: 2 }) ];
     new Term({ expression: 'term', definition: /(.*) (.*) (.*)/, converters });
   });
 
-  it('should default to a single wildcard term', () => {
+  it('should define itself in the given dictionary', () => {
+    const dictionary = new Dictionary();
+    const term = new Term({ expression: 'term' });
+    term.defineIn(dictionary);
+    expect(dictionary.defines('term')).toBe(true);
+  });
+
+  it('should default to a single wildcard term with passthrough converter', () => {
     const term = new Term({ expression: 'term' });
     expect(term.definition).toBe('(.+)');
   });
@@ -18,22 +30,12 @@ describe('Term', () => {
   it('should report too many converter arguments', () => {
     const converters = [ new PassthroughConverter(), new PassthroughConverter({ demand: 2 }) ];
     expect(() => new Term({ expression: 'term', definition: /(.*)/, converters }))
-      .toThrow('Pattern [(.*)] for term [term] has only 1 matching group, but 2 converters with a total of 3 arguments were specified');
+      .toThrow('Pattern [(.*)] for term [term] has only 1 matching group, but a total of 3 converter arguments were specified');
   });
 
   it('should report too few converter arguments', () => {
     const converters = [ new PassthroughConverter() ];
     expect(() => new Term({ expression: 'term', definition: /(.*) (.*)/, converters }))
-      .toThrow('Pattern [(.*) (.*)] for term [term] has 2 matching groups, but only 1 converter with a total of 1 argument was specified');
+      .toThrow('Pattern [(.*) (.*)] for term [term] has 2 matching groups, but only a total of 1 converter argument was specified');
   });
-
-  it('should report too few converters', () => {
-    expect(() => new Term({ expression: 'term', definition: /(.*) (.*)/, converters: [] }))
-      .toThrow('Pattern [(.*) (.*)] for term [term] has 2 matching groups, but no converters were specified');
-  });
-
-  it('should handle 0 in both directions');
-
-  it('should indicate whether it resolves an expression');
-
 });

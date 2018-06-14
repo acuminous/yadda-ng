@@ -71,8 +71,6 @@ describe('Macro', () => {
     expect(macro.run({}, 'Bob Holness')).rejects.toThrow(('Step [Bob Holness] yielded 2 values using pattern [/^(.+) (.+)$/] from template [$name], but only 1 step argument was specified'));
   });
 
-  it('should handle 0 in both directions');
-
 });
 
 class Spy {

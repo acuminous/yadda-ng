@@ -132,7 +132,4 @@ describe('Library', () => {
     const candidates = library.getCandidateMacros('step 1');
     expect(candidates.length).toBe(4);
   });
-
-  xit('should report all duplicate patterns in the error message');
-  xit('should be consistent with template, pattern, signature');
 });
