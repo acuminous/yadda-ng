@@ -25,13 +25,15 @@ describe('Macro', () => {
     const spy = new Spy();
     const macro = new Macro({ library, type: 'given', pattern: new Pattern(/^the rain in Spain falls mainly on the plains$/), converters: [], fn: spy.tap() });
     expect(macro.supports('Given the rain in Spain falls mainly on the plains')).toBe(true);
+    expect(macro.supports('When the rain in Spain falls mainly on the plains')).toBe(true);
+    expect(macro.supports('Then the rain in Spain falls mainly on the plains')).toBe(true);
   });
 
   it('should advise when it does not support a localised statement', () => {
     const library = new EnglishLibrary();
     const spy = new Spy();
     const macro = new Macro({ library, type: 'given', pattern: new Pattern(/^the rain in Spain falls mainly on the plains$/), converters: [], fn: spy.tap() });
-    expect(macro.supports('When the rain in Spain falls mainly on the plains')).toBe(false);
+    expect(macro.supports('Given the rain in Spain falls mostly on the plains')).toBe(false);
   });
 
   it('should run step functions', async () => {
