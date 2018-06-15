@@ -6,6 +6,11 @@ describe('PassthroughConverter', () => {
 
   it('should pass through a single value', async () => {
     const converted = await new Converters.PassthroughConverter().convert({}, 1);
+    expect(converted).toEqual(1);
+  });
+
+  it('should pass through a single value as an array', async () => {
+    const converted = await new Converters.PassthroughConverter({ forceArray: true }).convert({}, 1);
     expect(converted).toEqual([1]);
   });
 

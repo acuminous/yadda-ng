@@ -86,8 +86,8 @@ describe('Dictionary', () => {
       const dictionary = new Dictionary().define('term', /(.*)/);
       const { converters } = dictionary.expand('$term $term');
       expect(converters.length).toBe(2);
-      expect(converters[0].convert({}, 1)).resolves.toEqual([1]);
-      expect(converters[1].convert({}, 2)).resolves.toEqual([2]);
+      expect(converters[0].convert({}, 1)).resolves.toEqual(1);
+      expect(converters[1].convert({}, 2)).resolves.toEqual(2);
     });
 
     it('should use the specified term converters', () => {
