@@ -1,7 +1,7 @@
 const expect = require('expect');
 
 const { Library, Macro, Converters, Pattern, Localisation } = require('..');
-const { EnglishLibrary } = Localisation;
+const { English } = Localisation;
 const { PassthroughConverter, UpperCaseConverter, LowerCaseConverter } = Converters;
 
 describe('Macro', () => {
@@ -9,31 +9,31 @@ describe('Macro', () => {
   it('should advise when it supports a statement', () => {
     const library = new Library();
     const spy = new Spy();
-    const macro = new Macro({ library, pattern: new Pattern(/^the rain in Spain falls mainly on the plains$/), converters: [], fn: spy.tap() });
-    expect(macro.supports('the rain in Spain falls mainly on the plains')).toBe(true);
+    const macro = new Macro({ library, pattern: new Pattern(/^A$/), converters: [], fn: spy.tap() });
+    expect(macro.supports('A')).toBe(true);
   });
 
   it('should advise when it does not support a statement', () => {
     const library = new Library();
     const spy = new Spy();
-    const macro = new Macro({ library, pattern: new Pattern(/^the rain in Spain falls mainly on the plains$/), converters: [], fn: spy.tap() });
-    expect(macro.supports('the rain in Spain falls mostly on the plains')).toBe(false);
+    const macro = new Macro({ library, pattern: new Pattern(/^A$/), converters: [], fn: spy.tap() });
+    expect(macro.supports('B')).toBe(false);
   });
 
   it('should advise when it supports a localised statement', () => {
-    const library = new EnglishLibrary();
+    const library = new Library({ language: new English() });
     const spy = new Spy();
-    const macro = new Macro({ library, type: 'given', pattern: new Pattern(/^the rain in Spain falls mainly on the plains$/), converters: [], fn: spy.tap() });
-    expect(macro.supports('Given the rain in Spain falls mainly on the plains')).toBe(true);
-    expect(macro.supports('When the rain in Spain falls mainly on the plains')).toBe(true);
-    expect(macro.supports('Then the rain in Spain falls mainly on the plains')).toBe(true);
+    const macro = new Macro({ library, pattern: new Pattern(/^A$/), converters: [], fn: spy.tap() });
+    expect(macro.supports('Given A')).toBe(true);
+    expect(macro.supports('When A')).toBe(true);
+    expect(macro.supports('Then A')).toBe(true);
   });
 
   it('should advise when it does not support a localised statement', () => {
-    const library = new EnglishLibrary();
+    const library = new Library({ language: new English() });
     const spy = new Spy();
-    const macro = new Macro({ library, type: 'given', pattern: new Pattern(/^the rain in Spain falls mainly on the plains$/), converters: [], fn: spy.tap() });
-    expect(macro.supports('Given the rain in Spain falls mostly on the plains')).toBe(false);
+    const macro = new Macro({ library, pattern: new Pattern(/^A$/), converters: [], fn: spy.tap() });
+    expect(macro.supports('Given B')).toBe(false);
   });
 
   it('should run step functions', async () => {
@@ -45,10 +45,10 @@ describe('Macro', () => {
   });
 
   it('should run localised step functions', async () => {
-    const library = new EnglishLibrary();
+    const library = new Library({ language: new English() });
     const spy = new Spy();
-    const macro = new Macro({ library, type: 'given', pattern: new Pattern(/^the rain in Spain falls mainly on the plains$/), converters: [], fn: spy.tap() });
-    await macro.run({}, 'Given the rain in Spain falls mainly on the plains');
+    const macro = new Macro({ library, pattern: new Pattern(/^A$/), converters: [], fn: spy.tap() });
+    await macro.run({}, 'Given A');
     expect(spy.invocations).toHaveLength(1);
   });
 

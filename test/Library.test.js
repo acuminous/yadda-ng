@@ -1,9 +1,15 @@
 const expect = require('expect');
 
-const { Library, Converters } = require('..');
+const { Library, Converters, Localisation } = require('..');
 const { NumberConverter } = Converters;
+const { English } = Localisation;
 
 describe('Library', () => {
+
+  it('should generalise a statement', () => {
+    expect(new Library().generalise('Given A')).toBe('Given A');
+    expect(new Library({ language: new English() }).generalise('Given A')).toBe('A');
+  });
 
   it('should define a step using a single regular expressions and no matching groups', async () => {
     const state = { invocations: 0 };
