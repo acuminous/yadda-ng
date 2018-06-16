@@ -11,7 +11,7 @@ const Term = require('./lib/Term');
 const Pattern = require('./lib/Pattern');
 const Converters = require('./lib/converters');
 const Macro = require('./lib/Macro');
-const Localisation = require('./lib/localisation');
+const Languages = require('./lib/languages');
 
 module.exports = {
   Script,
@@ -27,5 +27,5 @@ module.exports = {
   Pattern,
   Converters,
   Macro,
-  Localisation,
+  Languages,
 };

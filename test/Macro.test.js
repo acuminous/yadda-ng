@@ -1,7 +1,7 @@
 const expect = require('expect');
 
-const { Library, Macro, Converters, Pattern, Localisation } = require('..');
-const { English } = Localisation;
+const { Library, Macro, Converters, Pattern, Languages } = require('..');
+const { English } = Languages;
 const { PassthroughConverter, UpperCaseConverter, LowerCaseConverter } = Converters;
 
 describe('Macro', () => {

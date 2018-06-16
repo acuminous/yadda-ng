@@ -1,14 +1,17 @@
 const expect = require('expect');
 
-const { Library, Converters, Localisation } = require('..');
+const { Library, Converters, Languages } = require('..');
 const { NumberConverter } = Converters;
-const { English } = Localisation;
+const { Pirate } = Languages;
 
 describe('Library', () => {
 
-  it('should generalise a statement', () => {
-    expect(new Library().generalise('Given A')).toBe('Given A');
-    expect(new Library({ language: new English() }).generalise('Given A')).toBe('A');
+  it('should generalise a statement in English by default', () => {
+    expect(new Library().generalise('Given A')).toBe('A');
+  });
+
+  it('should generalise a statement using the specified language', () => {
+    expect(new Library({ language: new Pirate() }).generalise('Giveth A')).toBe('A');
   });
 
   it('should define a step using a single regular expressions and no matching groups', async () => {

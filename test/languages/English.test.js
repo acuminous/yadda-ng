@@ -1,7 +1,7 @@
 const expect = require('expect');
 
-const { Localisation } = require('../..');
-const { English } = Localisation;
+const { Languages } = require('../..');
+const { English } = Languages;
 
 describe('English', () => {
   it('should generalise statement', () => {
