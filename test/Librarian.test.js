@@ -29,10 +29,11 @@ describe('Librarian', () => {
 
   it('should create undefined steps', () => {
     const librarian = new Librarian({ libraries: [] });
-    const step = librarian.createStep(new Competition(), new Annotations(), 'undefined');
+    const step = librarian.createStep(new Competition(), new Annotations(), 'undefined step');
 
     expect(step.isPending()).toBe(false);
-    expect(() => step.run()).toThrow('Undefined step: [undefined]');
+    expect(step.suggestion).toBe('.define(\'undefined step\', () => { // your code here })');
+    expect(() => step.run()).toThrow('Undefined step: [undefined step]');
   });
 
   it('should create asynchronous steps', async () => {

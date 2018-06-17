@@ -11,7 +11,7 @@ describe('Feature Playbook', () => {
 
   it('should pretend to run features', async () => {
     const step1 = new AsyncStep({ statement: 'one', macro });
-    const step2 = new UndefinedStep({ language: Languages.default, statement: 'two' });
+    const step2 = new UndefinedStep({ statement: 'two', suggestion: 'define(...)' });
     const step3 = new AsyncStep({ statement: 'three', macro: pendingMacro });
     const step4 = new AmbiguousStep({ statement: 'four', language: Languages.default });
     const scenario1 = new Scenario({ title: 'Scenario A', steps: [ step1, step2, step3, step4 ] });
@@ -34,7 +34,7 @@ describe('Feature Playbook', () => {
     expect(report[0].status).toEqual('run');
     expect(report[1].step).toBe(step2.statement);
     expect(report[1].status).toEqual('undefined');
-    expect(report[1].suggestion).toEqual('two');
+    expect(report[1].suggestion).toEqual('define(...)');
     expect(report[2].step).toBe(step3.statement);
     expect(report[2].status).toEqual('pending');
     expect(report[3].step).toBe(step4.statement);
