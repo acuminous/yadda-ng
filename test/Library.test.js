@@ -131,6 +131,13 @@ describe('Library', () => {
     ).toThrow('Macro pattern [/^duplicate step$/] derived from template [duplicate step] defined in library [test] is a duplicate of pattern [/^duplicate step$/] derived from template [duplicate step] defined in library [test]');
   });
 
+  it('should report duplicate step definitions defined by templates', async () => {
+    expect(() => new Library({ name: 'test' })
+      .define('$foo step')
+      .define('$bar step')
+    ).toThrow('Macro pattern [/^(.+) step$/] derived from template [$bar step] defined in library [test] is a duplicate of pattern [/^(.+) step$/] derived from template [$foo step] defined in library [test]');
+  });
+
   it('should report duplicate step definitions defined by regular expressions', async () => {
     expect(() => new Library({ name: 'test' })
       .define(/duplicate step/)

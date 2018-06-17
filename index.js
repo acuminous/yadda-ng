@@ -5,6 +5,7 @@ const Annotations = require('./lib/Annotations');
 const Feature = require('./lib/Feature');
 const Scenario = require('./lib/Scenario');
 const Steps = require('./lib/steps');
+const Librarian = require('./lib/Librarian');
 const Library = require('./lib/Library');
 const Dictionary = require('./lib/Dictionary');
 const Term = require('./lib/Term');
@@ -21,6 +22,7 @@ module.exports = {
   Feature,
   Scenario,
   Steps,
+  Librarian,
   Library,
   Dictionary,
   Term,

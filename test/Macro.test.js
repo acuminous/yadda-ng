@@ -94,7 +94,7 @@ describe('Macro', () => {
     const converters = [new PassthroughConverter(), new PassthroughConverter({ demand: 2 })];
     const spy = new Spy();
     const macro = new Macro({ library, pattern: new Pattern(/^(.+)$/), template: '$name', converters, fn: spy.tap() });
-    expect(macro.run({}, 'Bob Holness')).rejects.toThrow('Step [Bob Holness] matched only 1 value using pattern [/^(.+)$/] from template [$name], but a total of 3 converter arguments were specified');
+    await expect(macro.run({}, 'Bob Holness')).rejects.toThrow('Step [Bob Holness] yielded only 1 value using pattern [/^(.+)$/] from template [$name], but 3 converter arguments were specified');
   });
 
   it('should raise an error when there are more matches than converter arguments', async () => {
@@ -102,21 +102,126 @@ describe('Macro', () => {
     const converters = [new PassthroughConverter()];
     const spy = new Spy();
     const macro = new Macro({ library, pattern: new Pattern(/^(.+) (.+)$/), template: '$name', converters, fn: spy.tap() });
-    expect(macro.run({}, 'Bob Holness')).rejects.toThrow('Step [Bob Holness] matched 2 values using pattern [/^(.+) (.+)$/] from template [$name], but only a total of 1 converter argument was specified');
+    await expect(macro.run({}, 'Bob Holness')).rejects
+      .toThrow('Step [Bob Holness] yielded 2 values using pattern [/^(.+) (.+)$/] from template [$name], but only 1 converter argument was specified');
+  });
+
+  it('should raise an error when there are some matches but no converter arguments', async () => {
+    const library = new Library();
+    const converters = [];
+    const spy = new Spy();
+    const macro = new Macro({ library, pattern: new Pattern(/^(.+) (.+)$/), template: '$name', converters, fn: spy.tap() });
+    await expect(macro.run({}, 'Bob Holness')).rejects
+      .toThrow('Step [Bob Holness] yielded 2 values using pattern [/^(.+) (.+)$/] from template [$name], but no converter arguments were specified');
+  });
+
+  it('should raise an error when there are no matches but some converter arguments', async () => {
+    const library = new Library();
+    const converters = [new PassthroughConverter(), new PassthroughConverter({ demand: 2 })];
+    const spy = new Spy();
+    const macro = new Macro({ library, pattern: new Pattern(/^.+$/), template: '$name', converters, fn: spy.tap() });
+    await expect(macro.run({}, 'Bob Holness')).rejects.toThrow('Step [Bob Holness] yielded no values using pattern [/^.+$/] from template [$name], but 3 converter arguments were specified');
   });
 
   it('should raise an error when there are fewer parsed arguments than step arguments', async () => {
     const library = new Library();
     const converters = [new PassthroughConverter()];
     const macro = new Macro({ library, pattern: new Pattern(/^(.+)$/), template: '$name', converters, fn: (state, a, b) => {}});
-    expect(macro.run({}, 'Bob Holness')).rejects.toThrow('Step [Bob Holness] yielded only 1 value using pattern [/^(.+)$/] from template [$name], but 2 step arguments were specified');
+    await await expect(macro.run({}, 'Bob Holness')).rejects
+      .toThrow('Step [Bob Holness] yielded only 1 value using pattern [/^(.+)$/] from template [$name], but 2 step arguments were specified');
   });
 
   it('should raise an error when there are more parsed arguments than step arguments', async () => {
     const library = new Library();
     const converters = [new PassthroughConverter({ demand: 2 })];
     const macro = new Macro({ library, pattern: new Pattern(/^(.+) (.+)$/), template: '$name', converters, fn: (state, a) => {}});
-    expect(macro.run({}, 'Bob Holness')).rejects.toThrow('Step [Bob Holness] yielded 2 values using pattern [/^(.+) (.+)$/] from template [$name], but only 1 step argument was specified');
+    await expect(macro.run({}, 'Bob Holness')).rejects
+      .toThrow('Step [Bob Holness] yielded 2 values using pattern [/^(.+) (.+)$/] from template [$name], but only 1 step argument was specified');
+  });
+
+  it('should raise an error when there no parsed arguments but some step arguments', async () => {
+    const library = new Library();
+    const converters = [];
+    const macro = new Macro({ library, pattern: new Pattern(/^.+$/), template: '$name', converters, fn: (state, a, b) => {}});
+    await await expect(macro.run({}, 'Bob Holness')).rejects
+      .toThrow('Step [Bob Holness] yielded no values using pattern [/^.+$/] from template [$name], but 2 step arguments were specified');
+  });
+
+  it('should raise an error when there some parsed arguments but no step arguments', async () => {
+    const library = new Library();
+    const converters = [new PassthroughConverter({ demand: 2 })];
+    const macro = new Macro({ library, pattern: new Pattern(/^(.+) (.+)$/), template: '$name', converters, fn: (state) => {}});
+    await expect(macro.run({}, 'Bob Holness')).rejects
+      .toThrow('Step [Bob Holness] yielded 2 values using pattern [/^(.+) (.+)$/] from template [$name], but no step arguments were specified');
+  });
+
+  describe('without template', () => {
+
+    it('should raise an error when there are fewer matches than converter arguments', async () => {
+      const library = new Library();
+      const converters = [new PassthroughConverter(), new PassthroughConverter({ demand: 2 })];
+      const spy = new Spy();
+      const macro = new Macro({ library, pattern: new Pattern(/^(.+)$/), converters, fn: spy.tap() });
+      await expect(macro.run({}, 'Bob Holness')).rejects.toThrow('Step [Bob Holness] yielded only 1 value using pattern [/^(.+)$/], but 3 converter arguments were specified');
+    });
+
+    it('should raise an error when there are more matches than converter arguments', async () => {
+      const library = new Library();
+      const converters = [new PassthroughConverter()];
+      const spy = new Spy();
+      const macro = new Macro({ library, pattern: new Pattern(/^(.+) (.+)$/), converters, fn: spy.tap() });
+      await expect(macro.run({}, 'Bob Holness')).rejects
+        .toThrow('Step [Bob Holness] yielded 2 values using pattern [/^(.+) (.+)$/], but only 1 converter argument was specified');
+    });
+
+    it('should raise an error when there are some matches but no converter arguments', async () => {
+      const library = new Library();
+      const converters = [];
+      const spy = new Spy();
+      const macro = new Macro({ library, pattern: new Pattern(/^(.+) (.+)$/), converters, fn: spy.tap() });
+      await expect(macro.run({}, 'Bob Holness')).rejects
+        .toThrow('Step [Bob Holness] yielded 2 values using pattern [/^(.+) (.+)$/], but no converter arguments were specified');
+    });
+
+    it('should raise an error when there are no matches but some converter arguments', async () => {
+      const library = new Library();
+      const converters = [new PassthroughConverter(), new PassthroughConverter({ demand: 2 })];
+      const spy = new Spy();
+      const macro = new Macro({ library, pattern: new Pattern(/^.+$/), converters, fn: spy.tap() });
+      await expect(macro.run({}, 'Bob Holness')).rejects.toThrow('Step [Bob Holness] yielded no values using pattern [/^.+$/], but 3 converter arguments were specified');
+    });
+
+    it('should raise an error when there are fewer parsed arguments than step arguments', async () => {
+      const library = new Library();
+      const converters = [new PassthroughConverter()];
+      const macro = new Macro({ library, pattern: new Pattern(/^(.+)$/), converters, fn: (state, a, b) => {}});
+      await await expect(macro.run({}, 'Bob Holness')).rejects
+        .toThrow('Step [Bob Holness] yielded only 1 value using pattern [/^(.+)$/], but 2 step arguments were specified');
+    });
+
+    it('should raise an error when there are more parsed arguments than step arguments', async () => {
+      const library = new Library();
+      const converters = [new PassthroughConverter({ demand: 2 })];
+      const macro = new Macro({ library, pattern: new Pattern(/^(.+) (.+)$/), converters, fn: (state, a) => {}});
+      await expect(macro.run({}, 'Bob Holness')).rejects
+        .toThrow('Step [Bob Holness] yielded 2 values using pattern [/^(.+) (.+)$/], but only 1 step argument was specified');
+    });
+
+    it('should raise an error when there no parsed arguments but some step arguments', async () => {
+      const library = new Library();
+      const converters = [];
+      const macro = new Macro({ library, pattern: new Pattern(/^.+$/), converters, fn: (state, a, b) => {}});
+      await await expect(macro.run({}, 'Bob Holness')).rejects
+        .toThrow('Step [Bob Holness] yielded no values using pattern [/^.+$/], but 2 step arguments were specified');
+    });
+
+    it('should raise an error when there some parsed arguments but no step arguments', async () => {
+      const library = new Library();
+      const converters = [new PassthroughConverter({ demand: 2 })];
+      const macro = new Macro({ library, pattern: new Pattern(/^(.+) (.+)$/), converters, fn: (state) => {}});
+      await expect(macro.run({}, 'Bob Holness')).rejects
+        .toThrow('Step [Bob Holness] yielded 2 values using pattern [/^(.+) (.+)$/], but no step arguments were specified');
+    });
   });
 
 });
