@@ -1,6 +1,6 @@
 const expect = require('expect');
 
-const { Librarian, Library, Annotations } = require('..');
+const { Librarian, Library, Annotations, Competition } = require('..');
 
 describe('Librarian', () => {
 
@@ -11,10 +11,10 @@ describe('Librarian', () => {
       new Library({ name: 'C' }).define('baz'),
     ] }).filter(['A', 'C']);
 
-    librarian.createStep(new Annotations(), 'foo').run();
-    librarian.createStep(new Annotations(), 'baz').run();
+    librarian.createStep(new Competition(), new Annotations(), 'foo').run();
+    librarian.createStep(new Competition(), new Annotations(), 'baz').run();
 
-    expect(() => librarian.createStep(new Annotations(), 'bar').run()).toThrow('Undefined step: [bar]');
+    expect(() => librarian.createStep(new Competition(), new Annotations(), 'bar').run()).toThrow('Undefined step: [bar]');
   });
 
   it('should create pending steps', () => {
@@ -22,14 +22,14 @@ describe('Librarian', () => {
       new Library().define('foo'),
     ] });
 
-    const step = librarian.createStep(new Annotations(), 'foo');
+    const step = librarian.createStep(new Competition(), new Annotations(), 'foo');
 
     expect(step.isPending()).toBe(true);
   });
 
   it('should create undefined steps', () => {
     const librarian = new Librarian({ libraries: [] });
-    const step = librarian.createStep(new Annotations(), 'undefined');
+    const step = librarian.createStep(new Competition(), new Annotations(), 'undefined');
 
     expect(step.isPending()).toBe(false);
     expect(() => step.run()).toThrow('Undefined step: [undefined]');
@@ -42,42 +42,52 @@ describe('Librarian', () => {
       new Library().define('foo', () => { run = true; }),
     ] });
 
-    const step = librarian.createStep(new Annotations(), 'foo');
+    const step = librarian.createStep(new Competition(), new Annotations(), 'foo');
     expect(step.isPending()).toBe(false);
 
     await step.run();
     expect(run).toBe(true);
   });
 
-  it.skip('should create ambiguous steps', () => {
+  it('should create ambiguous steps from templates', () => {
     const librarian = new Librarian({ libraries: [
       new Library({ name: 'A' }).define('foo'),
       new Library({ name: 'B' }).define('foo'),
     ] });
 
-    const step = librarian.createStep(new Annotations(), 'foo');
+    const step = librarian.createStep(new Competition(), new Annotations(), 'foo');
 
     expect(step.isPending()).toBe(false);
-    expect(() => step.run()).toThrow('Undefined step: [undefined]');
+    expect(() => step.run()).toThrow('Ambiguous Step: [foo] is equally matched by macro with pattern [/^foo$/] derived from template [foo] defined in library [A], macro with pattern [/^foo$/] derived from template [foo] defined in library [B]');
   });
 
-  it.skip('should select the compatible step that most closesly matches the statement', async () => {
+  it('should create ambiguous steps from patterns', () => {
+    const librarian = new Librarian({ libraries: [
+      new Library({ name: 'A' }).define(/.*/),
+      new Library({ name: 'B' }).define(/.*/),
+    ] });
+
+    const step = librarian.createStep(new Competition(), new Annotations(), 'foo');
+
+    expect(step.isPending()).toBe(false);
+    expect(() => step.run()).toThrow('Ambiguous Step: [foo] is equally matched by macro with pattern [/.*/] defined in library [A], macro with pattern [/.*/] defined in library [B]');
+  });
+
+  it('should prefer the compatible steps from the previous winners library', async () => {
     let run = false;
 
     const librarian = new Librarian({ libraries: [
-      new Library()
-        .define(/(\d+) (.*) patient/, () => { throw new Error('Wrong step'); })
-        .define(/1 (.*) patient/, () => { run = true; })
-        .define(/([0123456789]+) (.*) patient/, () => { throw new Error('Wrong step'); })
+      new Library({ name: 'A' }).define(/B/, () => { throw new Error('Wrong step'); }),
+      new Library({ name: 'B' }).define(/A/),
+      new Library({ name: 'B' }).define(/B/, () => { run = true; }),
+      new Library({ name: 'C' }).define(/B/, () => { throw new Error('Wrong step'); }),
     ] });
 
-    const step = librarian.createStep(new Annotations(), 'Given 1 male patient');
+    const competition = new Competition();
+    librarian.createStep(competition, new Annotations(), 'A');
+    const step = librarian.createStep(competition, new Annotations(), 'B');
 
     await step.run();
     expect(run).toBe(true);
-  });
-
-  it.skip('should select the compatible step that was from the previously used library ', () => {
-
   });
 });

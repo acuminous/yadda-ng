@@ -13,7 +13,7 @@ const Pattern = require('./lib/Pattern');
 const Converters = require('./lib/converters');
 const Macro = require('./lib/Macro');
 const Languages = require('./lib/languages');
-const Scores = require('./lib/scores');
+const Competition = require('./lib/Competition');
 
 module.exports = {
   Script,
@@ -31,5 +31,5 @@ module.exports = {
   Converters,
   Macro,
   Languages,
-  Scores,
+  Competition,
 };
