@@ -10,6 +10,7 @@ const Library = require('./lib/Library');
 const Dictionary = require('./lib/Dictionary');
 const Term = require('./lib/Term');
 const Pattern = require('./lib/Pattern');
+const Signature = require('./lib/Signature');
 const Converters = require('./lib/converters');
 const Macro = require('./lib/Macro');
 const Languages = require('./lib/languages');
@@ -29,6 +30,7 @@ module.exports = {
   Term,
   Pattern,
   Converters,
+  Signature,
   Macro,
   Languages,
   Competition,

@@ -1,6 +1,6 @@
 const expect = require('expect');
 
-const { Competition, Macro, Pattern, Library } = require('..');
+const { Competition, Macro, Pattern, Library, Signature } = require('..');
 
 describe('Competition', () => {
 
@@ -13,7 +13,8 @@ describe('Competition', () => {
   it('should record winner and no contenders when there is only one candidate', () => {
     const competition = new Competition();
     const library = new Library();
-    const macro = new Macro({ library, pattern: new Pattern(/A/) });
+    const signature = new Signature({ library, pattern: new Pattern(/A/) });
+    const macro = new Macro({ library, signature });
 
     const ranked = competition.rank({}, [ macro ]);
     expect(ranked.winner).toBe(macro);
@@ -22,11 +23,16 @@ describe('Competition', () => {
 
   it('should record contenders when there is no clear winner', () => {
     const competition = new Competition();
-    const libraryA = new Library({ name: 'A' });
-    const libraryB = new Library({ name: 'B' });
-    const macro1 = new Macro({ library: libraryA, pattern: new Pattern(/A/) });
-    const macro2 = new Macro({ library: libraryA, pattern: new Pattern(/B/) });
-    const macro3 = new Macro({ library: libraryB, pattern: new Pattern(/C/) });
+    const library1 = new Library({ name: 'A' });
+    const library2 = new Library({ name: 'B' });
+
+    const signature1 = new Signature({ library: library1, pattern: new Pattern(/A/) });
+    const signature2 = new Signature({ library: library1, pattern: new Pattern(/B/) });
+    const signature3 = new Signature({ library: library2, pattern: new Pattern(/C/) });
+
+    const macro1 = new Macro({ library: library1, signature: signature1  });
+    const macro2 = new Macro({ library: library1, signature: signature2  });
+    const macro3 = new Macro({ library: library2, signature: signature3  });
 
     const ranked = competition.rank({}, [ macro1, macro2, macro3 ]);
     expect(ranked.winner).toBe(undefined);
@@ -36,11 +42,16 @@ describe('Competition', () => {
 
   it('should prefer macro from previous winner\'s library', () => {
     const competition = new Competition();
-    const libraryA = new Library({ name: 'A' });
-    const libraryB = new Library({ name: 'B' });
-    const macro1 = new Macro({ library: libraryA, pattern: new Pattern(/A/) });
-    const macro2 = new Macro({ library: libraryA, pattern: new Pattern(/B/) });
-    const macro3 = new Macro({ library: libraryB, pattern: new Pattern(/C/) });
+    const library1 = new Library({ name: 'A' });
+    const library2 = new Library({ name: 'B' });
+
+    const signature1 = new Signature({ library: library1, pattern: new Pattern(/A/) });
+    const signature2 = new Signature({ library: library1, pattern: new Pattern(/B/) });
+    const signature3 = new Signature({ library: library2, pattern: new Pattern(/C/) });
+
+    const macro1 = new Macro({ library: library1, signature: signature1  });
+    const macro2 = new Macro({ library: library1, signature: signature2  });
+    const macro3 = new Macro({ library: library2, signature: signature3  });
 
     const ranked = competition.rank({ currentLibrary: 'B' }, [ macro1, macro2, macro3 ]);
     expect(ranked.winner).toBe(macro3);

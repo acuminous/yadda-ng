@@ -1,13 +1,14 @@
 const expect = require('expect');
 
-const { Steps, Macro, Pattern, Library } = require('../..');
+const { Steps, Macro, Pattern, Library, Signature } = require('../..');
 const { AmbiguousStep } = Steps;
 
 describe('AmbiguousStep', () => {
 
   it('should run step', async () => {
     const library = new Library();
-    const macro = new Macro({ library, pattern: new Pattern(/.*/), fn: () => {} });
+    const signature = new Signature({ library, pattern: new Pattern(/.*/) });
+    const macro = new Macro({ library, signature, fn: () => {} });
     const step = new AmbiguousStep({ statement: 'Given A', contenders: [ macro ] });
     const outcome = await step.run({});
     expect(outcome.status).toBe('ambiguous');

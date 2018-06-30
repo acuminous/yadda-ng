@@ -1,12 +1,13 @@
 const expect = require('expect');
 
-const { Steps, Macro, Library, Pattern } = require('../..');
+const { Steps, Macro, Library, Pattern, Signature } = require('../..');
 const { AsyncStep } = Steps;
 
 describe('AsyncStep', () => {
   const library = new Library();
-  const macro = new Macro({ library, pattern: new Pattern(/.*/), fn: () => {} });
-  const pendingMacro = new Macro({ library, pattern: new Pattern(/.*/) });
+  const signature = new Signature({ library, pattern: new Pattern(/.*/) });
+  const macro = new Macro({ library, signature, fn: () => {} });
+  const pendingMacro = new Macro({ library, signature });
 
   it('should run step', async () => {
     await expect(new AsyncStep({ statement: 'Given A', macro }).run({})).resolves.toEqual({ status: 'run' });

@@ -129,21 +129,21 @@ describe('Library', () => {
     expect(() => new Library({ name: 'test' })
       .define('duplicate step')
       .define('duplicate step')
-    ).toThrow('Macro with pattern [/^duplicate step$/] derived from template [duplicate step] defined in library [test] is a duplicate of macro with pattern [/^duplicate step$/] derived from template [duplicate step] defined in library [test]');
+    ).toThrow('Signature [/^duplicate step$/] derived from template [duplicate step] defined in library [test] is a duplicate of signature [/^duplicate step$/] derived from template [duplicate step] defined in library [test]');
   });
 
   it('should report duplicate step definitions defined by templates', async () => {
     expect(() => new Library({ name: 'test' })
       .define('$foo step')
       .define('$bar step')
-    ).toThrow('Macro with pattern [/^(.+) step$/] derived from template [$bar step] defined in library [test] is a duplicate of macro with pattern [/^(.+) step$/] derived from template [$foo step] defined in library [test]');
+    ).toThrow('Signature [/^(.+) step$/] derived from template [$bar step] defined in library [test] is a duplicate of signature [/^(.+) step$/] derived from template [$foo step] defined in library [test]');
   });
 
   it('should report duplicate step definitions defined by regular expressions', async () => {
     expect(() => new Library({ name: 'test' })
       .define(/duplicate step/)
       .define(/duplicate step/)
-    ).toThrow('Macro with pattern [/duplicate step/] defined in library [test] is a duplicate of macro with pattern [/duplicate step/] defined in library [test]');
+    ).toThrow('Signature [/duplicate step/] defined in library [test] is a duplicate of signature [/duplicate step/] defined in library [test]');
   });
 
   it('should return matching candidate', async () => {
