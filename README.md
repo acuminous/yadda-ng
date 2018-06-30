@@ -1,6 +1,7 @@
 # yadda-ng
 
 1. DynamicStep tests
+1. State history
 1. Multiple signatures per step
 1. Injectable / Configurable competition
 1. Make argument validation injectable

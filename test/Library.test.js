@@ -6,12 +6,13 @@ const { Pirate } = Languages;
 
 describe('Library', () => {
 
-  it('should default to constructor name', () => {
-    expect(new Library().name).toBe('Library');
-  });
-
   it('should use the specified name name', () => {
     expect(new Library({ name: 'Search' }).name).toBe('Search');
+  });
+
+  it('should default to randomised constructor name', () => {
+    class CustomLibrary extends Library {}
+    expect(new CustomLibrary().name).toMatch(/CustomLibrary-\w+/);
   });
 
   it('should generalise a statement in English by default', () => {
