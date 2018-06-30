@@ -1,21 +1,43 @@
 const expect = require('expect');
 
-const { Steps } = require('../..');
+const { Annotations, Steps } = require('../..');
 const { UndefinedStep } = Steps;
 
 describe('UndefinedStep', () => {
 
-  it('should pretend to run step', () => {
-    expect(new UndefinedStep({ statement: 'Given A' }).pretend()).toBe('undefined');
-  });
-
   it('should run step', async () => {
-    expect(() => new UndefinedStep({ statement: 'Given A' }).run())
-      .toThrow('Undefined step: [Given A]');
+    const step = new UndefinedStep({ statement: 'Given A', suggestion: 'define(step)' });
+    const outcome = await step.run({});
+    expect(outcome.status).toBe('undefined');
+    expect(outcome.suggestion).toBe('define(step)');
   });
 
-  it('should not be pending', () => {
+  it('should advise when pending', async () => {
+    const annotations = new Annotations().add('pending');
+    const step = new UndefinedStep({ annotations, statement: 'Given A' });
+    expect(step.isPending()).toBe(true);
+
+    const status = await step.run({});
+    expect(status).toEqual({ status: 'pending' });
+  });
+
+  it('should advise when not pending', () => {
     expect(new UndefinedStep({ statement: 'Given A' }).isPending()).toBe(false);
+  });
+
+  it('should delete current library when not pending', async () => {
+    const step = new UndefinedStep({ statement: 'Given A' });
+    const state = { currentLibrary: 'A' };
+    await step.run(state);
+    expect(state.currentLibrary).toBe(undefined);
+  });
+
+  it('should not delete current library when pending', async () => {
+    const annotations = new Annotations().add('pending');
+    const step = new UndefinedStep({ statement: 'Given A', annotations });
+    const state = { currentLibrary: 'A' };
+    await step.run(state);
+    expect(state.currentLibrary).toBe('A');
   });
 
 });

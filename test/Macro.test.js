@@ -36,6 +36,20 @@ describe('Macro', () => {
     expect(macro.supports('Given B')).toBe(false);
   });
 
+  it('should set the preferred library ', () => {
+    const library = new Library({ name: 'A' });
+    const macro1 = new Macro({ library, pattern: new Pattern(/^A$/), converters: [] });
+    expect(macro1.isFromLibrary('A')).toBe(true);
+    expect(macro1.isFromLibrary('B')).toBe(false);
+  });
+
+  it('should advise when it is from the named library', () => {
+    const library = new Library({ name: 'A' });
+    const macro1 = new Macro({ library, pattern: new Pattern(/^A$/), converters: [] });
+    expect(macro1.isFromLibrary('A')).toBe(true);
+    expect(macro1.isFromLibrary('B')).toBe(false);
+  });
+
   it('should run step functions', async () => {
     const library = new Library();
     const spy = new Spy();
@@ -58,7 +72,16 @@ describe('Macro', () => {
     const spy = new Spy();
     const macro = new Macro({ library, pattern: new Pattern(/.*/), converters: [], fn: spy.tap() });
     await macro.run(state, 'Some Text');
-    expect(spy.invocations[0][0]).toEqual({ a: 1 });
+    expect(spy.invocations[0][0]).toBe(state);
+  });
+
+  it('should decorate state with current library', async () => {
+    const state = { a: 1 };
+    const library = new Library({ name: 'A' });
+    const spy = new Spy();
+    const macro = new Macro({ library, pattern: new Pattern(/.*/), converters: [], fn: spy.tap() });
+    await macro.run(state, 'Some Text');
+    expect(state.currentLibrary).toBe('A');
   });
 
   it('should allow state changes', async () => {

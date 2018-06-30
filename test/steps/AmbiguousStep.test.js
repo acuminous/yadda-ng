@@ -5,19 +5,24 @@ const { AmbiguousStep } = Steps;
 
 describe('AmbiguousStep', () => {
 
-  it('should pretend to run step', () => {
-    expect(new AmbiguousStep({ statement: 'Given A', contenders: [] }).pretend()).toBe('ambiguous');
-  });
-
   it('should run step', async () => {
     const library = new Library();
     const macro = new Macro({ library, pattern: new Pattern(/.*/), fn: () => {} });
-    expect(() => new AmbiguousStep({ statement: 'Given A', contenders: [ macro ] }).run())
-      .toThrow('Ambiguous Step: [Given A] is equally matched by macro with pattern [/.*/] defined in library [Library]');
+    const step = new AmbiguousStep({ statement: 'Given A', contenders: [ macro ] });
+    const outcome = await step.run({});
+    expect(outcome.status).toBe('ambiguous');
+    expect(outcome.contenders).toEqual([ macro ]);
   });
 
   it('should not be pending', () => {
     expect(new AmbiguousStep({ statement: 'Given A', contenders: [] }).isPending()).toBe(false);
+  });
+
+  it('should delete current library from state', async () => {
+    const step = new AmbiguousStep({ statement: 'Given A', contenders: [] });
+    const state = { currentLibrary: 'A' };
+    await step.run(state);
+    expect(state.currentLibrary).toBe(undefined);
   });
 
 });

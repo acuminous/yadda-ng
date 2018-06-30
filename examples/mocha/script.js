@@ -10,15 +10,15 @@ module.exports = new Script({ source: [
         },
         title: 'Scenario 1',
         steps: [
-          { text: 'Step 1' },
-          { text: 'Step 2' },
+          { statement: 'Step 1' },
+          { statement: 'Step 2' },
         ]
       },
       {
         title: 'Scenario 2',
         steps: [
-          { text: 'Step 1' },
-          { text: 'Step 2' },
+          { statement: 'Step 1' },
+          { statement: 'Step 2' },
         ]
       }
     ]
