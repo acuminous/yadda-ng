@@ -16,6 +16,7 @@ const Converters = require('./lib/converters');
 const Macro = require('./lib/Macro');
 const Languages = require('./lib/languages');
 const Competition = require('./lib/Competition');
+const Functions = require('./lib/functions');
 
 module.exports = {
   Script,
@@ -36,4 +37,5 @@ module.exports = {
   Macro,
   Languages,
   Competition,
+  Functions,
 };
