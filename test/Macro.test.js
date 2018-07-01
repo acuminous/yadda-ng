@@ -90,7 +90,7 @@ describe('Macro', () => {
     const signature = new Signature({ library, pattern: new Pattern(/.*/) });
     const spy = new Spy();
     const macro = new Macro({ library, signature, converters: [], fn: spy.tap() });
-    await macro.run(state, 'Some Text');
+    await macro.setCurrentLibrary(state);
     expect(state.currentLibrary).toBe('A');
   });
 
