@@ -11,7 +11,7 @@ const Dictionary = require('./lib/Dictionary');
 const Term = require('./lib/Term');
 const Pattern = require('./lib/Pattern');
 const Signature = require('./lib/Signature');
-const ArityValidator = require('./lib/ArityValidator');
+const Arities = require('./lib/arities');
 const Converters = require('./lib/converters');
 const Macro = require('./lib/Macro');
 const Languages = require('./lib/languages');
@@ -33,7 +33,7 @@ module.exports = {
   Pattern,
   Converters,
   Signature,
-  ArityValidator,
+  Arities,
   Macro,
   Languages,
   Competition,
