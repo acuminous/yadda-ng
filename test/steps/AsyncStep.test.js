@@ -6,8 +6,8 @@ const { AsyncStep } = Steps;
 describe('AsyncStep', () => {
   const library = new Library();
   const signature = new Signature({ library, pattern: new Pattern(/.*/) });
-  const macro = new Macro({ library, signature, fn: () => {} });
-  const pendingMacro = new Macro({ library, signature });
+  const macro = new Macro({ signature, fn: () => {} });
+  const pendingMacro = new Macro({ signature });
 
   it('should run step', async () => {
     await expect(new AsyncStep({ statement: 'Given A', macro }).run({})).resolves.toEqual({ status: 'run' });

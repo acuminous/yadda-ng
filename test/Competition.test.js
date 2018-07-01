@@ -14,7 +14,7 @@ describe('Competition', () => {
     const competition = new Competition();
     const library = new Library();
     const signature = new Signature({ library, pattern: new Pattern(/A/) });
-    const macro = new Macro({ library, signature });
+    const macro = new Macro({ signature });
 
     const ranked = competition.rank({}, [ macro ]);
     expect(ranked.winner).toBe(macro);
@@ -30,9 +30,9 @@ describe('Competition', () => {
     const signature2 = new Signature({ library: library1, pattern: new Pattern(/B/) });
     const signature3 = new Signature({ library: library2, pattern: new Pattern(/C/) });
 
-    const macro1 = new Macro({ library: library1, signature: signature1  });
-    const macro2 = new Macro({ library: library1, signature: signature2  });
-    const macro3 = new Macro({ library: library2, signature: signature3  });
+    const macro1 = new Macro({ signature: signature1  });
+    const macro2 = new Macro({ signature: signature2  });
+    const macro3 = new Macro({ signature: signature3  });
 
     const ranked = competition.rank({}, [ macro1, macro2, macro3 ]);
     expect(ranked.winner).toBe(undefined);
@@ -49,9 +49,9 @@ describe('Competition', () => {
     const signature2 = new Signature({ library: library1, pattern: new Pattern(/B/) });
     const signature3 = new Signature({ library: library2, pattern: new Pattern(/C/) });
 
-    const macro1 = new Macro({ library: library1, signature: signature1  });
-    const macro2 = new Macro({ library: library1, signature: signature2  });
-    const macro3 = new Macro({ library: library2, signature: signature3  });
+    const macro1 = new Macro({ signature: signature1  });
+    const macro2 = new Macro({ signature: signature2  });
+    const macro3 = new Macro({ signature: signature3  });
 
     const ranked = competition.rank({ currentLibrary: 'B' }, [ macro1, macro2, macro3 ]);
     expect(ranked.winner).toBe(macro3);

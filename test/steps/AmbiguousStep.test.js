@@ -8,7 +8,7 @@ describe('AmbiguousStep', () => {
   it('should run step', async () => {
     const library = new Library();
     const signature = new Signature({ library, pattern: new Pattern(/.*/) });
-    const macro = new Macro({ library, signature, fn: () => {} });
+    const macro = new Macro({ signature, fn: () => {} });
     const step = new AmbiguousStep({ statement: 'Given A', contenders: [ macro ] });
     const outcome = await step.run({});
     expect(outcome.status).toBe('ambiguous');
