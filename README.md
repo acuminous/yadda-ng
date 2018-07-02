@@ -1,5 +1,6 @@
 # yadda-ng
 
+1. Move getConverters from signature to library, support variable converters
 1. State history
 1. Injectable / Configurable competition
 1. Default to no language
