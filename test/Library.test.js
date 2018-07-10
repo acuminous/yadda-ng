@@ -15,8 +15,8 @@ describe('Library', () => {
     expect(new CustomLibrary().name).toMatch(/CustomLibrary-\w+/);
   });
 
-  it('should generalise a statement in English by default', () => {
-    expect(new Library().generalise('Given A')).toBe('A');
+  it('should generalise a statement in no language by default', () => {
+    expect(new Library().generalise('Given A')).toBe('Given A');
   });
 
   it('should generalise a statement using the specified language', () => {

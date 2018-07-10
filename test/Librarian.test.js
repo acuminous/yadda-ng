@@ -47,7 +47,7 @@ describe('Librarian', () => {
 
   it('should suggest undefined steps in the default language', () => {
     const librarian = new Librarian({ libraries: [] });
-    expect(librarian.suggest('Given some step')).toBe('.define(\'some step\', (state) => { // your code here })');
+    expect(librarian.suggest('Given some step')).toBe('.define(\'Given some step\', (state) => { // your code here })');
   });
 
   it('should suggest undefined steps in the specified language', () => {
