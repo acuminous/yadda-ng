@@ -8,7 +8,7 @@ describe('SpecificationParser', () => {
     const specificationBuilder = new SpecificationBuilder();
     const stateMachine = new StateMachine({ specificationBuilder });
     const parser = new SpecificationParser({ handler: stateMachine });
-    const specification = parser.parse([
+    parser.parse([
       '@Skip',
       'Feature: Some feature',
       '',
@@ -23,6 +23,7 @@ describe('SpecificationParser', () => {
 
     ].join('\n'));
 
+    const specification = specificationBuilder.export();
     expect(specification.annotations[0].name).toBe('Skip');
     expect(specification.annotations[0].value).toBe(true);
     expect(specification.title).toBe('Some feature');
