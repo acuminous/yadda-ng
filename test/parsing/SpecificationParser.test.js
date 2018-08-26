@@ -1,258 +1,267 @@
 const expect = require('expect');
 const { Parsing } = require('../..');
-const { SpecificationParser } =  Parsing;
+const { SpecificationParser, SpecificationBuilder, StateMachine } =  Parsing;
 
-describe('Specification Parser', () => {
+describe('SpecificationParser', () => {
+
+  it('Parses specifications', () => {
+    const specificationBuilder = new SpecificationBuilder();
+    const stateMachine = new StateMachine({ specificationBuilder });
+    const parser = new SpecificationParser({ handler: stateMachine });
+    const specification = parser.parse([
+      '@Skip',
+      'Feature: Some feature',
+      '',
+      '@Browser = Firefox',
+      'Scenario: First scenario',
+      'First step',
+      'Second step',
+      '',
+      'Scenario: Second scenario',
+      'Third step',
+      'Fourth step',
+
+    ].join('\n'));
+
+    expect(specification.annotations[0].name).toBe('Skip');
+    expect(specification.annotations[0].value).toBe(true);
+    expect(specification.title).toBe('Some feature');
+    expect(specification.scenarios[0].annotations[0].name).toBe('Browser');
+    expect(specification.scenarios[0].annotations[0].value).toBe('Firefox');
+    expect(specification.scenarios[0].title).toBe('First scenario');
+    expect(specification.scenarios[0].steps[0].text).toBe('First step');
+    expect(specification.scenarios[0].steps[1].text).toBe('Second step');
+    expect(specification.scenarios[1].title).toBe('Second scenario');
+    expect(specification.scenarios[1].steps[0].text).toBe('Third step');
+    expect(specification.scenarios[1].steps[1].text).toBe('Fourth step');
+  });
 
   describe('Annotations', () => {
 
     it('should emit simple annotation events', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('annotation', (event) => {
+      const handler = initHandler((event) => {
+        expect(event.name).toBe('annotation');
         expect(event.source.line).toBe('@skip');
         expect(event.source.number).toBe(1);
-        expect(event.name).toBe('skip');
-        expect(event.value).toBe(true);
+        expect(event.data.name).toBe('skip');
+        expect(event.data.value).toBe(true);
       });
 
-      parser.parse('@skip');
+      new SpecificationParser({ handler }).parse('@skip');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
 
     it('should trim simple annotation names', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('annotation', (event) => {
-        expect(event.name).toBe('skip');
+      const handler = initHandler((event) => {
+        expect(event.source.line).toBe('@skip   ');
+        expect(event.data.name).toBe('skip');
       });
 
-      parser.parse('@skip   ');
+      new SpecificationParser({ handler }).parse('@skip   ');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
 
     it('should emit name value annotation events', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('annotation', (event) => {
+      const handler = initHandler((event) => {
+        expect(event.name).toBe('annotation');
         expect(event.source.line).toBe('@browser=firefox');
         expect(event.source.number).toBe(1);
-        expect(event.name).toBe('browser');
-        expect(event.value).toBe('firefox');
+        expect(event.data.name).toBe('browser');
+        expect(event.data.value).toBe('firefox');
       });
 
-      parser.parse('@browser=firefox');
+      new SpecificationParser({ handler }).parse('@browser=firefox');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
 
     it('should trim name value annotations', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('annotation', (event) => {
-        expect(event.name).toBe('browser');
-        expect(event.value).toBe('firefox');
+      const handler = initHandler((event) => {
+        expect(event.source.line).toBe(' @browser = firefox ');
+        expect(event.data.name).toBe('browser');
+        expect(event.data.value).toBe('firefox');
       });
 
-      parser.parse('@browser = firefox ');
+      new SpecificationParser({ handler }).parse(' @browser = firefox ');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
   });
 
   describe('Features', () => {
 
     it('should emit feature events', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('feature', (event) => {
+      const handler = initHandler((event) => {
+        expect(event.name).toBe('feature');
         expect(event.source.line).toBe('Feature: Some feature');
         expect(event.source.number).toBe(1);
-        expect(event.title).toBe('Some feature');
+        expect(event.data.title).toBe('Some feature');
       });
 
-      parser.parse('Feature: Some feature');
+      new SpecificationParser({ handler }).parse('Feature: Some feature');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
 
     it('should trim feature titles', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('feature', (event) => {
-        expect(event.title).toBe('Some feature');
+      const handler = initHandler((event) => {
+        expect(event.source.line).toBe('Feature:   Some feature   ');
+        expect(event.data.title).toBe('Some feature');
       });
 
-      parser.parse('Feature:   Some feature   ');
+      new SpecificationParser({ handler }).parse('Feature:   Some feature   ');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
   });
 
   describe('Scenarios', () => {
 
     it('should emit scenario events', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('scenario', (event) => {
+      const handler = initHandler((event) => {
+        expect(event.name).toBe('scenario');
         expect(event.source.line).toBe('Scenario: Some scenario');
         expect(event.source.number).toBe(1);
-        expect(event.title).toBe('Some scenario');
+        expect(event.data.title).toBe('Some scenario');
       });
 
-      parser.parse('Scenario: Some scenario');
+      new SpecificationParser({ handler }).parse('Scenario: Some scenario');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
 
     it('should trim scenario titles', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('scenario', (event) => {
-        expect(event.title).toBe('Some scenario');
+      const handler = initHandler((event) => {
+        expect(event.source.line).toBe('Scenario:   Some scenario   ');
+        expect(event.data.title).toBe('Some scenario');
       });
 
-      parser.parse('Scenario:   Some scenario   ');
+      new SpecificationParser({ handler }).parse('Scenario:   Some scenario   ');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
   });
 
   describe('Blank lines', () => {
 
     it('should emit blank line events (1)', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('blank_line', (event) => {
+      const handler = initHandler((event) => {
+        expect(event.name).toBe('blank_line');
         expect(event.source.line).toBe('');
         expect(event.source.number).toBe(1);
       });
 
-      parser.parse('');
+      new SpecificationParser({ handler }).parse('');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
 
     it('should emit blank line events (2)', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('blank_line', (event) => {
+      const handler = initHandler((event) => {
+        expect(event.name).toBe('blank_line');
         expect(event.source.line).toBe('  ');
         expect(event.source.number).toBe(1);
       });
 
-      parser.parse('  ');
+      new SpecificationParser({ handler }).parse('  ');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
   });
 
   describe('Text', () => {
 
     it('should emit text events', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('scenario', (event) => {
+      const handler = initHandler((event) => {
+        expect(event.name).toBe('text');
         expect(event.source.line).toBe('Some text');
         expect(event.source.number).toBe(1);
-        expect(event.text).toBe('Some text');
+        expect(event.data.text).toBe('Some text');
       });
 
-      parser.parse('Some text');
+      new SpecificationParser({ handler }).parse('Some text');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
 
     it('should trim text', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('scenario', (event) => {
-        expect(event.source.line).toBe('   Some text  ');
-        expect(event.source.number).toBe(1);
-        expect(event.text).toBe('Some text');
+      const handler = initHandler((event) => {
+        expect(event.data.text).toBe('Some text');
       });
 
-      parser.parse('   Some text  ');
+      new SpecificationParser({ handler }).parse('   Some text  ');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
   });
 
   describe('Single line comments', () => {
 
     it('should emit single line comment events', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('single_line_comment', (event) => {
+      const handler = initHandler((event) => {
+        expect(event.name).toBe('single_line_comment');
         expect(event.source.line).toBe('#Some comment');
         expect(event.source.number).toBe(1);
-        expect(event.comment).toBe('Some comment');
+        expect(event.data.text).toBe('Some comment');
       });
 
-      parser.parse('#Some comment');
+      new SpecificationParser({ handler }).parse('#Some comment');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
 
     it('should trim single line comments', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('single_line_comment', (event) => {
+      const handler = initHandler((event) => {
+        expect(event.name).toBe('single_line_comment');
         expect(event.source.line).toBe('  #   Some comment   ');
-        expect(event.source.number).toBe(1);
-        expect(event.comment).toBe('Some comment');
+        expect(event.data.text).toBe('Some comment');
       });
 
-      parser.parse('  #   Some comment   ');
+      new SpecificationParser({ handler }).parse('  #   Some comment   ');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
   });
 
   describe('Multi line comments', () => {
 
     it('should emit multi line comment events', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('multi_line_comment', (event) => {
+      const handler = initHandler((event) => {
+        expect(event.name).toBe('multi_line_comment');
         expect(event.source.line).toBe('###Some comment');
-        expect(event.source.number).toBe(1);
-        expect(event.comment).toBe('Some comment');
+        expect(event.data.text).toBe('Some comment');
       });
 
-      parser.parse('###Some comment');
+      new SpecificationParser({ handler }).parse('###Some comment');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
 
     it('should trim multi line comments', () => {
-      const { parser, invocations } = initParser();
-
-      parser.on('multi_line_comment', (event) => {
+      const handler = initHandler((event) => {
         expect(event.source.line).toBe('  ####   Some comment   ');
-        expect(event.source.number).toBe(1);
-        expect(event.comment).toBe('Some comment');
+        expect(event.data.text).toBe('Some comment');
       });
 
-      parser.parse('  ####   Some comment   ');
+      new SpecificationParser({ handler }).parse('  ####   Some comment   ');
 
-      expect(invocations.count).toBe(1);
+      expect(handler.invocations.count).toBe(1);
     });
   });
 
-  function initParser() {
+  function initHandler(assertions) {
     const invocations = new Invocations();
-    const parser = new SpecificationParser()
-      .on('annotation', () => invocations.register())
-      .on('feature', () => invocations.register())
-      .on('scenario', () => invocations.register())
-      .on('blank_line', () => invocations.register())
-      .on('multi_line_comment', () => invocations.register())
-      .on('single_line_comment', () => invocations.register())
-      .on('text', () => invocations.register());
-    return { invocations, parser };
+    return {
+      handle: (event) => {
+        if (event.name === 'end') return;
+        invocations.register();
+        assertions(event);
+      },
+      invocations,
+      export: () => null,
+    };
   }
 
   class Invocations {
