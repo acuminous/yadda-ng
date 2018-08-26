@@ -1,5 +1,5 @@
 const expect = require('expect');
-const { Parsing } = require('../..');
+const { Parsing } = require('../../..');
 const { SpecificationBuilder, States } =  Parsing;
 const { InitialState, CreateCommentState } =  States;
 
@@ -17,6 +17,15 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
+      state = state.handle(event);
+      expect(state.name).toBe('create_comment');
+    });
+  });
+
+  describe('Background Events', () => {
+
+    it('should not cause transition', () => {
+      const event = makeEvent('background');
       state = state.handle(event);
       expect(state.name).toBe('create_comment');
     });

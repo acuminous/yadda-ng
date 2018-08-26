@@ -1,5 +1,5 @@
 const expect = require('expect');
-const { Parsing } = require('../..');
+const { Parsing } = require('../../..');
 const { SpecificationBuilder, States } =  Parsing;
 const { CreateScenarioState } =  States;
 
@@ -21,6 +21,14 @@ describe('Create Scenario State', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
       state = state.handle(event);
       expect(state.name).toBe('create_scenario');
+    });
+  });
+
+  describe('Background Events', () => {
+
+    it('should error', () => {
+      const event = makeEvent('background');
+      expect(() => state.handle(event)).toThrow('Unexpected event: background on line: 1, \'meh\'');
     });
   });
 

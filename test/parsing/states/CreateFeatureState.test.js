@@ -1,10 +1,9 @@
 const expect = require('expect');
-const { Parsing } = require('../..');
+const { Parsing } = require('../../..');
 const { SpecificationBuilder, States } =  Parsing;
 const { CreateFeatureState } =  States;
 
 describe('Create Feature State', () => {
-
   let specificationBuilder;
   let state;
 
@@ -20,6 +19,30 @@ describe('Create Feature State', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
       state = state.handle(event);
       expect(state.name).toBe('create_feature');
+    });
+  });
+
+  describe('Background Events', () => {
+
+    it('should transition to create_background on background event', () => {
+      const event = makeEvent('background', { title: 'Meh' });
+      state = state.handle(event);
+      expect(state.name).toBe('create_background');
+    });
+
+    it('should capture scenarios with annotations', () => {
+      state = state.handle(makeEvent('annotation', { name: 'one', value: '1' }));
+      state = state.handle(makeEvent('annotation', { name: 'two', value: '2' }));
+      state = state.handle(makeEvent('background', { title: 'First background' }));
+      state = state.handle(makeEvent('scenario', { title: 'First scenario' }));
+
+      const exported = specificationBuilder.export();
+      expect(exported.scenarios.length).toBe(1);
+      expect(exported.scenarios[0].annotations.length).toBe(2);
+      expect(exported.scenarios[0].annotations[0].name).toBe('one');
+      expect(exported.scenarios[0].annotations[0].value).toBe('1');
+      expect(exported.scenarios[0].annotations[1].name).toBe('two');
+      expect(exported.scenarios[0].annotations[1].value).toBe('2');
     });
   });
 

@@ -145,6 +145,33 @@ describe('SpecificationParser', () => {
     });
   });
 
+  describe('Backgrounds', () => {
+
+    it('should emit background events', () => {
+      const handler = initHandler((event) => {
+        expect(event.name).toBe('background');
+        expect(event.source.line).toBe('Background: Some background');
+        expect(event.source.number).toBe(1);
+        expect(event.data.title).toBe('Some background');
+      });
+
+      new SpecificationParser({ handler }).parse('Background: Some background');
+
+      expect(handler.invocations.count).toBe(1);
+    });
+
+    it('should trim background titles', () => {
+      const handler = initHandler((event) => {
+        expect(event.source.line).toBe('Background:   Some background   ');
+        expect(event.data.title).toBe('Some background');
+      });
+
+      new SpecificationParser({ handler }).parse('Background:   Some background   ');
+
+      expect(handler.invocations.count).toBe(1);
+    });
+  });
+
   describe('Blank lines', () => {
 
     it('should emit blank line events (1)', () => {
