@@ -1,3 +1,4 @@
+const Parsing = require('./lib/parsing');
 const Script = require('./lib/Script');
 const Playbooks = require('./lib/playbooks');
 const Annotation = require('./lib/Annotation');
@@ -19,6 +20,7 @@ const Competition = require('./lib/Competition');
 const Functions = require('./lib/functions');
 
 module.exports = {
+  Parsing,
   Script,
   Playbooks,
   Annotations,
