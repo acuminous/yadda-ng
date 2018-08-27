@@ -1,16 +1,16 @@
 const expect = require('expect');
 const { Parsing } = require('../../..');
-const { SpecificationBuilder, States } =  Parsing;
+const { Specification, States } =  Parsing;
 const { CreateFeatureState } =  States;
 
 describe('Create Feature State', () => {
-  let specificationBuilder;
+  let specification;
   let state;
 
   beforeEach(() => {
-    specificationBuilder = new SpecificationBuilder()
+    specification = new Specification()
       .createFeature({ annotations: [], title: 'Meh' });
-    state = new CreateFeatureState({ specificationBuilder });
+    state = new CreateFeatureState({ specification });
   });
 
   describe('Annotation Events', () => {
@@ -36,7 +36,7 @@ describe('Create Feature State', () => {
       state = state.handle(makeEvent('background', { title: 'First background' }));
       state = state.handle(makeEvent('scenario', { title: 'First scenario' }));
 
-      const exported = specificationBuilder.export();
+      const exported = specification.export();
       expect(exported.scenarios.length).toBe(1);
       expect(exported.scenarios[0].annotations.length).toBe(2);
       expect(exported.scenarios[0].annotations[0].name).toBe('one');
@@ -95,7 +95,7 @@ describe('Create Feature State', () => {
       state = state.handle(makeEvent('text', { text: 'meh' }));
       state = state.handle(makeEvent('scenario', { title: 'Second scenario' }));
 
-      const exported = specificationBuilder.export();
+      const exported = specification.export();
       expect(exported.scenarios.length).toBe(2);
       expect(exported.scenarios[0].title).toBe('First scenario');
       expect(exported.scenarios[1].title).toBe('Second scenario');
@@ -106,7 +106,7 @@ describe('Create Feature State', () => {
       state = state.handle(makeEvent('annotation', { name: 'two', value: '2' }));
       state = state.handle(makeEvent('scenario', { title: 'First scenario' }));
 
-      const exported = specificationBuilder.export();
+      const exported = specification.export();
       expect(exported.scenarios.length).toBe(1);
       expect(exported.scenarios[0].annotations.length).toBe(2);
       expect(exported.scenarios[0].annotations[0].name).toBe('one');

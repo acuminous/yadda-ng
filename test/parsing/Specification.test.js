@@ -1,16 +1,14 @@
 const expect = require('expect');
 const { Languages } = require('../..');
 const { Parsing } = require('../..');
-const { SpecificationParser, SpecificationBuilder, StateMachine } =  Parsing;
+const { Specification } =  Parsing;
 
-describe('SpecificationParser', () => {
+describe('Specification', () => {
 
   describe('Parsing', () => {
     it('Parses specifications', () => {
-      const specificationBuilder = new SpecificationBuilder();
-      const stateMachine = new StateMachine({ specificationBuilder });
-      const parser = new SpecificationParser({ handler: stateMachine });
-      parser.parse([
+      const parser = new Specification();
+      const specification = parser.parse([
         '@Skip',
         'Feature: Some feature',
         '',
@@ -26,9 +24,8 @@ describe('SpecificationParser', () => {
         'Third step',
         'Fourth step',
 
-      ].join('\n'));
+      ].join('\n')).export();
 
-      const specification = specificationBuilder.export();
       expect(specification.annotations[0].name).toBe('Skip');
       expect(specification.annotations[0].value).toBe(true);
       expect(specification.title).toBe('Some feature');
@@ -45,10 +42,8 @@ describe('SpecificationParser', () => {
     });
 
     it('Parses specifications in the specified languages', () => {
-      const specificationBuilder = new SpecificationBuilder();
-      const stateMachine = new StateMachine({ specificationBuilder });
-      const parser = new SpecificationParser({ handler: stateMachine, language: new Languages.Pirate() });
-      parser.parse([
+      const parser = new Specification({ language: new Languages.Pirate() });
+      const specification = parser.parse([
         '@Skip',
         'Tale: Some feature',
         '',
@@ -63,9 +58,8 @@ describe('SpecificationParser', () => {
         'Sortie: Second scenario',
         'Thence third step',
         'And fourth step',
-      ].join('\n'));
+      ].join('\n')).export();
 
-      const specification = specificationBuilder.export();
       expect(specification.annotations[0].name).toBe('Skip');
       expect(specification.annotations[0].value).toBe(true);
       expect(specification.title).toBe('Some feature');
@@ -93,7 +87,7 @@ describe('SpecificationParser', () => {
         expect(event.data.value).toBe(true);
       });
 
-      new SpecificationParser({ handler }).parse('@skip');
+      new Specification({ state: handler }).parse('@skip');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -104,7 +98,7 @@ describe('SpecificationParser', () => {
         expect(event.data.name).toBe('skip');
       });
 
-      new SpecificationParser({ handler }).parse('@skip   ');
+      new Specification({ state: handler }).parse('@skip   ');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -118,7 +112,7 @@ describe('SpecificationParser', () => {
         expect(event.data.value).toBe('firefox');
       });
 
-      new SpecificationParser({ handler }).parse('@browser=firefox');
+      new Specification({ state: handler }).parse('@browser=firefox');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -130,7 +124,7 @@ describe('SpecificationParser', () => {
         expect(event.data.value).toBe('firefox');
       });
 
-      new SpecificationParser({ handler }).parse(' @browser = firefox ');
+      new Specification({ state: handler }).parse(' @browser = firefox ');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -146,7 +140,7 @@ describe('SpecificationParser', () => {
         expect(event.data.title).toBe('Some feature');
       });
 
-      new SpecificationParser({ handler }).parse('Feature: Some feature');
+      new Specification({ state: handler }).parse('Feature: Some feature');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -157,7 +151,7 @@ describe('SpecificationParser', () => {
         expect(event.data.title).toBe('Some feature');
       });
 
-      new SpecificationParser({ handler }).parse('Feature:   Some feature   ');
+      new Specification({ state: handler }).parse('Feature:   Some feature   ');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -169,7 +163,7 @@ describe('SpecificationParser', () => {
         expect(event.data.title).toBe('Some feature');
       });
 
-      new SpecificationParser({ handler }).parse('Feature:   Some feature   ');
+      new Specification({ state: handler }).parse('Feature:   Some feature   ');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -185,7 +179,7 @@ describe('SpecificationParser', () => {
         expect(event.data.title).toBe('Some scenario');
       });
 
-      new SpecificationParser({ handler }).parse('Scenario: Some scenario');
+      new Specification({ state: handler }).parse('Scenario: Some scenario');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -196,7 +190,7 @@ describe('SpecificationParser', () => {
         expect(event.data.title).toBe('Some scenario');
       });
 
-      new SpecificationParser({ handler }).parse('Scenario:   Some scenario   ');
+      new Specification({ state: handler }).parse('Scenario:   Some scenario   ');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -212,7 +206,7 @@ describe('SpecificationParser', () => {
         expect(event.data.title).toBe('Some background');
       });
 
-      new SpecificationParser({ handler }).parse('Background: Some background');
+      new Specification({ state: handler }).parse('Background: Some background');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -223,7 +217,7 @@ describe('SpecificationParser', () => {
         expect(event.data.title).toBe('Some background');
       });
 
-      new SpecificationParser({ handler }).parse('Background:   Some background   ');
+      new Specification({ state: handler }).parse('Background:   Some background   ');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -238,7 +232,7 @@ describe('SpecificationParser', () => {
         expect(event.source.number).toBe(1);
       });
 
-      new SpecificationParser({ handler }).parse('');
+      new Specification({ state: handler }).parse('');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -250,7 +244,7 @@ describe('SpecificationParser', () => {
         expect(event.source.number).toBe(1);
       });
 
-      new SpecificationParser({ handler }).parse('  ');
+      new Specification({ state: handler }).parse('  ');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -266,7 +260,7 @@ describe('SpecificationParser', () => {
         expect(event.data.text).toBe('Some text');
       });
 
-      new SpecificationParser({ handler }).parse('Some text');
+      new Specification({ state: handler }).parse('Some text');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -276,7 +270,7 @@ describe('SpecificationParser', () => {
         expect(event.data.text).toBe('Some text');
       });
 
-      new SpecificationParser({ handler }).parse('   Some text  ');
+      new Specification({ state: handler }).parse('   Some text  ');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -292,7 +286,7 @@ describe('SpecificationParser', () => {
         expect(event.data.text).toBe('Some comment');
       });
 
-      new SpecificationParser({ handler }).parse('#Some comment');
+      new Specification({ state: handler }).parse('#Some comment');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -304,7 +298,7 @@ describe('SpecificationParser', () => {
         expect(event.data.text).toBe('Some comment');
       });
 
-      new SpecificationParser({ handler }).parse('  #   Some comment   ');
+      new Specification({ state: handler }).parse('  #   Some comment   ');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -319,7 +313,7 @@ describe('SpecificationParser', () => {
         expect(event.data.text).toBe('Some comment');
       });
 
-      new SpecificationParser({ handler }).parse('###Some comment');
+      new Specification({ state: handler }).parse('###Some comment');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -330,7 +324,7 @@ describe('SpecificationParser', () => {
         expect(event.data.text).toBe('Some comment');
       });
 
-      new SpecificationParser({ handler }).parse('  ####   Some comment   ');
+      new Specification({ state: handler }).parse('  ####   Some comment   ');
 
       expect(handler.invocations.count).toBe(1);
     });
@@ -339,10 +333,11 @@ describe('SpecificationParser', () => {
   function initHandler(assertions) {
     const invocations = new Invocations();
     return {
-      handle: (event) => {
+      handle: function handle(event) {
         if (event.name === 'end') return;
         invocations.register();
         assertions(event);
+        return { handle: handle };
       },
       invocations,
       export: () => null,

@@ -1,16 +1,16 @@
 const expect = require('expect');
 const { Parsing } = require('../../..');
-const { SpecificationBuilder, States } = Parsing;
+const { Specification, States } = Parsing;
 const { InitialState } = States;
 
 describe('Initial State', () => {
 
-  let specificationBuilder;
+  let specification;
   let state;
 
   beforeEach(() => {
-    specificationBuilder = new SpecificationBuilder();
-    state = new InitialState({ specificationBuilder });
+    specification = new Specification();
+    state = new InitialState({ specification });
   });
 
   describe('Annotation Events', () => {
@@ -59,7 +59,7 @@ describe('Initial State', () => {
       const event = makeEvent('feature', { title: 'Some feature' });
       state = state.handle(event);
 
-      const exported = specificationBuilder.export();
+      const exported = specification.export();
       expect(exported.title).toBe('Some feature');
     });
 
@@ -68,7 +68,7 @@ describe('Initial State', () => {
       state = state.handle(makeEvent('annotation', { name: 'two', value: '2' }));
       state = state.handle(makeEvent('feature', { title: 'Meh' }));
 
-      const exported = specificationBuilder.export();
+      const exported = specification.export();
       expect(exported.annotations.length).toBe(2);
       expect(exported.annotations[0].name).toBe('one');
       expect(exported.annotations[0].value).toBe('1');

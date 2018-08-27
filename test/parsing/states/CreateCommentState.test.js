@@ -1,6 +1,6 @@
 const expect = require('expect');
 const { Parsing } = require('../../..');
-const { SpecificationBuilder, States } =  Parsing;
+const { Specification, States } =  Parsing;
 const { InitialState, CreateCommentState } =  States;
 
 describe('Create Comment State', () => {
@@ -8,8 +8,8 @@ describe('Create Comment State', () => {
   let state;
 
   beforeEach(() => {
-    const specificationBuilder = new SpecificationBuilder();
-    const previousState = new InitialState({ specificationBuilder });
+    const specification = new Specification();
+    const previousState = new InitialState({ specification });
     state = new CreateCommentState({ previousState });
   });
 

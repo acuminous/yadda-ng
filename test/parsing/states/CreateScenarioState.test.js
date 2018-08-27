@@ -1,18 +1,18 @@
 const expect = require('expect');
 const { Parsing } = require('../../..');
-const { SpecificationBuilder, States } =  Parsing;
+const { Specification, States } =  Parsing;
 const { CreateScenarioState } =  States;
 
 describe('Create Scenario State', () => {
 
-  let specificationBuilder;
+  let specification;
   let state;
 
   beforeEach(() => {
-    specificationBuilder = new SpecificationBuilder()
+    specification = new Specification()
       .createFeature({ annotations: [], title: 'Meh' })
       .createScenario({ annotations: [], title: 'Meh' });
-    state = new CreateScenarioState({ specificationBuilder });
+    state = new CreateScenarioState({ specification });
   });
 
   describe('Annotation Events', () => {
@@ -97,7 +97,7 @@ describe('Create Scenario State', () => {
       state = state.handle(makeEvent('text', { text: 'First step' }));
       state = state.handle(makeEvent('text', { text: 'Second step' }));
 
-      const exported = specificationBuilder.export();
+      const exported = specification.export();
       expect(exported.scenarios[0].steps.length).toBe(2);
       expect(exported.scenarios[0].steps[0].text).toBe('First step');
       expect(exported.scenarios[0].steps[1].text).toBe('Second step');
@@ -108,7 +108,7 @@ describe('Create Scenario State', () => {
       state = state.handle(makeEvent('annotation', { name: 'two', value: '2' }));
       state = state.handle(makeEvent('text', { text: 'First step' }));
 
-      const exported = specificationBuilder.export();
+      const exported = specification.export();
       expect(exported.scenarios[0].steps[0].annotations.length).toBe(2);
       expect(exported.scenarios[0].steps[0].annotations[0].name).toBe('one');
       expect(exported.scenarios[0].steps[0].annotations[0].value).toBe('1');
