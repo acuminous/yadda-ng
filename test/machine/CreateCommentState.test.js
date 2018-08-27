@@ -16,8 +16,8 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
-      state = state.handle(event);
-      expect(state.name).toBe('create_comment');
+      state = state.onAnnotation(event);
+      expect(state.name).toBe('CreateCommentState');
     });
   });
 
@@ -25,8 +25,8 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('background');
-      state = state.handle(event);
-      expect(state.name).toBe('create_comment');
+      state = state.onBackground(event);
+      expect(state.name).toBe('CreateCommentState');
     });
   });
 
@@ -34,8 +34,8 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('blank_line');
-      state = state.handle(event);
-      expect(state.name).toBe('create_comment');
+      state = state.onBlankLine(event);
+      expect(state.name).toBe('CreateCommentState');
     });
   });
 
@@ -43,7 +43,7 @@ describe('Create Comment State', () => {
 
     it('should error', () => {
       const event = { name: 'end' };
-      expect(() => state.handle(event)).toThrow('Premature end of specification');
+      expect(() => state.onEnd(event)).toThrow('Premature end of specification');
     });
   });
 
@@ -51,8 +51,8 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('feature');
-      state = state.handle(event);
-      expect(state.name).toBe('create_comment');
+      state = state.onFeature(event);
+      expect(state.name).toBe('CreateCommentState');
     });
   });
 
@@ -60,8 +60,8 @@ describe('Create Comment State', () => {
 
     it('should transition to previous state', () => {
       const event = makeEvent('multi_line_comment');
-      state = state.handle(event);
-      expect(state.name).toBe('initial');
+      state = state.onMultiLineComment(event);
+      expect(state.name).toBe('InitialState');
     });
   });
 
@@ -69,8 +69,8 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('scenario');
-      state = state.handle(event);
-      expect(state.name).toBe('create_comment');
+      state = state.onScenario(event);
+      expect(state.name).toBe('CreateCommentState');
     });
   });
 
@@ -78,8 +78,8 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('single_line_comment');
-      state = state.handle(event);
-      expect(state.name).toBe('create_comment');
+      state = state.onSingleLineComment(event);
+      expect(state.name).toBe('CreateCommentState');
     });
   });
 
@@ -87,8 +87,8 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('text');
-      state = state.handle(event);
-      expect(state.name).toBe('create_comment');
+      state = state.onText(event);
+      expect(state.name).toBe('CreateCommentState');
     });
   });
 });

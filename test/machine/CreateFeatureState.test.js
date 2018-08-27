@@ -16,24 +16,24 @@ describe('Create Feature State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
-      state = state.handle(event);
-      expect(state.name).toBe('create_feature');
+      state = state.onAnnotation(event);
+      expect(state.name).toBe('CreateFeatureState');
     });
   });
 
   describe('Background Events', () => {
 
-    it('should transition to create_background on background event', () => {
+    it('should transition to CreateBackgroundState on background event', () => {
       const event = makeEvent('background', { title: 'Meh' });
-      state = state.handle(event);
-      expect(state.name).toBe('create_background');
+      state = state.onBackground(event);
+      expect(state.name).toBe('CreateBackgroundState');
     });
 
     it('should capture scenarios with annotations', () => {
-      state = state.handle(makeEvent('annotation', { name: 'one', value: '1' }));
-      state = state.handle(makeEvent('annotation', { name: 'two', value: '2' }));
-      state = state.handle(makeEvent('background', { title: 'First background' }));
-      state = state.handle(makeEvent('scenario', { title: 'First scenario' }));
+      state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state = state.onBackground(makeEvent('background', { title: 'First background' }));
+      state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
 
       const exported = specification.export();
       expect(exported.scenarios.length).toBe(1);
@@ -49,8 +49,8 @@ describe('Create Feature State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('blank_line');
-      state = state.handle(event);
-      expect(state.name).toBe('create_feature');
+      state = state.onBlankLine(event);
+      expect(state.name).toBe('CreateFeatureState');
     });
   });
 
@@ -58,7 +58,7 @@ describe('Create Feature State', () => {
 
     it('should error', () => {
       const event = { name: 'end' };
-      expect(() => state.handle(event)).toThrow('Premature end of specification');
+      expect(() => state.onEnd(event)).toThrow('Premature end of specification');
     });
   });
 
@@ -66,33 +66,33 @@ describe('Create Feature State', () => {
 
     it('should error', () => {
       const event = makeEvent('feature', { title: 'Meh' });
-      expect(() => state.handle(event)).toThrow('Unexpected event: feature on line: 1, \'meh\'');
+      expect(() => state.onFeature(event)).toThrow('Unexpected event: feature on line: 1, \'meh\'');
     });
   });
 
   describe('Multi Line Comment Events', () => {
 
-    it('should transition to create_comment and back', () => {
-      state = state.handle(makeEvent('multi_line_comment'));
-      expect(state.name).toBe('create_comment');
+    it('should transition to CreateCommentState and back', () => {
+      state = state.onMultiLineComment(makeEvent('multi_line_comment'));
+      expect(state.name).toBe('CreateCommentState');
 
-      state = state.handle(makeEvent('multi_line_comment'));
-      expect(state.name).toBe('create_feature');
+      state = state.onMultiLineComment(makeEvent('multi_line_comment'));
+      expect(state.name).toBe('CreateFeatureState');
     });
   });
 
   describe('Scenario Events', () => {
 
-    it('should transition to create_scenario on scenario event', () => {
+    it('should transition to CreateScenarioState on scenario event', () => {
       const event = makeEvent('scenario', { title: 'Meh' });
-      state = state.handle(event);
-      expect(state.name).toBe('create_scenario');
+      state = state.onScenario(event);
+      expect(state.name).toBe('CreateScenarioState');
     });
 
     it('should capture scenarios', () => {
-      state = state.handle(makeEvent('scenario', { title: 'First scenario' }));
-      state = state.handle(makeEvent('text', { text: 'meh' }));
-      state = state.handle(makeEvent('scenario', { title: 'Second scenario' }));
+      state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
+      state = state.onText(makeEvent('text', { text: 'meh' }));
+      state = state.onScenario(makeEvent('scenario', { title: 'Second scenario' }));
 
       const exported = specification.export();
       expect(exported.scenarios.length).toBe(2);
@@ -101,9 +101,9 @@ describe('Create Feature State', () => {
     });
 
     it('should capture scenarios with annotations', () => {
-      state = state.handle(makeEvent('annotation', { name: 'one', value: '1' }));
-      state = state.handle(makeEvent('annotation', { name: 'two', value: '2' }));
-      state = state.handle(makeEvent('scenario', { title: 'First scenario' }));
+      state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
 
       const exported = specification.export();
       expect(exported.scenarios.length).toBe(1);
@@ -119,8 +119,8 @@ describe('Create Feature State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('single_line_comment', { comment: 'Meh' });
-      state = state.handle(event);
-      expect(state.name).toBe('create_feature');
+      state = state.onSingleLineComment(event);
+      expect(state.name).toBe('CreateFeatureState');
     });
   });
 
@@ -128,7 +128,7 @@ describe('Create Feature State', () => {
 
       it('should error', () => {
         const event = makeEvent('text');
-        expect(() => state.handle(event)).toThrow('Unexpected event: text on line: 1, \'meh\'');
+        expect(() => state.onText(event)).toThrow('Unexpected event: text on line: 1, \'meh\'');
       });
   });
 });

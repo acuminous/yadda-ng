@@ -16,8 +16,8 @@ describe('Initial State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
-      state = state.handle(event);
-      expect(state.name).toBe('initial');
+      state = state.onAnnotation(event);
+      expect(state.name).toBe('InitialState');
     });
   });
 
@@ -25,7 +25,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('background');
-      expect(() => state.handle(event)).toThrow('Unexpected event: background on line: 1, \'meh\'');
+      expect(() => state.onBackground(event)).toThrow('Unexpected event: background on line: 1, \'meh\'');
     });
   });
 
@@ -33,8 +33,8 @@ describe('Initial State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('blank_line');
-      state = state.handle(event);
-      expect(state.name).toBe('initial');
+      state = state.onBlankLine(event);
+      expect(state.name).toBe('InitialState');
     });
   });
 
@@ -42,30 +42,30 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = { name: 'end' };
-      expect(() => state.handle(event)).toThrow('Premature end of specification');
+      expect(() => state.onEnd(event)).toThrow('Premature end of specification');
     });
   });
 
   describe('Feature Events', () => {
 
-    it('should transition to create_feature', () => {
+    it('should transition to CreateFeatureState', () => {
       const event = makeEvent('feature', { title: 'Some feature' });
-      state = state.handle(event);
-      expect(state.name).toBe('create_feature');
+      state = state.onFeature(event);
+      expect(state.name).toBe('CreateFeatureState');
     });
 
     it('should capture feature title', () => {
       const event = makeEvent('feature', { title: 'Some feature' });
-      state = state.handle(event);
+      state = state.onFeature(event);
 
       const exported = specification.export();
       expect(exported.title).toBe('Some feature');
     });
 
     it('should capture feature annotations', () => {
-      state = state.handle(makeEvent('annotation', { name: 'one', value: '1' }));
-      state = state.handle(makeEvent('annotation', { name: 'two', value: '2' }));
-      state = state.handle(makeEvent('feature', { title: 'Meh' }));
+      state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state = state.onFeature(makeEvent('feature', { title: 'Meh' }));
 
       const exported = specification.export();
       expect(exported.annotations.length).toBe(2);
@@ -78,10 +78,10 @@ describe('Initial State', () => {
 
   describe('Multi Line Comment Events', () => {
 
-    it('should transition to create_comment', () => {
+    it('should transition to CreateCommentState', () => {
       const event = makeEvent('multi_line_comment', { comment: 'Meh' });
-      state = state.handle(event);
-      expect(state.name).toBe('create_comment');
+      state = state.onMultiLineComment(event);
+      expect(state.name).toBe('CreateCommentState');
     });
   });
 
@@ -89,7 +89,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('scenario');
-      expect(() => state.handle(event)).toThrow('Unexpected event: scenario on line: 1, \'meh\'');
+      expect(() => state.onScenario(event)).toThrow('Unexpected event: scenario on line: 1, \'meh\'');
     });
   });
 
@@ -97,8 +97,8 @@ describe('Initial State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('single_line_comment', { comment: 'meh' });
-      state = state.handle(event);
-      expect(state.name).toBe('initial');
+      state = state.onSingleLineComment(event);
+      expect(state.name).toBe('InitialState');
     });
   });
 
@@ -106,7 +106,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('text');
-      expect(() => state.handle(event)).toThrow('Unexpected event: text on line: 1, \'meh\'');
+      expect(() => state.onText(event)).toThrow('Unexpected event: text on line: 1, \'meh\'');
     });
   });
 });
