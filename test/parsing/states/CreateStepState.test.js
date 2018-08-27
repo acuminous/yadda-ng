@@ -12,7 +12,7 @@ describe('Create Step State', () => {
     specification = new Specification()
       .createFeature({ annotations: [], title: 'Meh' })
       .createScenario({ annotations: [], title: 'Meh' })
-      .createStep({ annotations: [], text: 'Meh' });
+      .createStep({ annotations: [], statement: 'Meh' });
     state = new CreateStepState({ specification });
   });
 
@@ -128,8 +128,8 @@ describe('Create Step State', () => {
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps.length).toBe(2);
-      expect(exported.scenarios[0].steps[0].text).toBe('Meh');
-      expect(exported.scenarios[0].steps[1].text).toBe('Bah');
+      expect(exported.scenarios[0].steps[0].statement).toBe('Meh');
+      expect(exported.scenarios[0].steps[1].statement).toBe('Bah');
     });
 
     it('should capture steps with annotations', () => {

@@ -127,9 +127,9 @@ describe('Create Background State', () => {
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps.length).toBe(3);
-      expect(exported.scenarios[0].steps[0].text).toBe('First step');
-      expect(exported.scenarios[0].steps[1].text).toBe('Second step');
-      expect(exported.scenarios[0].steps[2].text).toBe('Third step');
+      expect(exported.scenarios[0].steps[0].statement).toBe('First step');
+      expect(exported.scenarios[0].steps[1].statement).toBe('Second step');
+      expect(exported.scenarios[0].steps[2].statement).toBe('Third step');
     });
 
     it('should capture steps with annotations', () => {

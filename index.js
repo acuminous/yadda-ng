@@ -18,6 +18,7 @@ const Macro = require('./lib/Macro');
 const Languages = require('./lib/languages');
 const Competition = require('./lib/Competition');
 const Functions = require('./lib/functions');
+const Convenience = require('./lib/Convenience');
 
 module.exports = {
   Parsing,
@@ -40,4 +41,5 @@ module.exports = {
   Languages,
   Competition,
   Functions,
+  Convenience,
 };

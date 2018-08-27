@@ -7,15 +7,15 @@ describe('Specification', () => {
 
   describe('Parsing', () => {
     it('Parses specifications', () => {
-      const parser = new Specification();
-      const specification = parser.parse([
-        '@Skip',
+      const specification = new Specification();
+      const document = specification.parse([
+        '@skip',
         'Feature: Some feature',
         '',
         '   Background:',
         '   First background step',
         '',
-        '   @Browser = Firefox',
+        '   @browser = Firefox',
         '   Scenario: First scenario',
         '      First step',
         '      Second step',
@@ -26,31 +26,31 @@ describe('Specification', () => {
 
       ].join('\n')).export();
 
-      expect(specification.annotations[0].name).toBe('Skip');
-      expect(specification.annotations[0].value).toBe(true);
-      expect(specification.title).toBe('Some feature');
-      expect(specification.scenarios[0].annotations[0].name).toBe('Browser');
-      expect(specification.scenarios[0].annotations[0].value).toBe('Firefox');
-      expect(specification.scenarios[0].title).toBe('First scenario');
-      expect(specification.scenarios[0].steps[0].text).toBe('First background step');
-      expect(specification.scenarios[0].steps[1].text).toBe('First step');
-      expect(specification.scenarios[0].steps[2].text).toBe('Second step');
-      expect(specification.scenarios[1].title).toBe('Second scenario');
-      expect(specification.scenarios[1].steps[0].text).toBe('First background step');
-      expect(specification.scenarios[1].steps[1].text).toBe('Third step');
-      expect(specification.scenarios[1].steps[2].text).toBe('Fourth step');
+      expect(document.annotations[0].name).toBe('skip');
+      expect(document.annotations[0].value).toBe(true);
+      expect(document.title).toBe('Some feature');
+      expect(document.scenarios[0].annotations[0].name).toBe('browser');
+      expect(document.scenarios[0].annotations[0].value).toBe('Firefox');
+      expect(document.scenarios[0].title).toBe('First scenario');
+      expect(document.scenarios[0].steps[0].statement).toBe('First background step');
+      expect(document.scenarios[0].steps[1].statement).toBe('First step');
+      expect(document.scenarios[0].steps[2].statement).toBe('Second step');
+      expect(document.scenarios[1].title).toBe('Second scenario');
+      expect(document.scenarios[1].steps[0].statement).toBe('First background step');
+      expect(document.scenarios[1].steps[1].statement).toBe('Third step');
+      expect(document.scenarios[1].steps[2].statement).toBe('Fourth step');
     });
 
     it('Parses specifications in the specified languages', () => {
-      const parser = new Specification({ language: new Languages.Pirate() });
-      const specification = parser.parse([
-        '@Skip',
+      const specification = new Specification({ language: new Languages.Pirate() });
+      const document = specification.parse([
+        '@skip',
         'Tale: Some feature',
         '',
         '   Aftground:',
         '   Giveth first background step',
         '',
-        '   @Browser = Firefox',
+        '   @browser = Firefox',
         '   Adventure: First scenario',
         '      Giveth first step',
         '      Whence second step',
@@ -60,19 +60,19 @@ describe('Specification', () => {
         '      And fourth step',
       ].join('\n')).export();
 
-      expect(specification.annotations[0].name).toBe('Skip');
-      expect(specification.annotations[0].value).toBe(true);
-      expect(specification.title).toBe('Some feature');
-      expect(specification.scenarios[0].annotations[0].name).toBe('Browser');
-      expect(specification.scenarios[0].annotations[0].value).toBe('Firefox');
-      expect(specification.scenarios[0].title).toBe('First scenario');
-      expect(specification.scenarios[0].steps[0].text).toBe('Giveth first background step');
-      expect(specification.scenarios[0].steps[1].text).toBe('Giveth first step');
-      expect(specification.scenarios[0].steps[2].text).toBe('Whence second step');
-      expect(specification.scenarios[1].title).toBe('Second scenario');
-      expect(specification.scenarios[1].steps[0].text).toBe('Giveth first background step');
-      expect(specification.scenarios[1].steps[1].text).toBe('Thence third step');
-      expect(specification.scenarios[1].steps[2].text).toBe('And fourth step');
+      expect(document.annotations[0].name).toBe('skip');
+      expect(document.annotations[0].value).toBe(true);
+      expect(document.title).toBe('Some feature');
+      expect(document.scenarios[0].annotations[0].name).toBe('browser');
+      expect(document.scenarios[0].annotations[0].value).toBe('Firefox');
+      expect(document.scenarios[0].title).toBe('First scenario');
+      expect(document.scenarios[0].steps[0].statement).toBe('Giveth first background step');
+      expect(document.scenarios[0].steps[1].statement).toBe('Giveth first step');
+      expect(document.scenarios[0].steps[2].statement).toBe('Whence second step');
+      expect(document.scenarios[1].title).toBe('Second scenario');
+      expect(document.scenarios[1].steps[0].statement).toBe('Giveth first background step');
+      expect(document.scenarios[1].steps[1].statement).toBe('Thence third step');
+      expect(document.scenarios[1].steps[2].statement).toBe('And fourth step');
     });
   });
 
