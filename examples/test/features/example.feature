@@ -27,6 +27,6 @@ Feature: Examples
     Then there are 99 green bottles standing on the wall
 
   Scenario: A step is missing
-    Given 100 green bottles are standing on the wall
-    When 1 green bottle accidentally falls
+    Given 100 green kegs are standing on the wall
+    When 1 green keg accidentally falls
     Then there are 99 green kegs standing on the wall
