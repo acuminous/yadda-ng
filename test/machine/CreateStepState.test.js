@@ -1,7 +1,6 @@
 const expect = require('expect');
-const { Parsing } = require('../../..');
-const { Specification, States } = Parsing;
-const { CreateStepState } =  States;
+const { Specification, Machine } = require('../..');
+const { CreateStepState } = Machine;
 
 describe('Create Step State', () => {
 

@@ -1,7 +1,5 @@
 const expect = require('expect');
-const { Languages } = require('../..');
-const { Parsing } = require('../..');
-const { Specification } =  Parsing;
+const { Specification, Languages } = require('..');
 
 describe('Specification', () => {
 

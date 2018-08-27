@@ -1,7 +1,6 @@
 const expect = require('expect');
-const { Parsing } = require('../../..');
-const { Specification, States } =  Parsing;
-const { CreateScenarioState } =  States;
+const { Specification, Machine } = require('../..');
+const { CreateScenarioState } = Machine;
 
 describe('Create Scenario State', () => {
 

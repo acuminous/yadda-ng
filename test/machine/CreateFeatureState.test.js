@@ -1,18 +1,15 @@
 const expect = require('expect');
-const { Parsing } = require('../../..');
-const { Specification, States } =  Parsing;
-const { CreateBackgroundState } =  States;
+const { Specification, Machine } = require('../..');
+const { CreateFeatureState } = Machine;
 
-describe('Create Background State', () => {
-
+describe('Create Feature State', () => {
   let specification;
   let state;
 
   beforeEach(() => {
     specification = new Specification()
-      .createFeature({ annotations: [], title: 'Meh' })
-      .createBackground({ annotations: [], title: 'Meh' });
-    state = new CreateBackgroundState({ specification });
+      .createFeature({ annotations: [], title: 'Meh' });
+    state = new CreateFeatureState({ specification });
   });
 
   describe('Annotation Events', () => {
@@ -20,15 +17,31 @@ describe('Create Background State', () => {
     it('should not cause transition', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
       state = state.handle(event);
-      expect(state.name).toBe('create_background');
+      expect(state.name).toBe('create_feature');
     });
   });
 
   describe('Background Events', () => {
 
-    it('should error', () => {
-      const event = makeEvent('background');
-      expect(() => state.handle(event)).toThrow('Unexpected event: background on line: 1, \'meh\'');
+    it('should transition to create_background on background event', () => {
+      const event = makeEvent('background', { title: 'Meh' });
+      state = state.handle(event);
+      expect(state.name).toBe('create_background');
+    });
+
+    it('should capture scenarios with annotations', () => {
+      state = state.handle(makeEvent('annotation', { name: 'one', value: '1' }));
+      state = state.handle(makeEvent('annotation', { name: 'two', value: '2' }));
+      state = state.handle(makeEvent('background', { title: 'First background' }));
+      state = state.handle(makeEvent('scenario', { title: 'First scenario' }));
+
+      const exported = specification.export();
+      expect(exported.scenarios.length).toBe(1);
+      expect(exported.scenarios[0].annotations.length).toBe(2);
+      expect(exported.scenarios[0].annotations[0].name).toBe('one');
+      expect(exported.scenarios[0].annotations[0].value).toBe('1');
+      expect(exported.scenarios[0].annotations[1].name).toBe('two');
+      expect(exported.scenarios[0].annotations[1].value).toBe('2');
     });
   });
 
@@ -37,7 +50,7 @@ describe('Create Background State', () => {
     it('should not cause transition', () => {
       const event = makeEvent('blank_line');
       state = state.handle(event);
-      expect(state.name).toBe('create_background');
+      expect(state.name).toBe('create_feature');
     });
   });
 
@@ -64,7 +77,7 @@ describe('Create Background State', () => {
       expect(state.name).toBe('create_comment');
 
       state = state.handle(makeEvent('multi_line_comment'));
-      expect(state.name).toBe('create_background');
+      expect(state.name).toBe('create_feature');
     });
   });
 
@@ -107,46 +120,16 @@ describe('Create Background State', () => {
     it('should not cause transition', () => {
       const event = makeEvent('single_line_comment', { comment: 'Meh' });
       state = state.handle(event);
-      expect(state.name).toBe('create_background');
+      expect(state.name).toBe('create_feature');
     });
   });
 
   describe('Text Events', () => {
 
-    it('should transition to create_step on text event', () => {
-      const event = makeEvent('text');
-      state = state.handle(event);
-      expect(state.name).toBe('create_step');
-    });
-
-    it('should capture steps', () => {
-      state = state.handle(makeEvent('text', { text: 'First step' }));
-      state = state.handle(makeEvent('text', { text: 'Second step' }));
-      state = state.handle(makeEvent('scenario', { title: 'First scenario' }));
-      state = state.handle(makeEvent('text', { text: 'Third step' }));
-
-      const exported = specification.export();
-      expect(exported.scenarios[0].steps.length).toBe(3);
-      expect(exported.scenarios[0].steps[0].statement).toBe('First step');
-      expect(exported.scenarios[0].steps[1].statement).toBe('Second step');
-      expect(exported.scenarios[0].steps[2].statement).toBe('Third step');
-    });
-
-    it('should capture steps with annotations', () => {
-      state = state.handle(makeEvent('annotation', { name: 'one', value: '1' }));
-      state = state.handle(makeEvent('annotation', { name: 'two', value: '2' }));
-      state = state.handle(makeEvent('text', { text: 'First step' }));
-      state = state.handle(makeEvent('scenario', { title: 'First scenario' }));
-      state = state.handle(makeEvent('text', { text: 'Second step' }));
-
-      const exported = specification.export();
-      expect(exported.scenarios[0].steps[0].annotations.length).toBe(2);
-      expect(exported.scenarios[0].steps[0].annotations[0].name).toBe('one');
-      expect(exported.scenarios[0].steps[0].annotations[0].value).toBe('1');
-      expect(exported.scenarios[0].steps[0].annotations[1].name).toBe('two');
-      expect(exported.scenarios[0].steps[0].annotations[1].value).toBe('2');
-    });
-
+      it('should error', () => {
+        const event = makeEvent('text');
+        expect(() => state.handle(event)).toThrow('Unexpected event: text on line: 1, \'meh\'');
+      });
   });
 });
 
