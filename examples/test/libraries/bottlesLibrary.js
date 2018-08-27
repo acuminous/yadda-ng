@@ -8,7 +8,9 @@ module.exports = new Library({ name: 'BottlesLibrary', dictionaries: [ commonDic
     state.wall = new Wall();
   })
   .define('$number $colour bottles are standing on the wall', (state, number, colour) => {
-    return Promise.all(new Array(number).fill().map(() => state.wall.add(new Bottle({ colour }))));
+    return Promise.all(new Array(number).fill().map(
+      () => state.wall.add(new Bottle({ colour }))
+    ));
   })
   .define(['$number $colour bottle accidentally falls', '$number $colour bottles accidentally fall'], (state, number, colour) => {
     return Promise.all(new Array(number).fill().map(
