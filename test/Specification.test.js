@@ -11,6 +11,8 @@ describe('Specification', () => {
         '@skip',
         'Feature: Some feature',
         '',
+        'Some free form text',
+        '',
         '   Background:',
         '   First background step',
         '',
@@ -25,6 +27,7 @@ describe('Specification', () => {
 
       ].join('\n')).export();
 
+      expect(document.description).toBe('Some free form text');
       expect(document.annotations[0].name).toBe('skip');
       expect(document.annotations[0].value).toBe(true);
       expect(document.title).toBe('Some feature');
@@ -46,6 +49,8 @@ describe('Specification', () => {
         '@skip',
         'Tale: Some feature',
         '',
+        'Pieces of eight',
+        '',
         '   Aftground:',
         '   Giveth first background step',
         '',
@@ -59,6 +64,7 @@ describe('Specification', () => {
         '      And fourth step',
       ].join('\n')).export();
 
+      expect(document.description).toBe('Pieces of eight');
       expect(document.annotations[0].name).toBe('skip');
       expect(document.annotations[0].value).toBe(true);
       expect(document.title).toBe('Some feature');

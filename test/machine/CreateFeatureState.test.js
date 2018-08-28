@@ -118,7 +118,7 @@ describe('Create Feature State', () => {
   describe('Single Line Comment Events', () => {
 
     it('should not cause transition', () => {
-      const event = makeEvent('single_line_comment', { comment: 'Meh' });
+      const event = makeEvent('single_line_comment', { text: 'Meh' });
       state = state.onSingleLineComment(event);
       expect(state.name).toBe('CreateFeatureState');
     });
@@ -126,10 +126,19 @@ describe('Create Feature State', () => {
 
   describe('Text Events', () => {
 
-      it('should error', () => {
-        const event = makeEvent('text');
-        expect(() => state.onText(event)).toThrow('Unexpected event: text on line: 1, \'meh\'');
-      });
+    it('should not cause transition', () => {
+      const event = makeEvent('text', { text: 'Meh' });
+      state = state.onText(event);
+      expect(state.name).toBe('CreateFeatureState');
+    });
+
+    it('should capture description', () => {
+      state = state.onText(makeEvent('text', { text: 'meh' }));
+      state = state.onText(makeEvent('text', { text: 'bah' }));
+
+      const exported = specification.export();
+      expect(exported.description).toBe('meh\nbah');
+    });
   });
 });
 
