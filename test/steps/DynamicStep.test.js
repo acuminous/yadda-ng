@@ -7,12 +7,12 @@ describe('DynamicStep', () => {
 
   it('should create undefined steps', async () => {
     const librarian = new Librarian({ libraries: [] });
-    const step = new DynamicStep({ librarian, annotations: new Annotations(), statement: 'foo' });
+    const step = new DynamicStep({ librarian, annotations: new Annotations(), statement: 'foo', generalised: 'bar' });
     expect(step.isPending()).toBe(false);
 
     const outcome = await step.run({});
     expect(outcome.status).toBe('undefined');
-    expect(outcome.suggestion).toBe('.define(\'foo\', (state) => { // your code here })');
+    expect(outcome.suggestion).toBe('.define(\'bar\', (state) => { // your code here })');
   });
 
   it('should disregard pending annotations', async () => {
@@ -22,7 +22,7 @@ describe('DynamicStep', () => {
 
     const annotations = new Annotations().add('pending');
 
-    const step = new DynamicStep({ librarian, annotations, statement: 'foo' });
+    const step = new DynamicStep({ librarian, annotations, statement: 'foo', generalised: 'foo' });
     expect(step.isPending()).toBe(false);
 
     const outcome = await step.run({});
@@ -36,7 +36,7 @@ describe('DynamicStep', () => {
       new Library().define('foo', () => { run = true; }),
     ] });
 
-    const step = new DynamicStep({ librarian, annotations: new Annotations(), statement: 'foo' });
+    const step = new DynamicStep({ librarian, annotations: new Annotations(), statement: 'foo', generalised: 'foo' });
     expect(step.isPending()).toBe(false);
 
     const outcome = await step.run({});
@@ -50,7 +50,7 @@ describe('DynamicStep', () => {
       new Library({ name: 'B' }).define('foo'),
     ] });
 
-    const step = new DynamicStep({ librarian, annotations: new Annotations(), statement: 'foo' });
+    const step = new DynamicStep({ librarian, annotations: new Annotations(), statement: 'foo', generalised: 'foo' });
     expect(step.isPending()).toBe(false);
 
     const outcome = await step.run({});
@@ -68,7 +68,7 @@ describe('DynamicStep', () => {
       new Library({ name: 'C' }).define(/B/, () => { throw new Error('Wrong step'); }),
     ] });
 
-    const step = new DynamicStep({ librarian, annotations: new Annotations(), statement: 'B' });
+    const step = new DynamicStep({ librarian, annotations: new Annotations(), statement: 'B', generalised: 'B' });
 
     const outcome = await step.run({ currentLibrary: 'B' });
     expect(run).toBe(true);

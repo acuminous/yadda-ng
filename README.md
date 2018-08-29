@@ -1,6 +1,7 @@
 # yadda-ng
 
-1. Add librarian null library check
+1. hasAnnotationsIgnoreCase
+1. State should be immutable (watch out for UndefinedStep)
 1. State history
 1. Injectable / Configurable competition
 1. Make argument validation injectable

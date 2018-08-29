@@ -1,8 +1,6 @@
 const expect = require('expect');
 
-const { Languages, Librarian, Library } = require('..');
-const { Pirate } = Languages;
-
+const { Librarian, Library } = require('..');
 
 describe('Librarian', () => {
 
@@ -14,10 +12,11 @@ describe('Librarian', () => {
       new Library({ name: 'D' }).define('bar'),
     ] });
 
-    const macros = librarian.getCompatibleMacros('bar');
+    const step = { statement: 'bar', generalised: 'bar' };
+    const macros = librarian.getCompatibleMacros(step);
     expect(macros.length).toBe(2);
-    expect(macros[0].supports('bar')).toBe(true);
-    expect(macros[1].supports('bar')).toBe(true);
+    expect(macros[0].supports(step)).toBe(true);
+    expect(macros[1].supports(step)).toBe(true);
   });
 
   it('should filter libraries', () => {
@@ -28,9 +27,10 @@ describe('Librarian', () => {
       new Library({ name: 'D' }).define('bar'),
     ] }).filter(['A', 'B', 'C']);
 
-    const macros = librarian.getCompatibleMacros('bar');
+    const step = { statement: 'bar', generalised: 'bar' };
+    const macros = librarian.getCompatibleMacros(step);
     expect(macros.length).toBe(1);
-    expect(macros[0].supports('bar')).toBe(true);
+    expect(macros[0].supports(step)).toBe(true);
   });
 
   it('should not filter when passed no filters', () => {
@@ -41,17 +41,8 @@ describe('Librarian', () => {
       new Library({ name: 'D' }).define('bar'),
     ] }).filter();
 
-    const macros = librarian.getCompatibleMacros('bar');
+    const step = { statement: 'bar', generalised: 'bar' };
+    const macros = librarian.getCompatibleMacros(step);
     expect(macros.length).toBe(2);
-  });
-
-  it('should suggest undefined steps in the default language', () => {
-    const librarian = new Librarian({ libraries: [] });
-    expect(librarian.suggest('Given some step')).toBe('.define(\'Given some step\', (state) => { // your code here })');
-  });
-
-  it('should suggest undefined steps in the specified language', () => {
-    const librarian = new Librarian({ language: new Pirate(), libraries: [] });
-    expect(librarian.suggest('Giveth some step')).toBe('.define(\'some step\', (state) => { // your code here })');
   });
 });
