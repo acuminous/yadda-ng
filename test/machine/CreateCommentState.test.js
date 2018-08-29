@@ -83,6 +83,15 @@ describe('Create Comment State', () => {
     });
   });
 
+  describe('Step Events', () => {
+
+    it('should not cause transition', () => {
+      const event = makeEvent('step');
+      state = state.onStep(event);
+      expect(state.name).toBe('CreateCommentState');
+    });
+  });
+
   describe('Text Events', () => {
 
     it('should not cause transition', () => {

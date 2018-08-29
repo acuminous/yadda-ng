@@ -25,7 +25,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('background');
-      expect(() => state.onBackground(event)).toThrow('Unexpected event: background on line: 1, \'meh\'');
+      expect(() => state.onBackground(event)).toThrow('Unexpected event: background from state: InitialState on line 1: \'meh\'');
     });
   });
 
@@ -89,7 +89,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('scenario');
-      expect(() => state.onScenario(event)).toThrow('Unexpected event: scenario on line: 1, \'meh\'');
+      expect(() => state.onScenario(event)).toThrow('Unexpected event: scenario from state: InitialState on line 1: \'meh\'');
     });
   });
 
@@ -102,11 +102,19 @@ describe('Initial State', () => {
     });
   });
 
+  describe('Step Events', () => {
+
+    it('should error', () => {
+      const event = makeEvent('step');
+      expect(() => state.onStep(event)).toThrow('Unexpected event: step from state: InitialState on line 1: \'meh\'');
+    });
+  });
+
   describe('Text Events', () => {
 
     it('should error', () => {
       const event = makeEvent('text');
-      expect(() => state.onText(event)).toThrow('Unexpected event: text on line: 1, \'meh\'');
+      expect(() => state.onText(event)).toThrow('Unexpected event: text from state: InitialState on line 1: \'meh\'');
     });
   });
 });

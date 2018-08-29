@@ -52,6 +52,8 @@ describe('Specification', () => {
         'Pieces of eight',
         '',
         '   Aftground:',
+        '   Here be a tale of much woe',
+        '',
         '   Giveth first background step',
         '',
         '   @browser = Firefox',
@@ -255,9 +257,62 @@ describe('Specification', () => {
     });
   });
 
+  describe('Step', () => {
+
+    it('should emit step events when matching localised steps', () => {
+      const state = new StubState((event) => {
+        expect(event.name).toBe('step');
+        expect(event.source.line).toBe('Given some step');
+        expect(event.source.number).toBe(1);
+        expect(event.data.statement).toBe('Given some step');
+        expect(event.data.generalised).toBe('some step');
+      });
+
+      new Specification({ language: new Languages.English(), state }).parse('Given some step');
+
+      expect(state.count).toBe(1);
+    });
+
+    it('should trim localised steps', () => {
+      const state = new StubState((event) => {
+        expect(event.data.statement).toBe('Given some step');
+        expect(event.data.generalised).toBe('some step');
+      });
+
+      new Specification({ language: new Languages.English(), state }).parse('   Given some step  ');
+
+      expect(state.count).toBe(1);
+    });
+
+    it('should emit step events when matching unlocalised text', () => {
+      const state = new StubState((event) => {
+        expect(event.name).toBe('step');
+        expect(event.source.line).toBe('Some step');
+        expect(event.source.number).toBe(1);
+        expect(event.data.statement).toBe('Some step');
+        expect(event.data.generalised).toBe('Some step');
+      });
+
+      new Specification({ state }).parse('Some step');
+
+      expect(state.count).toBe(1);
+    });
+
+    it('should trim localised steps', () => {
+      const state = new StubState((event) => {
+        expect(event.data.statement).toBe('Some step');
+        expect(event.data.generalised).toBe('Some step');
+      });
+
+      new Specification({ state }).parse('   Some step  ');
+
+      expect(state.count).toBe(1);
+    });
+  });
+
   describe('Text', () => {
 
-    it('should emit text events', () => {
+    it('should emit text events when not matching steps', () => {
       const state = new StubState((event) => {
         expect(event.name).toBe('text');
         expect(event.source.line).toBe('Some text');
@@ -265,7 +320,7 @@ describe('Specification', () => {
         expect(event.data.text).toBe('Some text');
       });
 
-      new Specification({ state }).parse('Some text');
+      new Specification({ language: new Languages.English(), state }).parse('Some text');
 
       expect(state.count).toBe(1);
     });
@@ -275,7 +330,7 @@ describe('Specification', () => {
         expect(event.data.text).toBe('Some text');
       });
 
-      new Specification({ state }).parse('   Some text  ');
+      new Specification({ language: new Languages.English(), state }).parse('   Some text  ');
 
       expect(state.count).toBe(1);
     });

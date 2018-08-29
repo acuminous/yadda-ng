@@ -28,7 +28,7 @@ describe('Create Step State', () => {
 
     it('should error', () => {
       const event = makeEvent('background');
-      expect(() => state.onBackground(event)).toThrow('Unexpected event: background on line: 1, \'meh\'');
+      expect(() => state.onBackground(event)).toThrow('Unexpected event: background from state: CreateStepState on line 1: \'meh\'');
     });
   });
 
@@ -54,7 +54,7 @@ describe('Create Step State', () => {
 
     it('should error on feature event', () => {
       const event = makeEvent('feature', { title: 'Meh' });
-      expect(() => state.onFeature(event)).toThrow('Unexpected event: feature on line: 1, \'meh\'');
+      expect(() => state.onFeature(event)).toThrow('Unexpected event: feature from state: CreateStepState on line 1: \'meh\'');
     });
   });
 
@@ -79,7 +79,7 @@ describe('Create Step State', () => {
 
     it('should capture scenarios', () => {
       state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
-      state = state.onText(makeEvent('text', { text: 'meh' }));
+      state = state.onStep(makeEvent('step', { statement: 'meh' }));
       state = state.onScenario(makeEvent('scenario', { title: 'Second scenario' }));
 
       const exported = specification.export();
@@ -113,28 +113,29 @@ describe('Create Step State', () => {
     });
   });
 
-  describe('Text Events', () => {
+  describe('Step Events', () => {
 
-    it('should transition to new CreateStepState on text event', () => {
-      const event = makeEvent('text');
-      const newState = state.onText(event);
+    it('should transition to new CreateStepState on step event', () => {
+      const event = makeEvent('step');
+      const newState = state.onStep(event);
       expect(newState).not.toBe(state);
       expect(state.name).toBe('CreateStepState');
     });
 
     it('should capture step', () => {
-      state = state.onText(makeEvent('text', { text: 'Bah' }));
+      state = state.onStep(makeEvent('step', { statement: 'Bah', generalised: 'bah' }));
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps.length).toBe(2);
       expect(exported.scenarios[0].steps[0].statement).toBe('Meh');
       expect(exported.scenarios[0].steps[1].statement).toBe('Bah');
+      expect(exported.scenarios[0].steps[1].generalised).toBe('bah');
     });
 
     it('should capture steps with annotations', () => {
       state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
       state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      state = state.onText(makeEvent('text', { text: 'Bah' }));
+      state = state.onStep(makeEvent('step', { statement: 'Bah' }));
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps[1].annotations.length).toBe(2);
@@ -143,7 +144,14 @@ describe('Create Step State', () => {
       expect(exported.scenarios[0].steps[1].annotations[1].name).toBe('two');
       expect(exported.scenarios[0].steps[1].annotations[1].value).toBe('2');
     });
+  });
 
+  describe('Text Events', () => {
+
+    it('should error', () => {
+      const event = makeEvent('text');
+      expect(() => state.onText(event)).toThrow('Unexpected event: text from state: CreateStepState on line 1: \'meh\'');
+    });
   });
 });
 

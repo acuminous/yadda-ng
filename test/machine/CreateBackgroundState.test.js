@@ -27,7 +27,7 @@ describe('Create Background State', () => {
 
     it('should error', () => {
       const event = makeEvent('background');
-      expect(() => state.onBackground(event)).toThrow('Unexpected event: background on line: 1, \'meh\'');
+      expect(() => state.onBackground(event)).toThrow('Unexpected event: background from state: CreateBackgroundState on line 1: \'meh\'');
     });
   });
 
@@ -52,7 +52,7 @@ describe('Create Background State', () => {
 
     it('should error', () => {
       const event = makeEvent('feature', { title: 'Meh' });
-      expect(() => state.onFeature(event)).toThrow('Unexpected event: feature on line: 1, \'meh\'');
+      expect(() => state.onFeature(event)).toThrow('Unexpected event: feature from state: CreateBackgroundState on line 1: \'meh\'');
     });
   });
 
@@ -69,35 +69,9 @@ describe('Create Background State', () => {
 
   describe('Scenario Events', () => {
 
-    it('should transition to CreateScenarioState on scenario event', () => {
+    it('should error on scenario event', () => {
       const event = makeEvent('scenario', { title: 'Meh' });
-      state = state.onScenario(event);
-      expect(state.name).toBe('CreateScenarioState');
-    });
-
-    it('should capture scenarios', () => {
-      state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
-      state = state.onText(makeEvent('text', { text: 'meh' }));
-      state = state.onScenario(makeEvent('scenario', { title: 'Second scenario' }));
-
-      const exported = specification.export();
-      expect(exported.scenarios.length).toBe(2);
-      expect(exported.scenarios[0].title).toBe('First scenario');
-      expect(exported.scenarios[1].title).toBe('Second scenario');
-    });
-
-    it('should capture scenarios with annotations', () => {
-      state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
-      state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
-
-      const exported = specification.export();
-      expect(exported.scenarios.length).toBe(1);
-      expect(exported.scenarios[0].annotations.length).toBe(2);
-      expect(exported.scenarios[0].annotations[0].name).toBe('one');
-      expect(exported.scenarios[0].annotations[0].value).toBe('1');
-      expect(exported.scenarios[0].annotations[1].name).toBe('two');
-      expect(exported.scenarios[0].annotations[1].value).toBe('2');
+      expect(() => state.onScenario(event)).toThrow('Unexpected event: scenario from state: CreateBackgroundState on line 1: \'meh\'');
     });
   });
 
@@ -110,33 +84,36 @@ describe('Create Background State', () => {
     });
   });
 
-  describe('Text Events', () => {
+  describe('Step Events', () => {
 
-    it('should transition to CreateStepState on text event', () => {
-      const event = makeEvent('text');
-      state = state.onText(event);
+    it('should transition to CreateStepState on step event', () => {
+      const event = makeEvent('step');
+      state = state.onStep(event);
       expect(state.name).toBe('CreateStepState');
     });
 
     it('should capture steps', () => {
-      state = state.onText(makeEvent('text', { text: 'First step' }));
-      state = state.onText(makeEvent('text', { text: 'Second step' }));
+      state = state.onStep(makeEvent('step', { statement: 'First step', generalised: 'Generalised first step' }));
+      state = state.onStep(makeEvent('step', { statement: 'Second step', generalised: 'Generalised second step' }));
       state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
-      state = state.onText(makeEvent('text', { text: 'Third step' }));
+      state = state.onStep(makeEvent('step', { statement: 'Third step', generalised: 'Generalised third step' }));
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps.length).toBe(3);
       expect(exported.scenarios[0].steps[0].statement).toBe('First step');
+      expect(exported.scenarios[0].steps[0].generalised).toBe('Generalised first step');
       expect(exported.scenarios[0].steps[1].statement).toBe('Second step');
+      expect(exported.scenarios[0].steps[1].generalised).toBe('Generalised second step');
       expect(exported.scenarios[0].steps[2].statement).toBe('Third step');
+      expect(exported.scenarios[0].steps[2].generalised).toBe('Generalised third step');
     });
 
     it('should capture steps with annotations', () => {
       state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
       state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      state = state.onText(makeEvent('text', { text: 'First step' }));
+      state = state.onStep(makeEvent('step', { statement: 'First step' }));
       state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
-      state = state.onText(makeEvent('text', { text: 'Second step' }));
+      state = state.onStep(makeEvent('step', { statement: 'Second step' }));
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps[0].annotations.length).toBe(2);
@@ -144,6 +121,27 @@ describe('Create Background State', () => {
       expect(exported.scenarios[0].steps[0].annotations[0].value).toBe('1');
       expect(exported.scenarios[0].steps[0].annotations[1].name).toBe('two');
       expect(exported.scenarios[0].steps[0].annotations[1].value).toBe('2');
+    });
+
+  });
+
+  describe('Text Events', () => {
+
+    it('should not transition on text event', () => {
+      const event = makeEvent('text');
+      state = state.onText(event);
+      expect(state.name).toBe('CreateBackgroundState');
+    });
+
+    // Need to make background explicit in the json Specification rather than merging with scenarios
+    xit('should capture description', () => {
+      state = state.onText(makeEvent('text', { text: 'First line' }));
+      state = state.onText(makeEvent('text', { text: 'Second line' }));
+      state = state.onStep(makeEvent('step', { statement: 'Some step' }));
+      state = state.onScenario(makeEvent('scenario', { title: 'Some scenario' }));
+
+      const exported = specification.export();
+      expect(exported.scenarios[0].description).toBe('First step\nSecond line');
     });
 
   });

@@ -29,10 +29,11 @@ describe('Create Feature State', () => {
       expect(state.name).toBe('CreateBackgroundState');
     });
 
-    it('should capture scenarios with annotations', () => {
+    it('should capture backgrounds with annotations', () => {
       state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
       state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
       state = state.onBackground(makeEvent('background', { title: 'First background' }));
+      state = state.onStep(makeEvent('step', { statement: 'First step' }));
       state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
 
       const exported = specification.export();
@@ -66,7 +67,7 @@ describe('Create Feature State', () => {
 
     it('should error', () => {
       const event = makeEvent('feature', { title: 'Meh' });
-      expect(() => state.onFeature(event)).toThrow('Unexpected event: feature on line: 1, \'meh\'');
+      expect(() => state.onFeature(event)).toThrow('Unexpected event: feature from state: CreateFeatureState on line 1: \'meh\'');
     });
   });
 
@@ -91,7 +92,7 @@ describe('Create Feature State', () => {
 
     it('should capture scenarios', () => {
       state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
-      state = state.onText(makeEvent('text', { text: 'meh' }));
+      state = state.onStep(makeEvent('step', { statement: 'meh' }));
       state = state.onScenario(makeEvent('scenario', { title: 'Second scenario' }));
 
       const exported = specification.export();
@@ -121,6 +122,25 @@ describe('Create Feature State', () => {
       const event = makeEvent('single_line_comment', { text: 'Meh' });
       state = state.onSingleLineComment(event);
       expect(state.name).toBe('CreateFeatureState');
+    });
+  });
+
+  describe('Step Events', () => {
+
+    // Features don't support steps, but feature descriptions might match the step regex
+
+    it('should not cause transition', () => {
+      const event = makeEvent('step', { statement: 'Meh' });
+      state = state.onStep(event);
+      expect(state.name).toBe('CreateFeatureState');
+    });
+
+    it('should capture description', () => {
+      state = state.onStep(makeEvent('step', { statement: 'meh' }));
+      state = state.onStep(makeEvent('step', { statement: 'bah' }));
+
+      const exported = specification.export();
+      expect(exported.description).toBe('meh\nbah');
     });
   });
 
