@@ -1,5 +1,7 @@
 # yadda-ng
 
+1. Scenarios need to get libraries from annotations (see Script)
+1. Script should die. Instead maybe compile steps from scenarios
 1. hasAnnotationsIgnoreCase
 1. State should be immutable (watch out for UndefinedStep)
 1. State history
