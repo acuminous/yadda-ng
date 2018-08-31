@@ -130,17 +130,13 @@ describe('Create Background State', () => {
       expect(state.name).toBe('CreateBackgroundState');
     });
 
-    // Need to make background explicit in the json Specification rather than merging with scenarios
-    xit('should capture description', () => {
+    it('should capture description', () => {
       state = state.onText(makeEvent('text', { text: 'First line' }));
       state = state.onText(makeEvent('text', { text: 'Second line' }));
-      state = state.onStep(makeEvent('step', { statement: 'Some step' }));
-      state = state.onScenario(makeEvent('scenario', { title: 'Some scenario' }));
 
       const exported = specification.export();
-      expect(exported.scenarios[0].description).toBe('First step\nSecond line');
+      expect(exported.background.description).toBe('First line\nSecond line');
     });
-
   });
 });
 

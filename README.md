@@ -1,5 +1,6 @@
 # yadda-ng
 
+1. Improve specification error messaging
 1. Scenarios need to get libraries from annotations (see Script)
 1. Script should die. Instead maybe compile steps from scenarios
 1. hasAnnotationsIgnoreCase
