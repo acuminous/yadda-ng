@@ -99,13 +99,11 @@ describe('Create Background State', () => {
       state = state.onStep(makeEvent('step', { statement: 'Third step', generalised: 'Generalised third step' }));
 
       const exported = specification.export();
-      expect(exported.scenarios[0].steps.length).toBe(3);
-      expect(exported.scenarios[0].steps[0].statement).toBe('First step');
-      expect(exported.scenarios[0].steps[0].generalised).toBe('Generalised first step');
-      expect(exported.scenarios[0].steps[1].statement).toBe('Second step');
-      expect(exported.scenarios[0].steps[1].generalised).toBe('Generalised second step');
-      expect(exported.scenarios[0].steps[2].statement).toBe('Third step');
-      expect(exported.scenarios[0].steps[2].generalised).toBe('Generalised third step');
+      expect(exported.background.steps.length).toBe(2);
+      expect(exported.background.steps[0].statement).toBe('First step');
+      expect(exported.background.steps[0].generalised).toBe('Generalised first step');
+      expect(exported.background.steps[1].statement).toBe('Second step');
+      expect(exported.background.steps[1].generalised).toBe('Generalised second step');
     });
 
     it('should capture steps with annotations', () => {
@@ -116,13 +114,12 @@ describe('Create Background State', () => {
       state = state.onStep(makeEvent('step', { statement: 'Second step' }));
 
       const exported = specification.export();
-      expect(exported.scenarios[0].steps[0].annotations.length).toBe(2);
-      expect(exported.scenarios[0].steps[0].annotations[0].name).toBe('one');
-      expect(exported.scenarios[0].steps[0].annotations[0].value).toBe('1');
-      expect(exported.scenarios[0].steps[0].annotations[1].name).toBe('two');
-      expect(exported.scenarios[0].steps[0].annotations[1].value).toBe('2');
+      expect(exported.background.steps[0].annotations.length).toBe(2);
+      expect(exported.background.steps[0].annotations[0].name).toBe('one');
+      expect(exported.background.steps[0].annotations[0].value).toBe('1');
+      expect(exported.background.steps[0].annotations[1].name).toBe('two');
+      expect(exported.background.steps[0].annotations[1].value).toBe('2');
     });
-
   });
 
   describe('Text Events', () => {
