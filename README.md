@@ -9,5 +9,8 @@
 1. Make argument validation injectable
 1. Consider removing MultiConverter
 1. Localisation
+  - Specifying language in the feature file
+  - Other languages
+  - All specification parser regexes
 1. Feature Parser
 1. Dedupe scenario and feature
