@@ -5,7 +5,7 @@ const { BaseState } = Machine;
 describe('Specification', () => {
 
   describe('Parsing', () => {
-    it('Parses specifications using the default language', () => {
+    it('Parses specifications using the default language (none)', () => {
       const specification = new Specification();
       const document = specification.parse([
         '@skip',
@@ -46,10 +46,10 @@ describe('Specification', () => {
       expect(document.scenarios[1].steps[1].statement).toBe('Fourth step');
     });
 
-    it('Parses specifications in the language passed to the constructor', () => {
+    it('Parses specifications in the language defined in the specficiation', () => {
       const specification = new Specification();
       const document = specification.parse([
-        '#language = Pirate',
+        '#language: Pirate',
         '',
         '@skip',
         'Tale: Some feature',
@@ -92,7 +92,17 @@ describe('Specification', () => {
       expect(document.scenarios[1].steps[1].statement).toBe('And fourth step');
     });
 
-    it('Parses specifications in the language given in the specification', () => {
+    it('should report missing languages', () => {
+      const specification = new Specification();
+      const text = [
+        '#language: Missing',
+        'Feature: Some feature',
+      ].join('\n');
+
+      expect(() => specification.parse(text)).toThrow('Language: Missing was not found');
+    });
+
+    it('Parses specifications in the language given in the constructor', () => {
       const specification = new Specification({ language: new Languages.Pirate() });
       const document = specification.parse([
         '@skip',
