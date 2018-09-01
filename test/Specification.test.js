@@ -147,7 +147,7 @@ describe('Specification', () => {
     });
   });
 
-  it('should be single use only', () => {
+  it('should be single use', () => {
     const specification = new Specification();
     const text = [
       '@skip',
@@ -170,7 +170,7 @@ describe('Specification', () => {
     ].join('\n');
 
     specification.parse(text);
-    expect(() => specification.parse(text)).toThrow('Unexpected event: annotation from state: FinalState on line 1: \'@skip\'');
+    expect(() => specification.parse(text)).toThrow('Annotation was unexpected while parsing specification on line 1: \'@skip\'');
   });
 
   describe('Annotations', () => {
@@ -482,14 +482,44 @@ describe('Specification', () => {
 
   class StubState extends BaseState {
     constructor(assertions) {
-      super();
+      super({ subject: 'specification' });
       this.count = 0;
       this.assertions = assertions;
+    }
+    onAnnotation(event) {
+      return this.handleEvent(event);
+    }
+    onBackground(event) {
+      return this.handleEvent(event);
+    }
+    onBlankLine(event) {
+      return this.handleEvent(event);
     }
     onEnd(event) {
       return this;
     }
-    handleUnexpectedEvent(event) {
+    onFeature(event) {
+      return this.handleEvent(event);
+    }
+    onLanguage(event) {
+      return this.handleEvent(event);
+    }
+    onMultiLineComment(event) {
+      return this.handleEvent(event);
+    }
+    onScenario(event) {
+      return this.handleEvent(event);
+    }
+    onSingleLineComment(event) {
+      return this.handleEvent(event);
+    }
+    onStep(event) {
+      return this.handleEvent(event);
+    }
+    onText(event) {
+      return this.handleEvent(event);
+    }
+    handleEvent(event) {
       this.count++;
       this.assertions(event);
       return this;

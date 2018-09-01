@@ -27,7 +27,7 @@ describe('Create Background State', () => {
 
     it('should error', () => {
       const event = makeEvent('background');
-      expect(() => state.onBackground(event)).toThrow('Unexpected event: background from state: CreateBackgroundState on line 1: \'meh\'');
+      expect(() => state.onBackground(event)).toThrow('Background was unexpected while parsing background on line 1: \'meh\'');
     });
   });
 
@@ -52,7 +52,15 @@ describe('Create Background State', () => {
 
     it('should error', () => {
       const event = makeEvent('feature', { title: 'Meh' });
-      expect(() => state.onFeature(event)).toThrow('Unexpected event: feature from state: CreateBackgroundState on line 1: \'meh\'');
+      expect(() => state.onFeature(event)).toThrow('Feature was unexpected while parsing background on line 1: \'meh\'');
+    });
+  });
+
+  describe('Language Events', () => {
+
+    it('should error', () => {
+      const event = makeEvent('language');
+      expect(() => state.onLanguage(event)).toThrow('Language was unexpected while parsing background on line 1: \'meh\'');
     });
   });
 
@@ -71,7 +79,7 @@ describe('Create Background State', () => {
 
     it('should error on scenario event', () => {
       const event = makeEvent('scenario', { title: 'Meh' });
-      expect(() => state.onScenario(event)).toThrow('Unexpected event: scenario from state: CreateBackgroundState on line 1: \'meh\'');
+      expect(() => state.onScenario(event)).toThrow('Scenario was unexpected while parsing background on line 1: \'meh\'');
     });
   });
 

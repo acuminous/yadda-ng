@@ -25,7 +25,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('background');
-      expect(() => state.onBackground(event)).toThrow('Unexpected event: background from state: InitialState on line 1: \'meh\'');
+      expect(() => state.onBackground(event)).toThrow('Background was unexpected while parsing specification on line 1: \'meh\'');
     });
   });
 
@@ -34,15 +34,6 @@ describe('Initial State', () => {
     it('should not cause transition', () => {
       const event = makeEvent('blank_line');
       state = state.onBlankLine(event);
-      expect(state.name).toBe('InitialState');
-    });
-  });
-
-  describe('Language Events', () => {
-
-    it('should not cause transition', () => {
-      const event = makeEvent('language', { name: 'English' });
-      state = state.onLanguage(event);
       expect(state.name).toBe('InitialState');
     });
   });
@@ -85,6 +76,15 @@ describe('Initial State', () => {
     });
   });
 
+  describe('Language Events', () => {
+
+    it('should not cause transition', () => {
+      const event = makeEvent('language', { name: 'English' });
+      state = state.onLanguage(event);
+      expect(state.name).toBe('InitialState');
+    });
+  });
+
   describe('Multi Line Comment Events', () => {
 
     it('should transition to CreateCommentState', () => {
@@ -98,7 +98,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('scenario');
-      expect(() => state.onScenario(event)).toThrow('Unexpected event: scenario from state: InitialState on line 1: \'meh\'');
+      expect(() => state.onScenario(event)).toThrow('Scenario was unexpected while parsing specification on line 1: \'meh\'');
     });
   });
 
@@ -115,7 +115,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('step');
-      expect(() => state.onStep(event)).toThrow('Unexpected event: step from state: InitialState on line 1: \'meh\'');
+      expect(() => state.onStep(event)).toThrow('Step was unexpected while parsing specification on line 1: \'meh\'');
     });
   });
 
@@ -123,7 +123,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('text');
-      expect(() => state.onText(event)).toThrow('Unexpected event: text from state: InitialState on line 1: \'meh\'');
+      expect(() => state.onText(event)).toThrow('Text was unexpected while parsing specification on line 1: \'meh\'');
     });
   });
 });

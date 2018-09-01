@@ -1,6 +1,5 @@
 # yadda-ng
 
-1. Improve specification error messaging
 1. Scenarios need to get libraries from annotations (see Script)
 1. Script should die. Instead maybe compile steps from scenarios
 1. hasAnnotationsIgnoreCase
@@ -10,7 +9,6 @@
 1. Make argument validation injectable
 1. Consider removing MultiConverter
 1. Localisation
-  - Specifying language in the feature file
   - Other languages
   - All specification parser regexes
 1. Feature Parser

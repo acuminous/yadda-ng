@@ -66,7 +66,15 @@ describe('Create Feature State', () => {
 
     it('should error', () => {
       const event = makeEvent('feature', { title: 'Meh' });
-      expect(() => state.onFeature(event)).toThrow('Unexpected event: feature from state: CreateFeatureState on line 1: \'meh\'');
+      expect(() => state.onFeature(event)).toThrow('Feature was unexpected while parsing feature on line 1: \'meh\'');
+    });
+  });
+
+  describe('Language Events', () => {
+
+    it('should error', () => {
+      const event = makeEvent('language');
+      expect(() => state.onLanguage(event)).toThrow('Language was unexpected while parsing feature on line 1: \'meh\'');
     });
   });
 

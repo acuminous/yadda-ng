@@ -56,6 +56,15 @@ describe('Create Comment State', () => {
     });
   });
 
+  describe('Language Events', () => {
+
+    it('should not cause transition', () => {
+      const event = makeEvent('language');
+      state = state.onLanguage(event);
+      expect(state.name).toBe('CreateCommentState');
+    });
+  });
+
   describe('Multi Line Comment Events', () => {
 
     it('should transition to previous state', () => {

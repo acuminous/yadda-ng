@@ -28,7 +28,7 @@ describe('Create Step State', () => {
 
     it('should error', () => {
       const event = makeEvent('background');
-      expect(() => state.onBackground(event)).toThrow('Unexpected event: background from state: CreateStepState on line 1: \'meh\'');
+      expect(() => state.onBackground(event)).toThrow('Background was unexpected while parsing step on line 1: \'meh\'');
     });
   });
 
@@ -54,7 +54,7 @@ describe('Create Step State', () => {
 
     it('should error on feature event', () => {
       const event = makeEvent('feature', { title: 'Meh' });
-      expect(() => state.onFeature(event)).toThrow('Unexpected event: feature from state: CreateStepState on line 1: \'meh\'');
+      expect(() => state.onFeature(event)).toThrow('Feature was unexpected while parsing step on line 1: \'meh\'');
     });
   });
 
@@ -66,6 +66,14 @@ describe('Create Step State', () => {
 
       state = state.onMultiLineComment(makeEvent('multi_line_comment'));
       expect(state.name).toBe('CreateStepState');
+    });
+  });
+
+  describe('Language Events', () => {
+
+    it('should error', () => {
+      const event = makeEvent('language');
+      expect(() => state.onLanguage(event)).toThrow('Language was unexpected while parsing step on line 1: \'meh\'');
     });
   });
 
@@ -150,7 +158,7 @@ describe('Create Step State', () => {
 
     it('should error', () => {
       const event = makeEvent('text');
-      expect(() => state.onText(event)).toThrow('Unexpected event: text from state: CreateStepState on line 1: \'meh\'');
+      expect(() => state.onText(event)).toThrow('Text was unexpected while parsing step on line 1: \'meh\'');
     });
   });
 });
