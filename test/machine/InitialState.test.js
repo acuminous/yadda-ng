@@ -38,6 +38,15 @@ describe('Initial State', () => {
     });
   });
 
+  describe('Language Events', () => {
+
+    it('should not cause transition', () => {
+      const event = makeEvent('language', { name: 'English' });
+      state = state.onLanguage(event);
+      expect(state.name).toBe('InitialState');
+    });
+  });
+
   describe('End Events', () => {
 
     it('should error', () => {
