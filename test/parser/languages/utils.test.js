@@ -1,7 +1,6 @@
 const expect = require('expect');
-
-const { Languages } = require('../..');
-const { BaseLanguage, utils } = Languages;
+const { Parser } = require('../../..');
+const { BaseLanguage, utils } = Parser.Languages;
 
 class Esperanto extends BaseLanguage {
   constructor({ name }) {

@@ -1,6 +1,6 @@
 const expect = require('expect');
-const { Languages } = require('../..');
-const { English } = Languages;
+const { Parser } = require('../../..');
+const { English } = Parser.Languages;
 
 describe('English', () => {
 

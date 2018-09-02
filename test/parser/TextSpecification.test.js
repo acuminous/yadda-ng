@@ -1,6 +1,6 @@
 const expect = require('expect');
-const { Parser, Languages } = require('../..');
-const { TextSpecification, States } = Parser;
+const { Parser } = require('../..');
+const { TextSpecification, Languages, States } = Parser;
 const { BaseState } = States;
 
 describe('Text Specification', () => {

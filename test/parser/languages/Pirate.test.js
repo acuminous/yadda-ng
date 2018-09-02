@@ -1,6 +1,6 @@
 const expect = require('expect');
-const { Languages } = require('../..');
-const { Pirate } = Languages;
+const { Parser } = require('../../..');
+const { Pirate } = Parser.Languages;
 
 describe('Pirate', () => {
   it('should generalise statement', () => {

@@ -15,7 +15,6 @@ const Signature = require('./lib/Signature');
 const Arities = require('./lib/arities');
 const Converters = require('./lib/converters');
 const Macro = require('./lib/Macro');
-const Languages = require('./lib/languages');
 const Competition = require('./lib/Competition');
 const Functions = require('./lib/functions');
 const Convenience = require('./lib/Convenience');
@@ -38,7 +37,6 @@ module.exports = {
   Signature,
   Arities,
   Macro,
-  Languages,
   Competition,
   Functions,
   Convenience,
