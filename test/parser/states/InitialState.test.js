@@ -1,6 +1,7 @@
 const expect = require('expect');
-const { TextSpecification, Specification, Machine } = require('../..');
-const { InitialState } = Machine;
+const { Parser } = require('../../..');
+const { TextSpecification, JsonSpecification, States } = Parser;
+const { InitialState } = States;
 
 describe('Initial State', () => {
 
@@ -9,7 +10,7 @@ describe('Initial State', () => {
 
   beforeEach(() => {
     const textSpecification = new TextSpecification();
-    specification = new Specification();
+    specification = new JsonSpecification();
     state = new InitialState({ textSpecification, specification });
   });
 

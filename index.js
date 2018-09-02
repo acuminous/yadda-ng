@@ -1,6 +1,4 @@
-const Machine = require('./lib/machine');
-const TextSpecification = require('./lib/TextSpecification');
-const Specification = require('./lib/Specification');
+const Parser = require('./lib/parser');
 const Script = require('./lib/Script');
 const Playbooks = require('./lib/playbooks');
 const Annotation = require('./lib/Annotation');
@@ -23,9 +21,7 @@ const Functions = require('./lib/functions');
 const Convenience = require('./lib/Convenience');
 
 module.exports = {
-  Machine,
-  Specification,
-  TextSpecification,
+  Parser,
   Script,
   Playbooks,
   Annotations,

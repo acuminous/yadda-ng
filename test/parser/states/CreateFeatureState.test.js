@@ -1,13 +1,14 @@
 const expect = require('expect');
-const { Specification, Machine } = require('../..');
-const { CreateFeatureState } = Machine;
+const { Parser } = require('../../..');
+const { JsonSpecification, States } = Parser;
+const { CreateFeatureState } = States;
 
 describe('Create Feature State', () => {
   let specification;
   let state;
 
   beforeEach(() => {
-    specification = new Specification()
+    specification = new JsonSpecification()
       .createFeature({ annotations: [], title: 'Meh' });
     state = new CreateFeatureState({ specification });
   });

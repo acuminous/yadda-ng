@@ -1,13 +1,14 @@
 const expect = require('expect');
-const { Specification, Machine } = require('../..');
-const { InitialState, CreateCommentState } = Machine;
+const { Parser } = require('../../..');
+const { JsonSpecification, States } = Parser;
+const { InitialState, CreateCommentState } = States;
 
 describe('Create Comment State', () => {
 
   let state;
 
   beforeEach(() => {
-    const specification = new Specification();
+    const specification = new JsonSpecification();
     const previousState = new InitialState({ specification });
     state = new CreateCommentState({ previousState });
   });

@@ -1,6 +1,7 @@
 const expect = require('expect');
-const { Specification, Machine } = require('../..');
-const { CreateScenarioState } = Machine;
+const { Parser } = require('../../..');
+const { JsonSpecification, States } = Parser;
+const { CreateScenarioState } = States;
 
 describe('Create Scenario State', () => {
 
@@ -8,7 +9,7 @@ describe('Create Scenario State', () => {
   let state;
 
   beforeEach(() => {
-    specification = new Specification()
+    specification = new JsonSpecification()
       .createFeature({ annotations: [], title: 'Meh' })
       .createScenario({ annotations: [], title: 'Meh' });
     state = new CreateScenarioState({ specification });

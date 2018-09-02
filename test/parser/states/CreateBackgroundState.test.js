@@ -1,6 +1,7 @@
 const expect = require('expect');
-const { Specification, Machine } = require('../..');
-const { CreateBackgroundState } =  Machine;
+const { Parser } = require('../../..');
+const { JsonSpecification, States } = Parser;
+const { CreateBackgroundState } =  States;
 
 describe('Create Background State', () => {
 
@@ -8,7 +9,7 @@ describe('Create Background State', () => {
   let state;
 
   beforeEach(() => {
-    specification = new Specification()
+    specification = new JsonSpecification()
       .createFeature({ annotations: [], title: 'Meh' })
       .createBackground({ annotations: [], title: 'Meh' });
     state = new CreateBackgroundState({ specification });

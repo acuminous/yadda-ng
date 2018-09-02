@@ -1,8 +1,9 @@
 const expect = require('expect');
-const { TextSpecification, Languages, Machine } = require('..');
-const { BaseState } = Machine;
+const { Parser, Languages } = require('../..');
+const { TextSpecification, States } = Parser;
+const { BaseState } = States;
 
-describe('Specification', () => {
+describe('Text Specification', () => {
 
   describe('Parsing', () => {
     it('Parses specifications using the default language (none)', () => {
