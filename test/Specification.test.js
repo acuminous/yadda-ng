@@ -1,13 +1,12 @@
 const expect = require('expect');
-const { Specification, Languages, Machine } = require('..');
+const { TextSpecification, Languages, Machine } = require('..');
 const { BaseState } = Machine;
 
 describe('Specification', () => {
 
   describe('Parsing', () => {
     it('Parses specifications using the default language (none)', () => {
-      const specification = new Specification();
-      const document = specification.parse([
+      const text = [
         '@skip',
         'Feature: Some feature',
         '',
@@ -26,7 +25,10 @@ describe('Specification', () => {
         '      Third step',
         '      Fourth step',
 
-      ].join('\n')).export();
+      ].join('\n');
+
+      const specification = new TextSpecification();
+      const document = specification.parse(text).export();
 
       expect(document.description).toBe('Some free form text');
       expect(document.annotations[0].name).toBe('skip');
@@ -47,8 +49,7 @@ describe('Specification', () => {
     });
 
     it('Parses specifications in the language defined in the specficiation', () => {
-      const specification = new Specification();
-      const document = specification.parse([
+      const text = [
         '#language: Pirate',
         '',
         '@skip',
@@ -70,7 +71,10 @@ describe('Specification', () => {
         '   Sortie: Second scenario',
         '      Thence third step',
         '      And fourth step',
-      ].join('\n')).export();
+      ].join('\n');
+
+      const specification = new TextSpecification();
+      const document = specification.parse(text).export();
 
       expect(document.description).toBe('Pieces of eight');
       expect(document.annotations[0].name).toBe('skip');
@@ -93,18 +97,18 @@ describe('Specification', () => {
     });
 
     it('should report missing languages', () => {
-      const specification = new Specification();
       const text = [
         '#language: Missing',
         'Feature: Some feature',
       ].join('\n');
 
+      const specification = new TextSpecification();
+
       expect(() => specification.parse(text)).toThrow('Language: Missing was not found');
     });
 
     it('Parses specifications in the language given in the constructor', () => {
-      const specification = new Specification({ language: new Languages.Pirate() });
-      const document = specification.parse([
+      const text = [
         '@skip',
         'Tale: Some feature',
         '',
@@ -124,7 +128,10 @@ describe('Specification', () => {
         '   Sortie: Second scenario',
         '      Thence third step',
         '      And fourth step',
-      ].join('\n')).export();
+      ].join('\n');
+
+      const specification = new TextSpecification({ language: new Languages.Pirate() });
+      const document = specification.parse(text).export();
 
       expect(document.description).toBe('Pieces of eight');
       expect(document.annotations[0].name).toBe('skip');
@@ -147,9 +154,8 @@ describe('Specification', () => {
     });
   });
 
-  it('should be single use', () => {
-    const specification = new Specification();
-    const text = [
+  it('should be multi use', () => {
+    const text1 = [
       '@skip',
       'Feature: Some feature',
       '',
@@ -168,9 +174,14 @@ describe('Specification', () => {
       '      Third step',
       '      Fourth step',
     ].join('\n');
+    const text2 = text1.replace('Some feature', 'Another feature');
 
-    specification.parse(text);
-    expect(() => specification.parse(text)).toThrow('Annotation was unexpected while parsing specification on line 1: \'@skip\'');
+    const specification = new TextSpecification();
+    const result1 = specification.parse(text1);
+    const result2 = specification.parse(text2);
+
+    expect(result1.export().title).toBe('Some feature');
+    expect(result2.export().title).toBe('Another feature');
   });
 
   describe('Annotations', () => {
@@ -184,7 +195,7 @@ describe('Specification', () => {
         expect(event.data.value).toBe(true);
       });
 
-      new Specification({ state }).parse('@skip');
+      new TextSpecification({ initialState: state }).parse('@skip');
 
       expect(state.count).toBe(1);
     });
@@ -195,7 +206,7 @@ describe('Specification', () => {
         expect(event.data.name).toBe('skip');
       });
 
-      new Specification({ state }).parse('@skip   ');
+      new TextSpecification({ initialState: state }).parse('@skip   ');
 
       expect(state.count).toBe(1);
     });
@@ -209,7 +220,7 @@ describe('Specification', () => {
         expect(event.data.value).toBe('firefox');
       });
 
-      new Specification({ state }).parse('@browser=firefox');
+      new TextSpecification({ initialState: state }).parse('@browser=firefox');
 
       expect(state.count).toBe(1);
     });
@@ -221,7 +232,7 @@ describe('Specification', () => {
         expect(event.data.value).toBe('firefox');
       });
 
-      new Specification({ state }).parse(' @browser = firefox ');
+      new TextSpecification({ initialState: state }).parse(' @browser = firefox ');
 
       expect(state.count).toBe(1);
     });
@@ -237,7 +248,7 @@ describe('Specification', () => {
         expect(event.data.title).toBe('Some feature');
       });
 
-      new Specification({ state }).parse('Feature: Some feature');
+      new TextSpecification({ initialState: state }).parse('Feature: Some feature');
 
       expect(state.count).toBe(1);
     });
@@ -248,7 +259,7 @@ describe('Specification', () => {
         expect(event.data.title).toBe('Some feature');
       });
 
-      new Specification({ state }).parse('Feature:   Some feature   ');
+      new TextSpecification({ initialState: state }).parse('Feature:   Some feature   ');
 
       expect(state.count).toBe(1);
     });
@@ -260,7 +271,7 @@ describe('Specification', () => {
         expect(event.data.title).toBe('Some feature');
       });
 
-      new Specification({ state }).parse('Feature:   Some feature   ');
+      new TextSpecification({ initialState: state }).parse('Feature:   Some feature   ');
 
       expect(state.count).toBe(1);
     });
@@ -276,7 +287,7 @@ describe('Specification', () => {
         expect(event.data.title).toBe('Some scenario');
       });
 
-      new Specification({ state }).parse('Scenario: Some scenario');
+      new TextSpecification({ initialState: state }).parse('Scenario: Some scenario');
 
       expect(state.count).toBe(1);
     });
@@ -287,7 +298,7 @@ describe('Specification', () => {
         expect(event.data.title).toBe('Some scenario');
       });
 
-      new Specification({ state }).parse('Scenario:   Some scenario   ');
+      new TextSpecification({ initialState: state }).parse('Scenario:   Some scenario   ');
 
       expect(state.count).toBe(1);
     });
@@ -303,7 +314,7 @@ describe('Specification', () => {
         expect(event.data.title).toBe('Some background');
       });
 
-      new Specification({ state }).parse('Background: Some background');
+      new TextSpecification({ initialState: state }).parse('Background: Some background');
 
       expect(state.count).toBe(1);
     });
@@ -314,7 +325,7 @@ describe('Specification', () => {
         expect(event.data.title).toBe('Some background');
       });
 
-      new Specification({ state }).parse('Background:   Some background   ');
+      new TextSpecification({ initialState: state }).parse('Background:   Some background   ');
 
       expect(state.count).toBe(1);
     });
@@ -329,7 +340,7 @@ describe('Specification', () => {
         expect(event.source.number).toBe(1);
       });
 
-      new Specification({ state }).parse('');
+      new TextSpecification({ initialState: state }).parse('');
 
       expect(state.count).toBe(1);
     });
@@ -341,7 +352,7 @@ describe('Specification', () => {
         expect(event.source.number).toBe(1);
       });
 
-      new Specification({ state }).parse('  ');
+      new TextSpecification({ initialState: state }).parse('  ');
 
       expect(state.count).toBe(1);
     });
@@ -358,7 +369,7 @@ describe('Specification', () => {
         expect(event.data.generalised).toBe('some step');
       });
 
-      new Specification({ language: new Languages.English(), state }).parse('Given some step');
+      new TextSpecification({ language: new Languages.English(), initialState: state }).parse('Given some step');
 
       expect(state.count).toBe(1);
     });
@@ -369,7 +380,7 @@ describe('Specification', () => {
         expect(event.data.generalised).toBe('some step');
       });
 
-      new Specification({ language: new Languages.English(), state }).parse('   Given some step  ');
+      new TextSpecification({ language: new Languages.English(), initialState: state }).parse('   Given some step  ');
 
       expect(state.count).toBe(1);
     });
@@ -383,7 +394,7 @@ describe('Specification', () => {
         expect(event.data.generalised).toBe('Some step');
       });
 
-      new Specification({ state }).parse('Some step');
+      new TextSpecification({ initialState: state }).parse('Some step');
 
       expect(state.count).toBe(1);
     });
@@ -394,7 +405,7 @@ describe('Specification', () => {
         expect(event.data.generalised).toBe('Some step');
       });
 
-      new Specification({ state }).parse('   Some step  ');
+      new TextSpecification({ initialState: state }).parse('   Some step  ');
 
       expect(state.count).toBe(1);
     });
@@ -410,7 +421,7 @@ describe('Specification', () => {
         expect(event.data.text).toBe('Some text');
       });
 
-      new Specification({ language: new Languages.English(), state }).parse('Some text');
+      new TextSpecification({ language: new Languages.English(), initialState: state }).parse('Some text');
 
       expect(state.count).toBe(1);
     });
@@ -420,7 +431,7 @@ describe('Specification', () => {
         expect(event.data.text).toBe('Some text');
       });
 
-      new Specification({ language: new Languages.English(), state }).parse('   Some text  ');
+      new TextSpecification({ language: new Languages.English(), initialState: state }).parse('   Some text  ');
 
       expect(state.count).toBe(1);
     });
@@ -436,7 +447,7 @@ describe('Specification', () => {
         expect(event.data.text).toBe('Some comment');
       });
 
-      new Specification({ state }).parse('#Some comment');
+      new TextSpecification({ initialState: state }).parse('#Some comment');
 
       expect(state.count).toBe(1);
     });
@@ -448,7 +459,7 @@ describe('Specification', () => {
         expect(event.data.text).toBe('Some comment');
       });
 
-      new Specification({ state }).parse('  #   Some comment   ');
+      new TextSpecification({ initialState: state }).parse('  #   Some comment   ');
 
       expect(state.count).toBe(1);
     });
@@ -463,7 +474,7 @@ describe('Specification', () => {
         expect(event.data.text).toBe('Some comment');
       });
 
-      new Specification({ state }).parse('###Some comment');
+      new TextSpecification({ initialState: state }).parse('###Some comment');
 
       expect(state.count).toBe(1);
     });
@@ -474,7 +485,7 @@ describe('Specification', () => {
         expect(event.data.text).toBe('Some comment');
       });
 
-      new Specification({ state }).parse('  ####   Some comment   ');
+      new TextSpecification({ initialState: state }).parse('  ####   Some comment   ');
 
       expect(state.count).toBe(1);
     });

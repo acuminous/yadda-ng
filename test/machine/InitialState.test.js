@@ -1,5 +1,5 @@
 const expect = require('expect');
-const { Specification, Machine } = require('../..');
+const { TextSpecification, Specification, Machine } = require('../..');
 const { InitialState } = Machine;
 
 describe('Initial State', () => {
@@ -8,8 +8,9 @@ describe('Initial State', () => {
   let state;
 
   beforeEach(() => {
+    const textSpecification = new TextSpecification();
     specification = new Specification();
-    state = new InitialState({ specification });
+    state = new InitialState({ textSpecification, specification });
   });
 
   describe('Annotation Events', () => {
