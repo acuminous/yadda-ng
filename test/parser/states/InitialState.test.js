@@ -9,9 +9,9 @@ describe('Initial State', () => {
   let state;
 
   beforeEach(() => {
-    const textSpecification = new TextSpecification();
+    const parser = new TextSpecification();
     specification = new JsonSpecification();
-    state = new InitialState({ textSpecification, specification });
+    state = new InitialState({ parser, specification });
   });
 
   describe('Annotation Events', () => {
