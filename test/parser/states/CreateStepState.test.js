@@ -12,8 +12,11 @@ describe('Create Step State', () => {
     specification = new JsonSpecification()
       .createFeature({ annotations: [], title: 'Meh' })
       .createScenario({ annotations: [], title: 'Meh' })
-      .createStep({ annotations: [], statement: 'Meh' });
-    state = new CreateStepState({ specification });
+      .createScenarioStep({ annotations: [], statement: 'Meh' });
+    state = new CreateStepState({ specification, createStep: (annotations, data) => {
+      specification.createScenarioStep({ annotations, ...data });
+      return this;
+    }});
   });
 
   describe('Annotation Events', () => {
