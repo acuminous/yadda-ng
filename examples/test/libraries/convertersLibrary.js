@@ -12,7 +12,16 @@ module.exports = new Library({ name: 'ConvertersLibrary', dictionaries: [ common
   .define('a value of $number', (state, argument) => {
     state.argument = argument;
   })
-  .define('the argument should be a $type', (state, type) => {
+  .define('$number plus $number', (state, argument1, argument2) => {
+    state.total = argument1 + argument2;
+  })
+  .define('the total is $number', (state, total) => {
+    assert.equal(state.total, total);
+  })
+  .define('coordinates of $coordinates', (state, argument) => {
+    state.argument = argument;
+  })
+  .define(['the argument should be an $type', 'the argument should be a $type'], (state, type) => {
     switch (type) {
       case 'date': {
         assert.ok(state.argument instanceof Date);

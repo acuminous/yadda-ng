@@ -8,18 +8,28 @@ Feature: Converter examples
   * A date converter
   * A numeric converter
 
-  Scenario: Demonstrate the boolean converter
+  Scenario: Step parameters can be converted to booleans
     Given something is true
     Then the argument should be a boolean
 
-  Scenario: Demonstrate the date converter
+  Scenario: Step parameters can be converted to dates
     Given the date is 2018/12/25
     Then the argument should be a date
 
-  Scenario: Demonstrate the number converter with an integer
+  Scenario: Step parameters can be converted to whole numbers
     Given a value of 123
     Then the argument should be a number
 
-  Scenario: Demonstrate the number converter with a float
+  Scenario: Step parameters can be converted to floating point numbers
     Given a value of 123.4
     Then the argument should be a number
+
+  Scenario: Multiple step parameters can be converted
+    Given my full name is Michael Caine
+    Then my first name is Michael
+    And my last name is Caine
+
+  Scenario: Multiple step parameters can be combined
+    Given coordinates of 13.28963, 118.23904
+    Then the argument should be an object
+
