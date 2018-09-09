@@ -3,13 +3,13 @@ const { commonDictionary } = require('../dictionaries');
 const assert = require('assert');
 
 module.exports = new Library({ name: 'ConvertersLibrary', dictionaries: [ commonDictionary ] })
-  .define('a $boolean value', (state, argument) => {
+  .define('something is $boolean', (state, argument) => {
     state.argument = argument;
   })
-  .define('a $date value', (state, argument) => {
+  .define('the date is $date', (state, argument) => {
     state.argument = argument;
   })
-  .define('a $numeric value', (state, argument) => {
+  .define('a value of $number', (state, argument) => {
     state.argument = argument;
   })
   .define('the argument should be a $type', (state, type) => {

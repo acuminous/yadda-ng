@@ -1,6 +1,6 @@
 # Language: English
 
-Feature: Examples
+Feature: Simple examples
 
   The Yadda syntax is similar to Gherkin, but not identical.
 
@@ -8,7 +8,7 @@ Feature: Examples
   * Scenarios can have example tables as well as Scenario Outlines
   * You can use [ ] as well as < >
   * Data tables headings can have a horizontal border row beneath the header
-  * You cannot use scenario or background descriptions unless you specify a language
+  * You cannot use scenario or background descriptions
 
   @timeout = 1000
   Background:

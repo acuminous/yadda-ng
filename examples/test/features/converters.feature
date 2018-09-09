@@ -1,6 +1,6 @@
 # Language: English
 
-Feature: Converters
+Feature: Converter examples
 
   Yadda ships with the following converters
 
@@ -9,14 +9,17 @@ Feature: Converters
   * A numeric converter
 
   Scenario: Demonstrate the boolean converter
-    Given a true value
+    Given something is true
     Then the argument should be a boolean
 
   Scenario: Demonstrate the date converter
-    Given a 2018/12/25 value
+    Given the date is 2018/12/25
     Then the argument should be a date
 
-  Scenario: Demonstrate the number converter
-    Given a 123 value
+  Scenario: Demonstrate the number converter with an integer
+    Given a value of 123
     Then the argument should be a number
 
+  Scenario: Demonstrate the number converter with a float
+    Given a value of 123.4
+    Then the argument should be a number

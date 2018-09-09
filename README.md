@@ -1,5 +1,7 @@
 # yadda-ng
 
+1. Remove scenario & background descriptions
+1. Steps should be pending after an undefined step
 1. Term should use arity class
 1. Scenarios need to get libraries from annotations (see Script)
 1. Script should die. Instead maybe compile steps from scenarios
