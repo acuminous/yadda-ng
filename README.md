@@ -1,6 +1,5 @@
 # yadda-ng
 
-1. Remove scenario & background descriptions
 1. Steps should be pending after an undefined step
 1. Term should use arity class
 1. Terms should be recursive: .define('coordinates', '$number, $number', new GeographicCoordinatesConverter());

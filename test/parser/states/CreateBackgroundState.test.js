@@ -133,18 +133,39 @@ describe('Create Background State', () => {
 
   describe('Text Events', () => {
 
-    it('should not transition on text event', () => {
+    it('should transition to CreateStepState on text event', () => {
       const event = makeEvent('text');
       state = state.onText(event);
-      expect(state.name).toBe('CreateBackgroundState');
+      expect(state.name).toBe('CreateStepState');
     });
 
-    it('should capture description', () => {
-      state = state.onText(makeEvent('text', { text: 'First line' }));
-      state = state.onText(makeEvent('text', { text: 'Second line' }));
+    it('should capture steps', () => {
+      state = state.onText(makeEvent('text', { text: 'First step' }));
+      state = state.onText(makeEvent('text', { text: 'Second step' }));
+      state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
+      state = state.onText(makeEvent('text', { text: 'Third step' }));
 
       const exported = specification.export();
-      expect(exported.background.description).toBe('First line\nSecond line');
+      expect(exported.background.steps.length).toBe(2);
+      expect(exported.background.steps[0].text).toBe('First step');
+      expect(exported.background.steps[0].generalised).toBe('First step');
+      expect(exported.background.steps[1].text).toBe('Second step');
+      expect(exported.background.steps[1].generalised).toBe('Second step');
+    });
+
+    it('should capture steps with annotations', () => {
+      state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state = state.onText(makeEvent('text', { text: 'First step' }));
+      state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
+      state = state.onText(makeEvent('text', { text: 'Second step' }));
+
+      const exported = specification.export();
+      expect(exported.background.steps[0].annotations.length).toBe(2);
+      expect(exported.background.steps[0].annotations[0].name).toBe('one');
+      expect(exported.background.steps[0].annotations[0].value).toBe('1');
+      expect(exported.background.steps[0].annotations[1].name).toBe('two');
+      expect(exported.background.steps[0].annotations[1].value).toBe('2');
     });
   });
 });

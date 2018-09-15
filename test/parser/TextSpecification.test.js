@@ -6,6 +6,7 @@ const { BaseState } = States;
 describe('Text Specification', () => {
 
   describe('Parsing', () => {
+
     it('Parses specifications using the default language (none)', () => {
       const text = [
         '@skip',
@@ -15,7 +16,7 @@ describe('Text Specification', () => {
         '',
         '   @timeout=1000',
         '   Background: The background',
-        '   First background step',
+        '      First background step',
         '',
         '   @browser = Firefox',
         '   Scenario: First scenario',
@@ -60,9 +61,8 @@ describe('Text Specification', () => {
         '',
         '   @timeout=1000',
         '   Aftground: A long time ago',
-        '   Here be a tale of much woe',
-        '',
-        '   Giveth first background step',
+        '      Giveth first background step',
+        '      Background steps can still be free form',
         '',
         '   @browser = Firefox',
         '   Adventure: First scenario',
@@ -72,6 +72,9 @@ describe('Text Specification', () => {
         '   Sortie: Second scenario',
         '      Thence third step',
         '      And fourth step',
+        '',
+        '   Sortie: Third scenario',
+        '      Steps can still be free form',
       ].join('\n');
 
       const specification = new TextSpecification();
@@ -84,9 +87,10 @@ describe('Text Specification', () => {
       expect(document.background.annotations[0].name).toBe('timeout');
       expect(document.background.annotations[0].value).toBe('1000');
       expect(document.background.title).toBe('A long time ago');
-      expect(document.background.description).toBe('Here be a tale of much woe');
       expect(document.background.steps[0].text).toBe('Giveth first background step');
       expect(document.background.steps[0].generalised).toBe('first background step');
+      expect(document.background.steps[1].text).toBe('Background steps can still be free form');
+      expect(document.background.steps[1].generalised).toBe('Background steps can still be free form');
       expect(document.scenarios[0].annotations[0].name).toBe('browser');
       expect(document.scenarios[0].annotations[0].value).toBe('Firefox');
       expect(document.scenarios[0].title).toBe('First scenario');
@@ -95,6 +99,8 @@ describe('Text Specification', () => {
       expect(document.scenarios[1].title).toBe('Second scenario');
       expect(document.scenarios[1].steps[0].text).toBe('Thence third step');
       expect(document.scenarios[1].steps[1].text).toBe('And fourth step');
+      expect(document.scenarios[2].title).toBe('Third scenario');
+      expect(document.scenarios[2].steps[0].text).toBe('Steps can still be free form');
     });
 
     it('should report missing languages', () => {
@@ -117,9 +123,7 @@ describe('Text Specification', () => {
         '',
         '   @timeout=1000',
         '   Aftground: A long time ago',
-        '   Here be a tale of much woe',
-        '',
-        '   Giveth first background step',
+        '      Giveth first background step',
         '',
         '   @browser = Firefox',
         '   Adventure: First scenario',
@@ -141,7 +145,6 @@ describe('Text Specification', () => {
       expect(document.background.annotations[0].name).toBe('timeout');
       expect(document.background.annotations[0].value).toBe('1000');
       expect(document.background.title).toBe('A long time ago');
-      expect(document.background.description).toBe('Here be a tale of much woe');
       expect(document.background.steps[0].text).toBe('Giveth first background step');
       expect(document.background.steps[0].generalised).toBe('first background step');
       expect(document.scenarios[0].annotations[0].name).toBe('browser');
