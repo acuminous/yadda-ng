@@ -160,9 +160,34 @@ describe('Create Step State', () => {
 
   describe('Text Events', () => {
 
-    it('should error', () => {
+    it('should transition to new CreateStepState on text event', () => {
       const event = makeEvent('text');
-      expect(() => state.onText(event)).toThrow('Text was unexpected while parsing step on line 1: \'meh\'');
+      const newState = state.onText(event);
+      expect(newState).not.toBe(state);
+      expect(state.name).toBe('CreateStepState');
+    });
+
+    it('should capture step', () => {
+      state = state.onText(makeEvent('text', { text: 'Bah', generalised: 'bah' }));
+
+      const exported = specification.export();
+      expect(exported.scenarios[0].steps.length).toBe(2);
+      expect(exported.scenarios[0].steps[0].text).toBe('Meh');
+      expect(exported.scenarios[0].steps[1].text).toBe('Bah');
+      expect(exported.scenarios[0].steps[1].generalised).toBe('bah');
+    });
+
+    it('should capture steps with annotations', () => {
+      state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state = state.onText(makeEvent('text', { text: 'Bah' }));
+
+      const exported = specification.export();
+      expect(exported.scenarios[0].steps[1].annotations.length).toBe(2);
+      expect(exported.scenarios[0].steps[1].annotations[0].name).toBe('one');
+      expect(exported.scenarios[0].steps[1].annotations[0].value).toBe('1');
+      expect(exported.scenarios[0].steps[1].annotations[1].name).toBe('two');
+      expect(exported.scenarios[0].steps[1].annotations[1].value).toBe('2');
     });
   });
 });
