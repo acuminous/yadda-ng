@@ -12,6 +12,15 @@ describe('UndefinedStep', () => {
     expect(outcome.suggestion).toBe('.define(\'A\', (state) => { // your code here })');
   });
 
+  it('should not abort', async () => {
+    const step = new UndefinedStep({ text: 'Given A', generalised: 'A' });
+    const outcome = await step.abort().run({});
+
+    expect(step.isAborted()).toBe(false);
+    expect(outcome.status).toBe('undefined');
+    expect(outcome.suggestion).toBe('.define(\'A\', (state) => { // your code here })');
+  });
+
   it('should advise when pending', async () => {
     const annotations = new Annotations().add('pending');
     const step = new UndefinedStep({ annotations, text: 'Given A', generalised: 'A' });

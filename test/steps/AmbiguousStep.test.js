@@ -15,6 +15,18 @@ describe('AmbiguousStep', () => {
     expect(outcome.contenders).toEqual([ macro ]);
   });
 
+  it('should not abort', async () => {
+    const library = new Library();
+    const signature = new Signature({ library, pattern: new Pattern(/.*/) });
+    const macro = new Macro({ signature, fn: () => {} });
+    const step = new AmbiguousStep({ text: 'Given A', contenders: [ macro ] });
+    const outcome = await step.abort().run({});
+
+    expect(step.isAborted()).toBe(false);
+    expect(outcome.status).toBe('ambiguous');
+    expect(outcome.contenders).toEqual([ macro ]);
+  });
+
   it('should not be pending', () => {
     expect(new AmbiguousStep({ text: 'Given A', contenders: [] }).isPending()).toBe(false);
   });

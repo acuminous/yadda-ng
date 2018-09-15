@@ -10,17 +10,30 @@ describe('RunnableStep', () => {
   const macro = new Macro({ signature, fn: new AsyncFunction  ({ fn: () => {} }) });
   const pendingMacro = new Macro({ signature, fn: new PendingFunction() });
 
-  it('should run step', async () => {
-    await expect(new RunnableStep({ text: 'Given A', macro }).run({})).resolves.toEqual({ status: 'run' });
-    await expect(new RunnableStep({ text: 'Given A', macro: pendingMacro }).run({})).resolves.toEqual({ status: 'pending' });
+  it('should run a runnable step', async () => {
+    const step = new RunnableStep({ text: 'Given A', macro });
+    await expect(step.run({})).resolves.toEqual({ status: 'run' });
+  });
+
+  it('should not run a pending step', async () => {
+    const step = new RunnableStep({ text: 'Given A', macro: pendingMacro });
+    await expect(step.run({})).resolves.toEqual({ status: 'pending' });
+  });
+
+  it('should not run an aborted step', async () => {
+    const step = new RunnableStep({ text: 'Given A', macro }).abort();
+    expect(step.isAborted()).toBe(true);
+    await expect(step.run({})).resolves.toEqual({ status: 'aborted' });
   });
 
   it('should be pending the macro is without a function', async () => {
-    await expect(new RunnableStep({ text: 'Given A', macro }).isPending()).toBe(false);
+    const step = new RunnableStep({ text: 'Given A', macro });
+    expect(step.isPending()).toBe(false);
   });
 
   it('should not be pending the macro has a function', async () => {
-    await expect(new RunnableStep({ text: 'Given A', macro: pendingMacro }).isPending()).toBe(true);
+    const step = new RunnableStep({ text: 'Given A', macro: pendingMacro });
+    expect(step.isPending()).toBe(true);
   });
 
 });

@@ -36,10 +36,11 @@ Feature: Simple examples
     @skip
     Then there are 99 green bottles standing on the wall
 
+  @only
   Scenario: A step is missing
-    Given 100 green kegs are standing on the wall
-    When 1 green keg accidentally falls
-    Then there are 99 green kegs standing on the wall
+    Given 100 green bottles are sitting on the wall
+    When 1 green bottle accidentally falls
+    Then there are 99 green bottles standing on the wall
 
 ###
   Scenario: A multiline step (a.k.a. docstring) using a list converter
