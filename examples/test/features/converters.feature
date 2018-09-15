@@ -24,12 +24,6 @@ Feature: Converter examples
     Given a value of 123.4
     Then the argument should be a number
 
-  Scenario: Multiple step parameters can be converted
-    Given my full name is Michael Caine
-    Then my first name is Michael
-    And my last name is Caine
-
   Scenario: Multiple step parameters can be combined
     Given coordinates of 13.28963, 118.23904
     Then the argument should be an object
-
