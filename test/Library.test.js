@@ -19,7 +19,7 @@ describe('Library', () => {
     const library = new Library()
       .define(/step 1/, (state) => state.invocations++);
 
-    const step = { statement: 'step 1', generalised: 'step 1'} ;
+    const step = { text: 'step 1', generalised: 'step 1'} ;
     const candidates = library.getCompatibleMacros(step);
     expect(candidates.length).toBe(1);
 
@@ -32,7 +32,7 @@ describe('Library', () => {
     const library = new Library()
       .define('step 1', (state) => state.invocations++);
 
-    const step = { statement: 'step 1', generalised: 'step 1'} ;
+    const step = { text: 'step 1', generalised: 'step 1'} ;
     const candidates = library.getCompatibleMacros(step);
     expect(candidates.length).toBe(1);
 
@@ -47,12 +47,12 @@ describe('Library', () => {
         state.invocations++;
       });
 
-    const lcStep = { statement: 'step 1', generalised: 'step 1'};
+    const lcStep = { text: 'step 1', generalised: 'step 1'};
     const candidates1 = library.getCompatibleMacros(lcStep);
     expect(candidates1.length).toBe(1);
     await candidates1[0].run(state, lcStep);
 
-    const ucStep = { statement: 'STEP 1', generalised: 'STEP 1'};
+    const ucStep = { text: 'STEP 1', generalised: 'STEP 1'};
     const candidates2 = library.getCompatibleMacros(ucStep);
     expect(candidates2.length).toBe(1);
     await candidates2[0].run(state, ucStep);
@@ -68,7 +68,7 @@ describe('Library', () => {
         state.invocations++;
       });
 
-    const step = { statement: 'step 1', generalised: 'step 1'} ;
+    const step = { text: 'step 1', generalised: 'step 1'} ;
     const candidates = library.getCompatibleMacros(step);
     expect(candidates.length).toBe(1);
 
@@ -84,7 +84,7 @@ describe('Library', () => {
         state.invocations++;
       });
 
-    const step = { statement: 'step 1', generalised: 'step 1'} ;
+    const step = { text: 'step 1', generalised: 'step 1'} ;
     const candidates = library.getCompatibleMacros(step);
     expect(candidates.length).toBe(1);
 
@@ -100,7 +100,7 @@ describe('Library', () => {
         state.invocations++;
       }, new NumberConverter());
 
-    const step = { statement: 'step 1', generalised: 'step 1'} ;
+    const step = { text: 'step 1', generalised: 'step 1'} ;
     const candidates = library.getCompatibleMacros(step);
     expect(candidates.length).toBe(1);
 
@@ -116,7 +116,7 @@ describe('Library', () => {
         state.invocations++;
       }, new NumberConverter());
 
-    const step = { statement: 'step 1', generalised: 'step 1'} ;
+    const step = { text: 'step 1', generalised: 'step 1'} ;
     const candidates = library.getCompatibleMacros(step);
     expect(candidates.length).toBe(1);
 
@@ -153,7 +153,7 @@ describe('Library', () => {
       .define('step 1')
       .define('not this one');
 
-    const step = { statement: 'step 1', generalised: 'step 1'} ;
+    const step = { text: 'step 1', generalised: 'step 1'} ;
     const candidates = library.getCompatibleMacros(step);
     expect(candidates.length).toBe(4);
   });

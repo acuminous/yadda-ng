@@ -12,7 +12,7 @@ describe('Create Step State', () => {
     specification = new JsonSpecification()
       .createFeature({ annotations: [], title: 'Meh' })
       .createScenario({ annotations: [], title: 'Meh' })
-      .createScenarioStep({ annotations: [], statement: 'Meh' });
+      .createScenarioStep({ annotations: [], text: 'Meh' });
     state = new CreateStepState({ specification, createStep: (annotations, data) => {
       specification.createScenarioStep({ annotations, ...data });
       return this;
@@ -91,7 +91,7 @@ describe('Create Step State', () => {
 
     it('should capture scenarios', () => {
       state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
-      state = state.onStep(makeEvent('step', { statement: 'meh' }));
+      state = state.onStep(makeEvent('step', { text: 'meh' }));
       state = state.onScenario(makeEvent('scenario', { title: 'Second scenario' }));
 
       const exported = specification.export();
@@ -135,19 +135,19 @@ describe('Create Step State', () => {
     });
 
     it('should capture step', () => {
-      state = state.onStep(makeEvent('step', { statement: 'Bah', generalised: 'bah' }));
+      state = state.onStep(makeEvent('step', { text: 'Bah', generalised: 'bah' }));
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps.length).toBe(2);
-      expect(exported.scenarios[0].steps[0].statement).toBe('Meh');
-      expect(exported.scenarios[0].steps[1].statement).toBe('Bah');
+      expect(exported.scenarios[0].steps[0].text).toBe('Meh');
+      expect(exported.scenarios[0].steps[1].text).toBe('Bah');
       expect(exported.scenarios[0].steps[1].generalised).toBe('bah');
     });
 
     it('should capture steps with annotations', () => {
       state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
       state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      state = state.onStep(makeEvent('step', { statement: 'Bah' }));
+      state = state.onStep(makeEvent('step', { text: 'Bah' }));
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps[1].annotations.length).toBe(2);

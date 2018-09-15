@@ -3,7 +3,7 @@ const { Parser } = require('../../..');
 const { Pirate } = Parser.Languages;
 
 describe('Pirate', () => {
-  it('should generalise statement', () => {
+  it('should generalise text', () => {
     expect(new Pirate().generalise('Giveth A')).toBe('A');
     expect(new Pirate().generalise('Whence A')).toBe('A');
     expect(new Pirate().generalise('Thence A')).toBe('A');

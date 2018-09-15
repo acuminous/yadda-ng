@@ -4,7 +4,7 @@ const { English } = Parser.Languages;
 
 describe('English', () => {
 
-  it('should generalise statement', () => {
+  it('should generalise text', () => {
     expect(new English().generalise('Given A')).toBe('A');
     expect(new English().generalise('When A')).toBe('A');
     expect(new English().generalise('Then A')).toBe('A');

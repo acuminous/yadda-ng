@@ -102,21 +102,21 @@ describe('Create Scenario State', () => {
     });
 
     it('should capture steps', () => {
-      state = state.onStep(makeEvent('step', { statement: 'First step', generalised: 'Generalised first step' }));
-      state = state.onStep(makeEvent('step', { statement: 'Second step', generalised: 'Generalised second step' }));
+      state = state.onStep(makeEvent('step', { text: 'First step', generalised: 'Generalised first step' }));
+      state = state.onStep(makeEvent('step', { text: 'Second step', generalised: 'Generalised second step' }));
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps.length).toBe(2);
-      expect(exported.scenarios[0].steps[0].statement).toBe('First step');
+      expect(exported.scenarios[0].steps[0].text).toBe('First step');
       expect(exported.scenarios[0].steps[0].generalised).toBe('Generalised first step');
-      expect(exported.scenarios[0].steps[1].statement).toBe('Second step');
+      expect(exported.scenarios[0].steps[1].text).toBe('Second step');
       expect(exported.scenarios[0].steps[1].generalised).toBe('Generalised second step');
     });
 
     it('should capture steps with annotations', () => {
       state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
       state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      state = state.onStep(makeEvent('step', { statement: 'First step' }));
+      state = state.onStep(makeEvent('step', { text: 'First step' }));
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps[0].annotations.length).toBe(2);

@@ -38,15 +38,15 @@ describe('Text Specification', () => {
       expect(document.background.annotations[0].name).toBe('timeout');
       expect(document.background.annotations[0].value).toBe('1000');
       expect(document.background.title).toBe('The background');
-      expect(document.background.steps[0].statement).toBe('First background step');
+      expect(document.background.steps[0].text).toBe('First background step');
       expect(document.scenarios[0].annotations[0].name).toBe('browser');
       expect(document.scenarios[0].annotations[0].value).toBe('Firefox');
       expect(document.scenarios[0].title).toBe('First scenario');
-      expect(document.scenarios[0].steps[0].statement).toBe('First step');
-      expect(document.scenarios[0].steps[1].statement).toBe('Second step');
+      expect(document.scenarios[0].steps[0].text).toBe('First step');
+      expect(document.scenarios[0].steps[1].text).toBe('Second step');
       expect(document.scenarios[1].title).toBe('Second scenario');
-      expect(document.scenarios[1].steps[0].statement).toBe('Third step');
-      expect(document.scenarios[1].steps[1].statement).toBe('Fourth step');
+      expect(document.scenarios[1].steps[0].text).toBe('Third step');
+      expect(document.scenarios[1].steps[1].text).toBe('Fourth step');
     });
 
     it('Parses specifications in the language defined in the specficiation', () => {
@@ -85,16 +85,16 @@ describe('Text Specification', () => {
       expect(document.background.annotations[0].value).toBe('1000');
       expect(document.background.title).toBe('A long time ago');
       expect(document.background.description).toBe('Here be a tale of much woe');
-      expect(document.background.steps[0].statement).toBe('Giveth first background step');
+      expect(document.background.steps[0].text).toBe('Giveth first background step');
       expect(document.background.steps[0].generalised).toBe('first background step');
       expect(document.scenarios[0].annotations[0].name).toBe('browser');
       expect(document.scenarios[0].annotations[0].value).toBe('Firefox');
       expect(document.scenarios[0].title).toBe('First scenario');
-      expect(document.scenarios[0].steps[0].statement).toBe('Giveth first step');
-      expect(document.scenarios[0].steps[1].statement).toBe('Whence second step');
+      expect(document.scenarios[0].steps[0].text).toBe('Giveth first step');
+      expect(document.scenarios[0].steps[1].text).toBe('Whence second step');
       expect(document.scenarios[1].title).toBe('Second scenario');
-      expect(document.scenarios[1].steps[0].statement).toBe('Thence third step');
-      expect(document.scenarios[1].steps[1].statement).toBe('And fourth step');
+      expect(document.scenarios[1].steps[0].text).toBe('Thence third step');
+      expect(document.scenarios[1].steps[1].text).toBe('And fourth step');
     });
 
     it('should report missing languages', () => {
@@ -142,16 +142,16 @@ describe('Text Specification', () => {
       expect(document.background.annotations[0].value).toBe('1000');
       expect(document.background.title).toBe('A long time ago');
       expect(document.background.description).toBe('Here be a tale of much woe');
-      expect(document.background.steps[0].statement).toBe('Giveth first background step');
+      expect(document.background.steps[0].text).toBe('Giveth first background step');
       expect(document.background.steps[0].generalised).toBe('first background step');
       expect(document.scenarios[0].annotations[0].name).toBe('browser');
       expect(document.scenarios[0].annotations[0].value).toBe('Firefox');
       expect(document.scenarios[0].title).toBe('First scenario');
-      expect(document.scenarios[0].steps[0].statement).toBe('Giveth first step');
-      expect(document.scenarios[0].steps[1].statement).toBe('Whence second step');
+      expect(document.scenarios[0].steps[0].text).toBe('Giveth first step');
+      expect(document.scenarios[0].steps[1].text).toBe('Whence second step');
       expect(document.scenarios[1].title).toBe('Second scenario');
-      expect(document.scenarios[1].steps[0].statement).toBe('Thence third step');
-      expect(document.scenarios[1].steps[1].statement).toBe('And fourth step');
+      expect(document.scenarios[1].steps[0].text).toBe('Thence third step');
+      expect(document.scenarios[1].steps[1].text).toBe('And fourth step');
     });
   });
 
@@ -366,7 +366,7 @@ describe('Text Specification', () => {
         expect(event.name).toBe('step');
         expect(event.source.line).toBe('Given some step');
         expect(event.source.number).toBe(1);
-        expect(event.data.statement).toBe('Given some step');
+        expect(event.data.text).toBe('Given some step');
         expect(event.data.generalised).toBe('some step');
       });
 
@@ -377,7 +377,7 @@ describe('Text Specification', () => {
 
     it('should trim localised steps', () => {
       const state = new StubState((event) => {
-        expect(event.data.statement).toBe('Given some step');
+        expect(event.data.text).toBe('Given some step');
         expect(event.data.generalised).toBe('some step');
       });
 
@@ -391,7 +391,7 @@ describe('Text Specification', () => {
         expect(event.name).toBe('step');
         expect(event.source.line).toBe('Some step');
         expect(event.source.number).toBe(1);
-        expect(event.data.statement).toBe('Some step');
+        expect(event.data.text).toBe('Some step');
         expect(event.data.generalised).toBe('Some step');
       });
 
@@ -402,7 +402,7 @@ describe('Text Specification', () => {
 
     it('should trim localised steps', () => {
       const state = new StubState((event) => {
-        expect(event.data.statement).toBe('Some step');
+        expect(event.data.text).toBe('Some step');
         expect(event.data.generalised).toBe('Some step');
       });
 

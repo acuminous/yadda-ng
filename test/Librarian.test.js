@@ -12,7 +12,7 @@ describe('Librarian', () => {
       new Library({ name: 'D' }).define('bar'),
     ] });
 
-    const step = { statement: 'bar', generalised: 'bar' };
+    const step = { text: 'bar', generalised: 'bar' };
     const macros = librarian.getCompatibleMacros(step);
     expect(macros.length).toBe(2);
     expect(macros[0].supports(step)).toBe(true);
@@ -27,7 +27,7 @@ describe('Librarian', () => {
       new Library({ name: 'D' }).define('bar'),
     ] }).filter(['A', 'B', 'C']);
 
-    const step = { statement: 'bar', generalised: 'bar' };
+    const step = { text: 'bar', generalised: 'bar' };
     const macros = librarian.getCompatibleMacros(step);
     expect(macros.length).toBe(1);
     expect(macros[0].supports(step)).toBe(true);
@@ -41,7 +41,7 @@ describe('Librarian', () => {
       new Library({ name: 'D' }).define('bar'),
     ] }).filter();
 
-    const step = { statement: 'bar', generalised: 'bar' };
+    const step = { text: 'bar', generalised: 'bar' };
     const macros = librarian.getCompatibleMacros(step);
     expect(macros.length).toBe(2);
   });

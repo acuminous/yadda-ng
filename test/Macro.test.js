@@ -6,7 +6,7 @@ const { AsyncFunction, CallbackFunction } = Functions;
 
 describe('Macro', () => {
 
-  it('should advise when it supports a generalised statement', () => {
+  it('should advise when it supports generalised text', () => {
     const library = new Library({ name: 'test' });
     const signature = new Signature({ library, pattern: new Pattern(/^A$/) });
     const spy = new AsyncSpy();
@@ -14,7 +14,7 @@ describe('Macro', () => {
     expect(macro.supports({ generalised: 'A' })).toBe(true);
   });
 
-  it('should advise when it does not support a generalised statement', () => {
+  it('should advise when it does not support generalised text', () => {
     const library = new Library({ name: 'test' });
     const signature = new Signature({ library, pattern: new Pattern(/^A$/) });
     const spy = new AsyncSpy();
@@ -43,7 +43,7 @@ describe('Macro', () => {
     const signature = new Signature({ library, pattern: new Pattern(/.*/) });
     const spy = new AsyncSpy();
     const macro = new Macro({ signature, converters: [], fn: spy.tap() });
-    await macro.run({}, { statement: 'Some Text', generalised: 'Some Text' });
+    await macro.run({}, { text: 'Some Text', generalised: 'Some Text' });
     expect(spy.invocations).toHaveLength(1);
   });
 
@@ -52,7 +52,7 @@ describe('Macro', () => {
     const signature = new Signature({ library, pattern: new Pattern(/.*/) });
     const spy = new CallbackSpy();
     const macro = new Macro({ signature, converters: [], fn: spy.tap() });
-    await macro.run({}, { statement: 'Some Text', generalised: 'Some Text' });
+    await macro.run({}, { text: 'Some Text', generalised: 'Some Text' });
     expect(spy.invocations).toHaveLength(1);
   });
 
@@ -62,7 +62,7 @@ describe('Macro', () => {
     const signature = new Signature({ library, pattern: new Pattern(/.*/) });
     const spy = new AsyncSpy();
     const macro = new Macro({ signature, converters: [], fn: spy.tap() });
-    const step = { statement: 'Some Text', generalised: 'Some Text' };
+    const step = { text: 'Some Text', generalised: 'Some Text' };
     await macro.run(state, step);
     expect(spy.invocations[0][0]).toBe(state);
   });
@@ -83,7 +83,7 @@ describe('Macro', () => {
     const signature = new Signature({ library, pattern: new Pattern(/.*/) });
     const fn = new AsyncFunction({ fn: (state) => state.updated = true });
     const macro = new Macro({ signature, converters: [], fn });
-    const step = { statement: 'Some Text', generalised: 'Some Text' };
+    const step = { text: 'Some Text', generalised: 'Some Text' };
     await macro.run(state, step);
     expect(state.updated).toBe(true);
   });
@@ -94,7 +94,7 @@ describe('Macro', () => {
     const converters = [ new PassthroughConverter(), new PassthroughConverter() ];
     const spy = new AsyncSpy();
     const macro = new Macro({ signature, converters, fn: spy.tap(3) });
-    const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+    const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
     await macro.run({}, step);
     expect(spy.invocations[0][1]).toBe('Bob');
     expect(spy.invocations[0][2]).toBe('Holness');
@@ -106,7 +106,7 @@ describe('Macro', () => {
     const converters = [ new UpperCaseConverter(), new LowerCaseConverter() ];
     const spy = new AsyncSpy();
     const macro = new Macro({ signature, converters, fn: spy.tap(3) });
-    const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+    const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
     await macro.run({}, step);
     expect(spy.invocations[0][1]).toBe('BOB');
     expect(spy.invocations[0][2]).toBe('holness');
@@ -118,7 +118,7 @@ describe('Macro', () => {
     const converters = [new PassthroughConverter(), new PassthroughConverter({ demand: 2 })];
     const spy = new AsyncSpy();
     const macro = new Macro({ signature, converters, fn: spy.tap() });
-    const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+    const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
     await expect(macro.run({}, step)).rejects
       .toThrow('Step [Bob Holness] yielded only 1 value using signature [/^(.+)$/] derived from template [$name] defined in library [test], but 3 converter arguments were specified');
   });
@@ -129,7 +129,7 @@ describe('Macro', () => {
     const converters = [new PassthroughConverter()];
     const spy = new AsyncSpy();
     const macro = new Macro({ signature, converters, fn: spy.tap() });
-    const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+    const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
     await expect(macro.run({}, step)).rejects
       .toThrow('Step [Bob Holness] yielded 2 values using signature [/^(.+) (.+)$/] derived from template [$name] defined in library [test], but only 1 converter argument was specified');
   });
@@ -140,7 +140,7 @@ describe('Macro', () => {
     const converters = [];
     const spy = new AsyncSpy();
     const macro = new Macro({ signature, converters, fn: spy.tap() });
-    const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+    const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
     await expect(macro.run({}, step)).rejects
       .toThrow('Step [Bob Holness] yielded 2 values using signature [/^(.+) (.+)$/] derived from template [$name] defined in library [test], but no converter arguments were specified');
   });
@@ -151,7 +151,7 @@ describe('Macro', () => {
     const converters = [new PassthroughConverter(), new PassthroughConverter({ demand: 2 })];
     const spy = new AsyncSpy();
     const macro = new Macro({ signature, converters, fn: spy.tap() });
-    const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+    const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
     await expect(macro.run({}, step)).rejects
       .toThrow('Step [Bob Holness] yielded no values using signature [/^.+$/] derived from template [$name] defined in library [test], but 3 converter arguments were specified');
   });
@@ -162,7 +162,7 @@ describe('Macro', () => {
     const signature = new Signature({ library, pattern: new Pattern(/^(.+)$/), template: '$name' });
     const fn = new AsyncFunction({ fn: (state, a, b) => {} });
     const macro = new Macro({ signature, converters, fn });
-    const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+    const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
     await await expect(macro.run({}, step)).rejects
       .toThrow('Step [Bob Holness] yielded only 1 value using signature [/^(.+)$/] derived from template [$name] defined in library [test], but 2 step arguments were specified');
   });
@@ -173,7 +173,7 @@ describe('Macro', () => {
     const converters = [new PassthroughConverter({ demand: 2 })];
     const fn = new AsyncFunction({ fn: (state, a) => {} });
     const macro = new Macro({ signature, converters, fn });
-    const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+    const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
     await expect(macro.run({}, step)).rejects
       .toThrow('Step [Bob Holness] yielded 2 values using signature [/^(.+) (.+)$/] derived from template [$name] defined in library [test], but only 1 step argument was specified');
   });
@@ -184,7 +184,7 @@ describe('Macro', () => {
     const converters = [];
     const fn = new AsyncFunction({ fn: (state, a, b) => {} });
     const macro = new Macro({ signature, converters, fn });
-    const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+    const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
     await await expect(macro.run({}, step)).rejects
       .toThrow('Step [Bob Holness] yielded no values using signature [/^.+$/] derived from template [$name] defined in library [test], but 2 step arguments were specified');
   });
@@ -195,7 +195,7 @@ describe('Macro', () => {
     const converters = [new PassthroughConverter({ demand: 2 })];
     const fn = new AsyncFunction({ fn: (state) => {} });
     const macro = new Macro({ signature, converters, fn });
-    const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+    const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
     await expect(macro.run({}, step)).rejects
       .toThrow('Step [Bob Holness] yielded 2 values using signature [/^(.+) (.+)$/] derived from template [$name] defined in library [test], but no step arguments were specified');
   });
@@ -208,7 +208,7 @@ describe('Macro', () => {
       const converters = [new PassthroughConverter(), new PassthroughConverter({ demand: 2 })];
       const spy = new AsyncSpy();
       const macro = new Macro({ signature, converters, fn: spy.tap() });
-      const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+      const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
       await expect(macro.run({}, step)).rejects
         .toThrow('Step [Bob Holness] yielded only 1 value using signature [/^(.+)$/] defined in library [test], but 3 converter arguments were specified');
     });
@@ -219,7 +219,7 @@ describe('Macro', () => {
       const converters = [new PassthroughConverter()];
       const spy = new AsyncSpy();
       const macro = new Macro({ signature, converters, fn: spy.tap() });
-      const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+      const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
       await expect(macro.run({}, step)).rejects
         .toThrow('Step [Bob Holness] yielded 2 values using signature [/^(.+) (.+)$/] defined in library [test], but only 1 converter argument was specified');
     });
@@ -230,7 +230,7 @@ describe('Macro', () => {
       const converters = [];
       const spy = new AsyncSpy();
       const macro = new Macro({ signature, converters, fn: spy.tap() });
-      const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+      const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
       await expect(macro.run({}, step)).rejects
         .toThrow('Step [Bob Holness] yielded 2 values using signature [/^(.+) (.+)$/] defined in library [test], but no converter arguments were specified');
     });
@@ -241,7 +241,7 @@ describe('Macro', () => {
       const converters = [new PassthroughConverter(), new PassthroughConverter({ demand: 2 })];
       const spy = new AsyncSpy();
       const macro = new Macro({ signature, converters, fn: spy.tap() });
-      const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+      const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
       await expect(macro.run({}, step)).rejects
         .toThrow('Step [Bob Holness] yielded no values using signature [/^.+$/] defined in library [test], but 3 converter arguments were specified');
     });
@@ -252,7 +252,7 @@ describe('Macro', () => {
       const converters = [new PassthroughConverter()];
       const fn = new AsyncFunction({ fn: (state, a, b) => {} });
       const macro = new Macro({ signature, converters, fn });
-      const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+      const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
       await await expect(macro.run({}, step)).rejects
         .toThrow('Step [Bob Holness] yielded only 1 value using signature [/^(.+)$/] defined in library [test], but 2 step arguments were specified');
     });
@@ -263,7 +263,7 @@ describe('Macro', () => {
       const converters = [new PassthroughConverter({ demand: 2 })];
       const fn = new AsyncFunction({ fn: (state, a) => {} });
       const macro = new Macro({ signature, converters, fn });
-      const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+      const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
       await expect(macro.run({}, step)).rejects
         .toThrow('Step [Bob Holness] yielded 2 values using signature [/^(.+) (.+)$/] defined in library [test], but only 1 step argument was specified');
     });
@@ -274,7 +274,7 @@ describe('Macro', () => {
       const converters = [];
       const fn = new AsyncFunction({ fn: (state, a, b) => {} });
       const macro = new Macro({ signature, converters, fn });
-      const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+      const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
       await await expect(macro.run({}, step)).rejects
         .toThrow('Step [Bob Holness] yielded no values using signature [/^.+$/] defined in library [test], but 2 step arguments were specified');
     });
@@ -285,7 +285,7 @@ describe('Macro', () => {
       const converters = [new PassthroughConverter({ demand: 2 })];
       const fn = new AsyncFunction({ fn: (state) => {} });
       const macro = new Macro({ signature, converters, fn });
-      const step = { statement: 'Bob Holness', generalised: 'Bob Holness' };
+      const step = { text: 'Bob Holness', generalised: 'Bob Holness' };
       await expect(macro.run({}, step)).rejects
         .toThrow('Step [Bob Holness] yielded 2 values using signature [/^(.+) (.+)$/] defined in library [test], but no step arguments were specified');
     });

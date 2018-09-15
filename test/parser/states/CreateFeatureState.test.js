@@ -34,7 +34,7 @@ describe('Create Feature State', () => {
       state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
       state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
       state = state.onBackground(makeEvent('background', { title: 'First background' }));
-      state = state.onStep(makeEvent('step', { statement: 'First step' }));
+      state = state.onStep(makeEvent('step', { text: 'First step' }));
       state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
 
       const exported = specification.export();
@@ -100,7 +100,7 @@ describe('Create Feature State', () => {
 
     it('should capture scenarios', () => {
       state = state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
-      state = state.onStep(makeEvent('step', { statement: 'meh' }));
+      state = state.onStep(makeEvent('step', { text: 'meh' }));
       state = state.onScenario(makeEvent('scenario', { title: 'Second scenario' }));
 
       const exported = specification.export();
@@ -138,14 +138,14 @@ describe('Create Feature State', () => {
     // Features don't support steps, but feature descriptions might match the step regex
 
     it('should not cause transition', () => {
-      const event = makeEvent('step', { statement: 'Meh' });
+      const event = makeEvent('step', { text: 'Meh' });
       state = state.onStep(event);
       expect(state.name).toBe('CreateFeatureState');
     });
 
     it('should capture description', () => {
-      state = state.onStep(makeEvent('step', { statement: 'meh' }));
-      state = state.onStep(makeEvent('step', { statement: 'bah' }));
+      state = state.onStep(makeEvent('step', { text: 'meh' }));
+      state = state.onStep(makeEvent('step', { text: 'bah' }));
 
       const exported = specification.export();
       expect(exported.description).toBe('meh\nbah');

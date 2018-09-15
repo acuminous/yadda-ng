@@ -11,8 +11,8 @@ describe('Feature Playbook', () => {
       .define('one', () => {})
       .define('two');
     const librarian = new Librarian({ libraries: [ library ] });
-    const step1 = new DynamicStep({ librarian, statement: 'one', generalised: 'one' });
-    const step2 = new DynamicStep({ librarian, statement: 'two', generalised: 'two' });
+    const step1 = new DynamicStep({ librarian, text: 'one', generalised: 'one' });
+    const step2 = new DynamicStep({ librarian, text: 'two', generalised: 'two' });
     const scenario1 = new Scenario({ title: 'Scenario A', steps: [ step1, step2 ] });
     const scenario2 = new Scenario({ title: 'Scenario B', steps: [ step1, step2 ] });
     const feature1 = new Feature({ title: 'Feature A', scenarios: [ scenario1, scenario2 ] });
@@ -32,9 +32,9 @@ describe('Feature Playbook', () => {
     expect(report.steps[4].scenario).toBe(scenario1.title);
     expect(report.steps[7].scenario).toBe(scenario2.title);
 
-    expect(report.steps[0].step).toBe(step1.statement);
+    expect(report.steps[0].step).toBe(step1.text);
     expect(report.steps[0].status).toBe('run');
-    expect(report.steps[1].step).toBe(step2.statement);
+    expect(report.steps[1].step).toBe(step2.text);
     expect(report.steps[1].status).toBe('pending');
   });
 
@@ -48,8 +48,8 @@ describe('Feature Playbook', () => {
         .define(/TWO/i, () => { throw new Error('Wrong Step'); });
 
     const librarian = new Librarian({ libraries: [ library1, library2 ] });
-    const step1 = new DynamicStep({ librarian, statement: 'one', generalised: 'one' });
-    const step2 = new DynamicStep({ librarian, statement: 'two', generalised: 'two' });
+    const step1 = new DynamicStep({ librarian, text: 'one', generalised: 'one' });
+    const step2 = new DynamicStep({ librarian, text: 'two', generalised: 'two' });
     const scenario = new Scenario({ title: 'Scenario A', steps: [ step1, step2 ] });
     const feature = new Feature({ title: 'Feature A', scenarios: [ scenario ] });
     const playbook = new FeaturePlaybook({ features: [ feature ]});
@@ -69,8 +69,8 @@ describe('Feature Playbook', () => {
         .define(/TWO/i, () => { throw new Error('Wrong Step'); });
 
     const librarian = new Librarian({ libraries: [ library1, library2 ] });
-    const step1 = new DynamicStep({ librarian, statement: 'one', generalised: 'one' });
-    const step2 = new DynamicStep({ librarian, statement: 'two', generalised: 'two' });
+    const step1 = new DynamicStep({ librarian, text: 'one', generalised: 'one' });
+    const step2 = new DynamicStep({ librarian, text: 'two', generalised: 'two' });
     const scenario = new Scenario({ title: 'Scenario A', steps: [ step1, step2 ] });
     const feature = new Feature({ title: 'Feature A', scenarios: [ scenario ] });
     const playbook = new FeaturePlaybook({ features: [ feature ]});
@@ -84,14 +84,14 @@ describe('Feature Playbook', () => {
   it('should report undefined steps', async () => {
     const library = new Library();
     const librarian = new Librarian({ libraries: [ library ] });
-    const step = new DynamicStep({ librarian, statement: 'one', generalised: 'generalised' });
+    const step = new DynamicStep({ librarian, text: 'one', generalised: 'generalised' });
     const scenario = new Scenario({ title: 'Scenario A', steps: [ step ] });
     const feature = new Feature({ title: 'Feature A', scenarios: [ scenario ] });
     const playbook = new FeaturePlaybook({ features: [ feature ]});
 
     const report = await playbook.run();
     expect(report.steps.length).toBe(1);
-    expect(report.steps[0].step).toBe(step.statement);
+    expect(report.steps[0].step).toBe(step.text);
     expect(report.steps[0].status).toBe('undefined');
     expect(report.steps[0].suggestion).toBe('.define(\'generalised\', (state) => { // your code here })');
   });
@@ -101,14 +101,14 @@ describe('Feature Playbook', () => {
       .define(/\w+/, () => {})
       .define(/\w*/, () => {});
     const librarian = new Librarian({ libraries: [ library ] });
-    const step = new DynamicStep({ librarian, statement: 'one', generalised: 'one' });
+    const step = new DynamicStep({ librarian, text: 'one', generalised: 'one' });
     const scenario = new Scenario({ title: 'Scenario A', steps: [ step ] });
     const feature = new Feature({ title: 'Feature A', scenarios: [ scenario ] });
     const playbook = new FeaturePlaybook({ features: [ feature ]});
 
     const report = await playbook.run();
     expect(report.steps.length).toBe(1);
-    expect(report.steps[0].step).toBe(step.statement);
+    expect(report.steps[0].step).toBe(step.text);
     expect(report.steps[0].status).toBe('ambiguous');
     expect(report.steps[0].contenders.length).toBe(2);
   });
@@ -117,14 +117,14 @@ describe('Feature Playbook', () => {
     const library = new Library()
       .define('one', () => { throw new Error('oh noes!'); });
     const librarian = new Librarian({ libraries: [ library ] });
-    const step = new DynamicStep({ librarian, statement: 'one', generalised: 'one' });
+    const step = new DynamicStep({ librarian, text: 'one', generalised: 'one' });
     const scenario = new Scenario({ title: 'Scenario A', steps: [ step ] });
     const feature = new Feature({ title: 'Feature A', scenarios: [ scenario ] });
     const playbook = new FeaturePlaybook({ features: [ feature ]});
 
     const report = await playbook.run();
     expect(report.steps.length).toBe(1);
-    expect(report.steps[0].step).toBe(step.statement);
+    expect(report.steps[0].step).toBe(step.text);
     expect(report.steps[0].status).toBe('error');
     expect(report.steps[0].error.message).toBe('oh noes!');
   });
@@ -133,7 +133,7 @@ describe('Feature Playbook', () => {
     const library = new Library()
       .define('one', async () => new Promise((resolve) => setTimeout(resolve, 201)));
     const librarian = new Librarian({ libraries: [ library ] });
-    const step = new DynamicStep({ librarian, statement: 'one', generalised: 'one' });
+    const step = new DynamicStep({ librarian, text: 'one', generalised: 'one' });
     const scenario = new Scenario({ title: 'Scenario A', steps: [ step ] });
     const feature = new Feature({ title: 'Feature A', scenarios: [ scenario ] });
     const playbook = new FeaturePlaybook({ features: [ feature ]});
