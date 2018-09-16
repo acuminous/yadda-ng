@@ -1,7 +1,7 @@
 const expect = require('expect');
 const { Parser } = require('../../..');
 const { JsonSpecification, States } = Parser;
-const { CreateStepState } = States;
+const { CreateScenarioStepState } = States;
 
 describe('Create Step State', () => {
 
@@ -13,7 +13,7 @@ describe('Create Step State', () => {
       .createFeature({ annotations: [], title: 'Meh' })
       .createScenario({ annotations: [], title: 'Meh' })
       .createScenarioStep({ annotations: [], text: 'Meh' });
-    state = new CreateStepState({ specification, createStep: (annotations, data) => {
+    state = new CreateScenarioStepState({ specification, createStep: (annotations, data) => {
       specification.createScenarioStep({ annotations, ...data });
       return this;
     }});
@@ -24,7 +24,7 @@ describe('Create Step State', () => {
     it('should not cause transition', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
       state = state.onAnnotation(event);
-      expect(state.name).toBe('CreateStepState');
+      expect(state.name).toBe('CreateScenarioStepState');
     });
   });
 
@@ -41,7 +41,7 @@ describe('Create Step State', () => {
     it('should not cause transition', () => {
       const event = makeEvent('blank_line');
       state = state.onBlankLine(event);
-      expect(state.name).toBe('CreateStepState');
+      expect(state.name).toBe('CreateScenarioStepState');
     });
   });
 
@@ -69,7 +69,7 @@ describe('Create Step State', () => {
       expect(state.name).toBe('CreateCommentState');
 
       state = state.onMultiLineComment(makeEvent('multi_line_comment'));
-      expect(state.name).toBe('CreateStepState');
+      expect(state.name).toBe('CreateScenarioStepState');
     });
   });
 
@@ -121,17 +121,17 @@ describe('Create Step State', () => {
     it('should not cause transition', () => {
       const event = makeEvent('single_line_comment', { comment: 'Meh' });
       state = state.onSingleLineComment(event);
-      expect(state.name).toBe('CreateStepState');
+      expect(state.name).toBe('CreateScenarioStepState');
     });
   });
 
   describe('Step Events', () => {
 
-    it('should transition to new CreateStepState on step event', () => {
+    it('should transition to new CreateScenarioStepState on step event', () => {
       const event = makeEvent('step');
       const newState = state.onStep(event);
       expect(newState).not.toBe(state);
-      expect(state.name).toBe('CreateStepState');
+      expect(state.name).toBe('CreateScenarioStepState');
     });
 
     it('should capture step', () => {
@@ -160,11 +160,11 @@ describe('Create Step State', () => {
 
   describe('Text Events', () => {
 
-    it('should transition to new CreateStepState on text event', () => {
+    it('should transition to new CreateScenarioStepState on text event', () => {
       const event = makeEvent('text');
       const newState = state.onText(event);
       expect(newState).not.toBe(state);
-      expect(state.name).toBe('CreateStepState');
+      expect(state.name).toBe('CreateScenarioStepState');
     });
 
     it('should capture step', () => {

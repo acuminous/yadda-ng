@@ -95,10 +95,10 @@ describe('Create Scenario State', () => {
 
   describe('Step Events', () => {
 
-    it('should transition to CreateStepState on step event', () => {
+    it('should transition to CreateScenarioStepState on step event', () => {
       const event = makeEvent('step');
       state = state.onStep(event);
-      expect(state.name).toBe('CreateStepState');
+      expect(state.name).toBe('CreateScenarioStepState');
     });
 
     it('should capture steps', () => {
@@ -129,10 +129,10 @@ describe('Create Scenario State', () => {
 
   describe('Text Events', () => {
 
-    it('should transition to CreateStepState on text event', () => {
+    it('should transition to CreateScenarioStepState on text event', () => {
       const event = makeEvent('text');
       state = state.onText(event);
-      expect(state.name).toBe('CreateStepState');
+      expect(state.name).toBe('CreateScenarioStepState');
     });
 
     it('should capture steps', () => {
