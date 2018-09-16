@@ -27,8 +27,7 @@ describe('Specification Parser', () => {
 
     ].join('\n');
 
-    const parser = new SpecificationParser();
-    const document = parser.parse(text).export();
+    const document = SpecificationParser.parse(text);
 
     expect(document.description).toBe('Some free form text');
     expect(document.annotations[0].name).toBe('skip');
@@ -75,8 +74,7 @@ describe('Specification Parser', () => {
       '      Steps can still be free form',
     ].join('\n');
 
-    const parser = new SpecificationParser();
-    const document = parser.parse(text).export();
+    const document = SpecificationParser.parse(text);
 
     expect(document.description).toBe('Pieces of eight');
     expect(document.annotations[0].name).toBe('skip');
@@ -107,9 +105,8 @@ describe('Specification Parser', () => {
       'Feature: Some feature',
     ].join('\n');
 
-    const parser = new SpecificationParser();
 
-    expect(() => parser.parse(text)).toThrow('Language: Missing was not found');
+    expect(() => SpecificationParser.parse(text)).toThrow('Language: Missing was not found');
   });
 
   it('should parse specifications in the specified language', () => {
@@ -133,9 +130,8 @@ describe('Specification Parser', () => {
       '      And fourth step',
     ].join('\n');
 
-    const parser = new SpecificationParser();
     const language = new Languages.Pirate();
-    const document = parser.parse(text, { language }).export();
+    const document = SpecificationParser.parse(text, { language });
 
     expect(document.description).toBe('Pieces of eight');
     expect(document.annotations[0].name).toBe('skip');
@@ -178,12 +174,11 @@ describe('Specification Parser', () => {
     ].join('\n');
     const text2 = text1.replace('Some feature', 'Another feature');
 
-    const parser = new SpecificationParser();
-    const result1 = parser.parse(text1);
-    const result2 = parser.parse(text2);
+    const result1 = SpecificationParser.parse(text1);
+    const result2 = SpecificationParser.parse(text2);
 
-    expect(result1.export().title).toBe('Some feature');
-    expect(result2.export().title).toBe('Another feature');
+    expect(result1.title).toBe('Some feature');
+    expect(result2.title).toBe('Another feature');
   });
 
   describe('Annotations', () => {
@@ -197,9 +192,8 @@ describe('Specification Parser', () => {
         expect(event.data.value).toBe(true);
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('@skip', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('@skip', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -210,9 +204,8 @@ describe('Specification Parser', () => {
         expect(event.data.name).toBe('skip');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('@skip   ', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('@skip   ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -226,9 +219,8 @@ describe('Specification Parser', () => {
         expect(event.data.value).toBe('firefox');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('@browser=firefox', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('@browser=firefox', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -240,9 +232,8 @@ describe('Specification Parser', () => {
         expect(event.data.value).toBe('firefox');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse(' @browser = firefox ', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse(' @browser = firefox ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -258,9 +249,8 @@ describe('Specification Parser', () => {
         expect(event.data.title).toBe('Some feature');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('Feature: Some feature', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('Feature: Some feature', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -271,9 +261,8 @@ describe('Specification Parser', () => {
         expect(event.data.title).toBe('Some feature');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('Feature:   Some feature   ', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('Feature:   Some feature   ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -285,9 +274,8 @@ describe('Specification Parser', () => {
         expect(event.data.title).toBe('Some feature');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('Feature:   Some feature   ', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('Feature:   Some feature   ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -303,9 +291,8 @@ describe('Specification Parser', () => {
         expect(event.data.title).toBe('Some scenario');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('Scenario: Some scenario', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('Scenario: Some scenario', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -316,9 +303,8 @@ describe('Specification Parser', () => {
         expect(event.data.title).toBe('Some scenario');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('Scenario:   Some scenario   ', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('Scenario:   Some scenario   ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -334,9 +320,8 @@ describe('Specification Parser', () => {
         expect(event.data.title).toBe('Some background');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('Background: Some background', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('Background: Some background', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -347,9 +332,8 @@ describe('Specification Parser', () => {
         expect(event.data.title).toBe('Some background');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('Background:   Some background   ', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('Background:   Some background   ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -364,9 +348,8 @@ describe('Specification Parser', () => {
         expect(event.source.number).toBe(1);
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -378,9 +361,8 @@ describe('Specification Parser', () => {
         expect(event.source.number).toBe(1);
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('  ', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('  ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -397,10 +379,9 @@ describe('Specification Parser', () => {
         expect(event.data.generalised).toBe('some step');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
+      const machine = new StateMachine({ state });
       const language = new Languages.English();
-      parser.parse('Given some step', { machine, language });
+      SpecificationParser.parse('Given some step', { machine, language });
 
       expect(state.count).toBe(1);
     });
@@ -411,10 +392,9 @@ describe('Specification Parser', () => {
         expect(event.data.generalised).toBe('some step');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
+      const machine = new StateMachine({ state });
       const language = new Languages.English();
-      parser.parse('   Given some step  ', { machine, language });
+      SpecificationParser.parse('   Given some step  ', { machine, language });
 
       expect(state.count).toBe(1);
     });
@@ -428,9 +408,8 @@ describe('Specification Parser', () => {
         expect(event.data.generalised).toBe('Some step');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('Some step', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('Some step', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -441,9 +420,8 @@ describe('Specification Parser', () => {
         expect(event.data.generalised).toBe('Some step');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('   Some step  ', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('   Some step  ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -459,10 +437,9 @@ describe('Specification Parser', () => {
         expect(event.data.text).toBe('Some text');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
+      const machine = new StateMachine({ state });
       const language = new Languages.English();
-      parser.parse('Some text', { machine, language });
+      SpecificationParser.parse('Some text', { machine, language });
 
       expect(state.count).toBe(1);
     });
@@ -472,9 +449,8 @@ describe('Specification Parser', () => {
         expect(event.data.text).toBe('Some text');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('   Some text  ', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('   Some text  ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -490,9 +466,8 @@ describe('Specification Parser', () => {
         expect(event.data.text).toBe('Some comment');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('#Some comment', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('#Some comment', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -504,9 +479,8 @@ describe('Specification Parser', () => {
         expect(event.data.text).toBe('Some comment');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('  #   Some comment   ', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('  #   Some comment   ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -521,9 +495,8 @@ describe('Specification Parser', () => {
         expect(event.data.text).toBe('Some comment');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('###Some comment', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('###Some comment', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -534,9 +507,8 @@ describe('Specification Parser', () => {
         expect(event.data.text).toBe('Some comment');
       });
 
-      const parser = new SpecificationParser();
-      const machine = new StateMachine({ parser, state });
-      parser.parse('  ####   Some comment   ', { machine });
+      const machine = new StateMachine({ state });
+      SpecificationParser.parse('  ####   Some comment   ', { machine });
 
       expect(state.count).toBe(1);
     });

@@ -1,5 +1,3 @@
-# Language: English
-
 Feature: Converter examples
 
   Yadda ships with the following converters

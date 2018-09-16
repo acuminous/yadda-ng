@@ -1,5 +1,3 @@
-# Language: English
-
 Feature: Simple examples
 
   The Yadda syntax is similar to Gherkin, but not identical.
