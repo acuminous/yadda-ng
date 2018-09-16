@@ -24,7 +24,6 @@ describe('Specification Parser', () => {
       '   Scenario: Second scenario',
       '      Third step',
       '      Fourth step',
-
     ].join('\n');
 
     const document = SpecificationParser.parse(text);
@@ -179,6 +178,95 @@ describe('Specification Parser', () => {
 
     expect(result1.title).toBe('Some feature');
     expect(result2.title).toBe('Another feature');
+  });
+
+  it('should support multiline steps', () => {
+    const text = [
+      '@skip',
+      'Feature: Some feature',
+      '',
+      'Some free form text',
+      '',
+      '   @timeout=1000',
+      '   Background: The background',
+      '   First background step',
+      '      Docstring 1',
+      '      Docstring 2',
+      '         Docstring 3',
+      '      Docstring 4   ',
+      '   Second background step',
+      '',
+      '   @browser = Firefox',
+      '   Scenario: First scenario',
+      '      First step',
+      '         Docstring 1',
+      '         Docstring 2',
+      '            Docstring 3',
+      '         Docstring 4   ',
+      '     Second step',
+    ].join('\n');
+
+    const document = SpecificationParser.parse(text);
+
+    expect(document.background.steps.length).toBe(2);
+    expect(document.background.steps[0].text).toBe('First background step');
+    expect(document.background.steps[0].docstring.length).toBe(4);
+    expect(document.background.steps[0].docstring[0]).toBe('Docstring 1');
+    expect(document.background.steps[0].docstring[1]).toBe('Docstring 2');
+    expect(document.background.steps[0].docstring[2]).toBe('   Docstring 3');
+    expect(document.background.steps[0].docstring[3]).toBe('Docstring 4   ');
+    expect(document.background.steps[1].text).toBe('Second background step');
+
+    expect(document.scenarios.length).toBe(1);
+    expect(document.scenarios[0].steps.length).toBe(2);
+    expect(document.scenarios[0].steps[0].text).toBe('First step');
+    expect(document.scenarios[0].steps[0].docstring.length).toBe(4);
+    expect(document.scenarios[0].steps[0].docstring[0]).toBe('Docstring 1');
+    expect(document.scenarios[0].steps[0].docstring[1]).toBe('Docstring 2');
+    expect(document.scenarios[0].steps[0].docstring[2]).toBe('   Docstring 3');
+    expect(document.scenarios[0].steps[0].docstring[3]).toBe('Docstring 4   ');
+    expect(document.scenarios[0].steps[1].text).toBe('Second step');
+  });
+
+  it('should support multiline steps in the specified language', () => {
+    const text = [
+      '@skip',
+      'Feature: Some feature',
+      '',
+      'Some free form text',
+      '',
+      '   @timeout=1000',
+      '   Background: The background',
+      '   Given a background step',
+      '      Given a docstring',
+      '      Given another docstring',
+      '   Given another background step',
+      '',
+      '   @browser = Firefox',
+      '   Scenario: First scenario',
+      '      Given a step',
+      '         Given a docstring',
+      '         Given another docstring',
+      '     Given another step',
+    ].join('\n');
+
+    const language = new Languages.English();
+    const document = SpecificationParser.parse(text, { language });
+
+    expect(document.background.steps.length).toBe(2);
+    expect(document.background.steps[0].generalised).toBe('a background step');
+    expect(document.background.steps[0].docstring.length).toBe(2);
+    expect(document.background.steps[0].docstring[0]).toBe('Given a docstring');
+    expect(document.background.steps[0].docstring[1]).toBe('Given another docstring');
+    expect(document.background.steps[1].generalised).toBe('another background step');
+
+    expect(document.scenarios.length).toBe(1);
+    expect(document.scenarios[0].steps.length).toBe(2);
+    expect(document.scenarios[0].steps[0].generalised).toBe('a step');
+    expect(document.scenarios[0].steps[0].docstring.length).toBe(2);
+    expect(document.scenarios[0].steps[0].docstring[0]).toBe('Given a docstring');
+    expect(document.scenarios[0].steps[0].docstring[1]).toBe('Given another docstring');
+    expect(document.scenarios[0].steps[1].generalised).toBe('another step');
   });
 
   describe('Annotations', () => {

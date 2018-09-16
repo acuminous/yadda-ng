@@ -14,7 +14,7 @@ describe('Create Scenario Step State', () => {
       .createScenarioStep({ annotations: [], text: 'Meh' });
 
     const machine = new StateMachine({ specification });
-    state = machine.toCreateScenarioStepState();
+    state = machine.toCreateScenarioStepState({ indentation: 0 });
   });
 
   describe('Annotation Events', () => {

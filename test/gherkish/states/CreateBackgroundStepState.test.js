@@ -14,7 +14,7 @@ describe('Create Background Step State', () => {
       .createBackgroundStep({ annotations: [], text: 'Meh' });
 
     const machine = new StateMachine({ specification });
-    state = machine.toCreateBackgroundStepState();
+    state = machine.toCreateBackgroundStepState({ indentation: 0 });
   });
 
   describe('Annotation Events', () => {
