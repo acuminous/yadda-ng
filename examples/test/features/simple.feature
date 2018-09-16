@@ -36,7 +36,6 @@ Feature: Simple examples
     @skip
     Then there are 99 green bottles standing on the wall
 
-  @only
   Scenario: A step is missing
     Given 100 green bottles are sitting on the wall
     When 1 green bottle accidentally falls

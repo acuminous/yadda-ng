@@ -1,18 +1,18 @@
 const expect = require('expect');
-const { Parser } = require('../../..');
-const { JsonSpecification, States } = Parser;
-const { CreateBackgroundState } =  States;
+const { Gherkish } = require('../../..');
+const { Specification, StateMachine } = Gherkish;
 
 describe('Create Background State', () => {
 
-  let specification;
   let state;
+  let specification;
 
   beforeEach(() => {
-    specification = new JsonSpecification()
+    specification = new Specification()
       .createFeature({ annotations: [], title: 'Meh' })
       .createBackground({ annotations: [], title: 'Meh' });
-    state = new CreateBackgroundState({ specification });
+    const machine = new StateMachine({ specification });
+    state = machine.toCreateBackgroundState({ specification, machine });
   });
 
   describe('Annotation Events', () => {

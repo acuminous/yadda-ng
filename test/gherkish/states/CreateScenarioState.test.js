@@ -1,7 +1,6 @@
 const expect = require('expect');
-const { Parser } = require('../../..');
-const { JsonSpecification, States } = Parser;
-const { CreateScenarioState } = States;
+const { Gherkish } = require('../../..');
+const { Specification, StateMachine } = Gherkish;
 
 describe('Create Scenario State', () => {
 
@@ -9,10 +8,12 @@ describe('Create Scenario State', () => {
   let state;
 
   beforeEach(() => {
-    specification = new JsonSpecification()
+    specification = new Specification()
       .createFeature({ annotations: [], title: 'Meh' })
       .createScenario({ annotations: [], title: 'Meh' });
-    state = new CreateScenarioState({ specification });
+
+    const machine = new StateMachine({ specification });
+    state = machine.toCreateScenarioState();
   });
 
   describe('Annotation Events', () => {

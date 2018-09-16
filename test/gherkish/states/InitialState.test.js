@@ -1,6 +1,6 @@
 const expect = require('expect');
-const { Parser } = require('../../..');
-const { TextSpecification, JsonSpecification, States } = Parser;
+const { Gherkish } = require('../../..');
+const { SpecificationParser, Specification, StateMachine, States } = Gherkish;
 const { InitialState } = States;
 
 describe('Initial State', () => {
@@ -9,9 +9,11 @@ describe('Initial State', () => {
   let state;
 
   beforeEach(() => {
-    const parser = new TextSpecification();
-    specification = new JsonSpecification();
-    state = new InitialState({ parser, specification });
+    const parser = new SpecificationParser();
+    specification = new Specification();
+
+    const machine = new StateMachine({ parser, specification });
+    state = new InitialState({ parser, machine, specification });
   });
 
   describe('Annotation Events', () => {
@@ -82,8 +84,15 @@ describe('Initial State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('language', { name: 'English' });
-      state = state.onLanguage(event);
+      state = state.onLanguage(event, {});
       expect(state.name).toBe('InitialState');
+    });
+
+    it('should set language', () => {
+      const session = {};
+      const event = makeEvent('language', { name: 'English' });
+      state = state.onLanguage(event, session);
+      expect(session.language.name).toBe('English');
     });
   });
 

@@ -1,16 +1,17 @@
 const expect = require('expect');
-const { Parser } = require('../../..');
-const { JsonSpecification, States } = Parser;
-const { InitialState, CreateCommentState } = States;
+const { Gherkish } = require('../../..');
+const { Specification, StateMachine } = Gherkish;
 
 describe('Create Comment State', () => {
 
   let state;
 
   beforeEach(() => {
-    const specification = new JsonSpecification();
-    const previousState = new InitialState({ specification });
-    state = new CreateCommentState({ previousState });
+    const specification = new Specification();
+
+    const machine = new StateMachine({ specification });
+    machine.toCreateFeatureState();
+    state = machine.toCreateCommentState();
   });
 
   describe('Annotation Events', () => {
@@ -71,7 +72,7 @@ describe('Create Comment State', () => {
     it('should transition to previous state', () => {
       const event = makeEvent('multi_line_comment');
       state = state.onMultiLineComment(event);
-      expect(state.name).toBe('InitialState');
+      expect(state.name).toBe('CreateFeatureState');
     });
   });
 
