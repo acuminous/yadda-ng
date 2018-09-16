@@ -7,6 +7,7 @@ Feature: Simple examples
   * You can use [ ] as well as < >
   * Data tables headings can have a horizontal border row beneath the header
   * You cannot use scenario or background descriptions
+  * docstrings are delimited by indentation not tripple quotes
 
   @timeout = 1000
   Background:
