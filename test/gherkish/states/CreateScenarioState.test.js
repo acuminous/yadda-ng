@@ -5,6 +5,7 @@ const { Specification, StateMachine } = Gherkish;
 describe('Create Scenario State', () => {
 
   let specification;
+  let machine;
   let state;
 
   beforeEach(() => {
@@ -12,7 +13,7 @@ describe('Create Scenario State', () => {
       .createFeature({ annotations: [], title: 'Meh' })
       .createScenario({ annotations: [], title: 'Meh' });
 
-    const machine = new StateMachine({ specification });
+    machine = new StateMachine({ specification });
     state = machine.toCreateScenarioState();
   });
 
@@ -20,8 +21,8 @@ describe('Create Scenario State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
-      state = state.onAnnotation(event);
-      expect(state.name).toBe('CreateScenarioState');
+      state.onAnnotation(event);
+      expect(machine.state).toBe('CreateScenarioState');
     });
   });
 
@@ -37,8 +38,8 @@ describe('Create Scenario State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('blank_line');
-      state = state.onBlankLine(event);
-      expect(state.name).toBe('CreateScenarioState');
+      state.onBlankLine(event);
+      expect(machine.state).toBe('CreateScenarioState');
     });
   });
 
@@ -60,12 +61,9 @@ describe('Create Scenario State', () => {
 
   describe('Multi Line Comment Events', () => {
 
-    it('should transition to CreateCommentState and back', () => {
-      state = state.onMultiLineComment(makeEvent('multi_line_comment'));
-      expect(state.name).toBe('CreateCommentState');
-
-      state = state.onMultiLineComment(makeEvent('multi_line_comment'));
-      expect(state.name).toBe('CreateScenarioState');
+    it('should transition to CreateCommentState', () => {
+      state.onMultiLineComment(makeEvent('multi_line_comment'));
+      expect(machine.state).toBe('CreateCommentState');
     });
   });
 
@@ -89,8 +87,8 @@ describe('Create Scenario State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('single_line_comment', { comment: 'Meh' });
-      state = state.onSingleLineComment(event);
-      expect(state.name).toBe('CreateScenarioState');
+      state.onSingleLineComment(event);
+      expect(machine.state).toBe('CreateScenarioState');
     });
   });
 
@@ -98,13 +96,13 @@ describe('Create Scenario State', () => {
 
     it('should transition to CreateScenarioStepState on step event', () => {
       const event = makeEvent('step');
-      state = state.onStep(event);
-      expect(state.name).toBe('CreateScenarioStepState');
+      state.onStep(event);
+      expect(machine.state).toBe('CreateScenarioStepState');
     });
 
     it('should capture steps', () => {
-      state = state.onStep(makeEvent('step', { text: 'First step', generalised: 'Generalised first step' }));
-      state = state.onStep(makeEvent('step', { text: 'Second step', generalised: 'Generalised second step' }));
+      state.onStep(makeEvent('step', { text: 'First step', generalised: 'Generalised first step' }));
+      state.onStep(makeEvent('step', { text: 'Second step', generalised: 'Generalised second step' }));
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps.length).toBe(2);
@@ -115,9 +113,9 @@ describe('Create Scenario State', () => {
     });
 
     it('should capture steps with annotations', () => {
-      state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
-      state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      state = state.onStep(makeEvent('step', { text: 'First step' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state.onStep(makeEvent('step', { text: 'First step' }));
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps[0].annotations.length).toBe(2);
@@ -132,13 +130,13 @@ describe('Create Scenario State', () => {
 
     it('should transition to CreateScenarioStepState on text event', () => {
       const event = makeEvent('text');
-      state = state.onText(event);
-      expect(state.name).toBe('CreateScenarioStepState');
+      state.onText(event);
+      expect(machine.state).toBe('CreateScenarioStepState');
     });
 
     it('should capture steps', () => {
-      state = state.onText(makeEvent('text', { text: 'First step' }));
-      state = state.onText(makeEvent('text', { text: 'Second step' }));
+      state.onText(makeEvent('text', { text: 'First step' }));
+      state.onText(makeEvent('text', { text: 'Second step' }));
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps.length).toBe(2);
@@ -149,9 +147,9 @@ describe('Create Scenario State', () => {
     });
 
     it('should capture steps with annotations', () => {
-      state = state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
-      state = state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      state = state.onText(makeEvent('text', { text: 'First step' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state.onText(makeEvent('text', { text: 'First step' }));
 
       const exported = specification.export();
       expect(exported.scenarios[0].steps[0].annotations.length).toBe(2);

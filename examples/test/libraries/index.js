@@ -1,7 +1,9 @@
-const bottlesLibrary = require('./bottlesLibrary');
+const simpleLibrary = require('./simpleLibrary');
+const advancedLibrary = require('./advancedLibrary');
 const convertersLibrary = require('./convertersLibrary');
 
 module.exports = {
-  bottlesLibrary,
+  simpleLibrary,
+  advancedLibrary,
   convertersLibrary,
 };
