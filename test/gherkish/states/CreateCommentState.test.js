@@ -5,20 +5,19 @@ const { Specification, StateMachine } = Gherkish;
 describe('Create Comment State', () => {
 
   let machine;
-  let state;
 
   beforeEach(() => {
     const specification = new Specification();
     machine = new StateMachine({ specification });
     machine.toCreateFeatureState();
-    state = machine.toCreateCommentState();
+    machine.toCreateCommentState();
   });
 
   describe('Annotation Events', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
-      state.onAnnotation(event);
+      machine.onAnnotation(event);
       expect(machine.state).toBe('CreateCommentState');
     });
   });
@@ -27,7 +26,7 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('background');
-      state.onBackground(event);
+      machine.onBackground(event);
       expect(machine.state).toBe('CreateCommentState');
     });
   });
@@ -36,7 +35,7 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('blank_line');
-      state.onBlankLine(event);
+      machine.onBlankLine(event);
       expect(machine.state).toBe('CreateCommentState');
     });
   });
@@ -45,7 +44,7 @@ describe('Create Comment State', () => {
 
     it('should error', () => {
       const event = { name: 'end' };
-      expect(() => state.onEnd(event)).toThrow('Premature end of specification');
+      expect(() => machine.onEnd(event)).toThrow('Premature end of specification');
     });
   });
 
@@ -53,7 +52,7 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('feature');
-      state.onFeature(event);
+      machine.onFeature(event);
       expect(machine.state).toBe('CreateCommentState');
     });
   });
@@ -62,7 +61,7 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('language');
-      state.onLanguage(event);
+      machine.onLanguage(event);
       expect(machine.state).toBe('CreateCommentState');
     });
   });
@@ -71,7 +70,7 @@ describe('Create Comment State', () => {
 
     it('should transition to previous state', () => {
       const event = makeEvent('multi_line_comment');
-      state.onMultiLineComment(event);
+      machine.onMultiLineComment(event);
       expect(machine.state).toBe('CreateFeatureState');
     });
   });
@@ -80,7 +79,7 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('scenario');
-      state.onScenario(event);
+      machine.onScenario(event);
       expect(machine.state).toBe('CreateCommentState');
     });
   });
@@ -89,7 +88,7 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('single_line_comment');
-      state.onSingleLineComment(event);
+      machine.onSingleLineComment(event);
       expect(machine.state).toBe('CreateCommentState');
     });
   });
@@ -98,7 +97,7 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('step');
-      state.onStep(event);
+      machine.onStep(event);
       expect(machine.state).toBe('CreateCommentState');
     });
   });
@@ -107,7 +106,7 @@ describe('Create Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('text');
-      state.onText(event);
+      machine.onText(event);
       expect(machine.state).toBe('CreateCommentState');
     });
   });
