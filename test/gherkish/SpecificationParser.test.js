@@ -26,7 +26,7 @@ describe('Specification Parser', () => {
       '      Fourth step',
     ].join('\n');
 
-    const document = SpecificationParser.parse(text);
+    const document = new SpecificationParser().parse(text);
 
     expect(document.description).toBe('Some free form text');
     expect(document.annotations[0].name).toBe('skip');
@@ -73,7 +73,7 @@ describe('Specification Parser', () => {
       '      Steps can still be free form',
     ].join('\n');
 
-    const document = SpecificationParser.parse(text);
+    const document = new SpecificationParser().parse(text);
 
     expect(document.description).toBe('Pieces of eight');
     expect(document.annotations[0].name).toBe('skip');
@@ -105,7 +105,7 @@ describe('Specification Parser', () => {
     ].join('\n');
 
 
-    expect(() => SpecificationParser.parse(text)).toThrow('Language: Missing was not found');
+    expect(() => new SpecificationParser().parse(text)).toThrow('Language: Missing was not found');
   });
 
   it('should parse specifications in the specified language', () => {
@@ -130,7 +130,7 @@ describe('Specification Parser', () => {
     ].join('\n');
 
     const language = new Languages.Pirate();
-    const document = SpecificationParser.parse(text, { language });
+    const document = new SpecificationParser().parse(text, { language });
 
     expect(document.description).toBe('Pieces of eight');
     expect(document.annotations[0].name).toBe('skip');
@@ -173,8 +173,8 @@ describe('Specification Parser', () => {
     ].join('\n');
     const text2 = text1.replace('Some feature', 'Another feature');
 
-    const result1 = SpecificationParser.parse(text1);
-    const result2 = SpecificationParser.parse(text2);
+    const result1 = new SpecificationParser().parse(text1);
+    const result2 = new SpecificationParser().parse(text2);
 
     expect(result1.title).toBe('Some feature');
     expect(result2.title).toBe('Another feature');
@@ -204,7 +204,7 @@ describe('Specification Parser', () => {
       '     Second step',
     ].join('\n');
 
-    const document = SpecificationParser.parse(text);
+    const document = new SpecificationParser().parse(text);
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].text).toBe('First background step');
@@ -249,7 +249,7 @@ describe('Specification Parser', () => {
     ].join('\n');
 
     const language = new Languages.English();
-    const document = SpecificationParser.parse(text, { language });
+    const document = new SpecificationParser().parse(text, { language });
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].generalised).toBe('a background step');
@@ -281,7 +281,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('@skip', { machine });
+      new SpecificationParser().parse('@skip', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -293,7 +293,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('@skip   ', { machine });
+      new SpecificationParser().parse('@skip   ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -308,7 +308,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('@browser=firefox', { machine });
+      new SpecificationParser().parse('@browser=firefox', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -321,7 +321,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse(' @browser = firefox ', { machine });
+      new SpecificationParser().parse(' @browser = firefox ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -338,7 +338,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('Feature: Some feature', { machine });
+      new SpecificationParser().parse('Feature: Some feature', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -350,7 +350,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('Feature:   Some feature   ', { machine });
+      new SpecificationParser().parse('Feature:   Some feature   ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -363,7 +363,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('Feature:   Some feature   ', { machine });
+      new SpecificationParser().parse('Feature:   Some feature   ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -380,7 +380,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('Scenario: Some scenario', { machine });
+      new SpecificationParser().parse('Scenario: Some scenario', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -392,7 +392,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('Scenario:   Some scenario   ', { machine });
+      new SpecificationParser().parse('Scenario:   Some scenario   ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -409,7 +409,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('Background: Some background', { machine });
+      new SpecificationParser().parse('Background: Some background', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -421,7 +421,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('Background:   Some background   ', { machine });
+      new SpecificationParser().parse('Background:   Some background   ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -437,7 +437,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('', { machine });
+      new SpecificationParser().parse('', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -450,7 +450,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('  ', { machine });
+      new SpecificationParser().parse('  ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -469,7 +469,7 @@ describe('Specification Parser', () => {
 
       const machine = new StateMachine({ state });
       const language = new Languages.English();
-      SpecificationParser.parse('Given some step', { machine, language });
+      new SpecificationParser().parse('Given some step', { machine, language });
 
       expect(state.count).toBe(1);
     });
@@ -482,7 +482,7 @@ describe('Specification Parser', () => {
 
       const machine = new StateMachine({ state });
       const language = new Languages.English();
-      SpecificationParser.parse('   Given some step  ', { machine, language });
+      new SpecificationParser().parse('   Given some step  ', { machine, language });
 
       expect(state.count).toBe(1);
     });
@@ -497,7 +497,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('Some step', { machine });
+      new SpecificationParser().parse('Some step', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -509,7 +509,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('   Some step  ', { machine });
+      new SpecificationParser().parse('   Some step  ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -527,7 +527,7 @@ describe('Specification Parser', () => {
 
       const machine = new StateMachine({ state });
       const language = new Languages.English();
-      SpecificationParser.parse('Some text', { machine, language });
+      new SpecificationParser().parse('Some text', { machine, language });
 
       expect(state.count).toBe(1);
     });
@@ -538,7 +538,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('   Some text  ', { machine });
+      new SpecificationParser().parse('   Some text  ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -555,7 +555,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('#Some comment', { machine });
+      new SpecificationParser().parse('#Some comment', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -568,7 +568,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('  #   Some comment   ', { machine });
+      new SpecificationParser().parse('  #   Some comment   ', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -584,7 +584,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('###Some comment', { machine });
+      new SpecificationParser().parse('###Some comment', { machine });
 
       expect(state.count).toBe(1);
     });
@@ -596,7 +596,7 @@ describe('Specification Parser', () => {
       });
 
       const machine = new StateMachine({ state });
-      SpecificationParser.parse('  ####   Some comment   ', { machine });
+      new SpecificationParser().parse('  ####   Some comment   ', { machine });
 
       expect(state.count).toBe(1);
     });
