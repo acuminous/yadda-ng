@@ -96,10 +96,10 @@ describe('Initial State', () => {
 
   describe('Multi Line Comment Events', () => {
 
-    it('should transition to CreateCommentState', () => {
+    it('should transition to CreateMultiLineCommentState', () => {
       const event = makeEvent('multi_line_comment', { comment: 'Meh' });
       machine.onMultiLineComment(event);
-      expect(machine.state).toBe('CreateCommentState');
+      expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
 

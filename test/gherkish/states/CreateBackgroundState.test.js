@@ -67,9 +67,9 @@ describe('Create Background State', () => {
 
   describe('Multi Line Comment Events', () => {
 
-    it('should transition to CreateCommentState', () => {
+    it('should transition to CreateMultiLineCommentState', () => {
       machine.onMultiLineComment(makeEvent('multi_line_comment'));
-      expect(machine.state).toBe('CreateCommentState');
+      expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
 
