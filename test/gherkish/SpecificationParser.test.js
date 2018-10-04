@@ -180,7 +180,7 @@ describe('Specification Parser', () => {
     expect(result2.title).toBe('Another feature');
   });
 
-  it('should support multiline steps', () => {
+  it('should support docstrings', () => {
     const text = [
       '@skip',
       'Feature: Some feature',
@@ -190,17 +190,21 @@ describe('Specification Parser', () => {
       '   @timeout=1000',
       '   Background: The background',
       '      First background step',
+      '         ---',
       '         Docstring 1',
       '            Docstring 2',
       '         Docstring 3   ',
+      '         ---',
       '      Second background step',
       '',
       '   @browser = Firefox',
       '   Scenario: First scenario',
       '      First step',
+      '         """',
       '         Docstring 1',
       '            Docstring 2',
       '         Docstring 3   ',
+      '         """',
       '     Second step',
     ].join('\n');
 
@@ -224,7 +228,7 @@ describe('Specification Parser', () => {
     expect(document.scenarios[0].steps[1].text).toBe('Second step');
   });
 
-  it('should support multiline steps in the specified language', () => {
+  it('should support docstrings in the specified language', () => {
     const text = [
       '@skip',
       'Feature: Some feature',
@@ -234,17 +238,21 @@ describe('Specification Parser', () => {
       '   @timeout=1000',
       '   Background: The background',
       '      Given a background step',
+      '         ---',
       '         Given a docstring',
       '         Given another docstring',
       '                                ',
+      '         ---',
       '      Given another background step',
       '',
       '   @browser = Firefox',
       '   Scenario: First scenario',
       '      Given a step',
+      '         """',
       '         Given a docstring',
       '         Given another docstring',
       '                                ',
+      '         """',
       '     Given another step',
     ].join('\n');
 
