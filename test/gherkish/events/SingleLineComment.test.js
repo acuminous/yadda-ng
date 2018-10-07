@@ -5,7 +5,7 @@ const { SingleLineCommentEvent } = Events;
 
 describe('SingleLineCommentEvent', () => {
 
-  class StubMachine {
+  class StubState {
     constructor() {
       this.events = [];
     }
@@ -27,16 +27,15 @@ describe('SingleLineCommentEvent', () => {
 
   it('should handle single line comments', () => {
     const event = new SingleLineCommentEvent();
-    const session = {
-      language: Languages.utils.getDefault(),
-      machine: new StubMachine(),
-    };
-    event.handle({ line: '# Some comment '}, session);
-    expect(session.machine.events.length).toBe(1);
+    const session = { language: Languages.utils.getDefault() };
+    const state = new StubState();
 
-    expect(session.machine.events[0].name).toBe('single_line_comment');
-    expect(session.machine.events[0].source.line).toBe('# Some comment ');
-    expect(session.machine.events[0].data.text).toBe('Some comment');
+    event.handle({ line: '# Some comment '}, session, state);
+    expect(state.events.length).toBe(1);
+
+    expect(state.events[0].name).toBe('single_line_comment');
+    expect(state.events[0].source.line).toBe('# Some comment ');
+    expect(state.events[0].data.text).toBe('Some comment');
   });
 
 });

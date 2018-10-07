@@ -5,7 +5,7 @@ const { ScenarioEvent } = Events;
 
 describe('ScenarioEvent', () => {
 
-  class StubMachine {
+  class StubState {
     constructor() {
       this.events = [];
     }
@@ -39,16 +39,15 @@ describe('ScenarioEvent', () => {
 
   it('should handle scenarios', () => {
     const event = new ScenarioEvent();
-    const session = {
-      language: Languages.utils.getDefault(),
-      machine: new StubMachine(),
-    };
-    event.handle({ line: 'Scenario:  Some scenario '}, session);
-    expect(session.machine.events.length).toBe(1);
+    const session = { language: Languages.utils.getDefault() };
+    const state = new StubState();
 
-    expect(session.machine.events[0].name).toBe('scenario');
-    expect(session.machine.events[0].source.line).toBe('Scenario:  Some scenario ');
-    expect(session.machine.events[0].data.title).toBe('Some scenario');
+    event.handle({ line: 'Scenario:  Some scenario '}, session, state);
+    expect(state.events.length).toBe(1);
+
+    expect(state.events[0].name).toBe('scenario');
+    expect(state.events[0].source.line).toBe('Scenario:  Some scenario ');
+    expect(state.events[0].data.title).toBe('Some scenario');
   });
 
 });

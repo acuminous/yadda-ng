@@ -1,23 +1,28 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
-const { Specification, StateMachine } = Gherkish;
+const { Specification, StateMachine, States } = Gherkish;
+const { CreateMultiLineCommentState } = States;
 
 describe('Create Multi Line Comment State', () => {
 
   let machine;
+  let state;
 
   beforeEach(() => {
     const specification = new Specification();
+
     machine = new StateMachine({ specification });
     machine.toCreateFeatureState();
     machine.toCreateMultiLineCommentState();
+
+    state = new CreateMultiLineCommentState({ specification, machine });
   });
 
   describe('Annotation Events', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
-      machine.onAnnotation(event);
+      state.onAnnotation(event);
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -26,7 +31,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('background');
-      machine.onBackground(event);
+      state.onBackground(event);
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -35,7 +40,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('blank_line');
-      machine.onBlankLine(event);
+      state.onBlankLine(event);
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -44,7 +49,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should error', () => {
       const event = { name: 'end' };
-      expect(() => machine.onEnd(event)).toThrow('Premature end of specification');
+      expect(() => state.onEnd(event)).toThrow('Premature end of specification');
     });
   });
 
@@ -52,7 +57,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('feature');
-      machine.onFeature(event);
+      state.onFeature(event);
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -61,7 +66,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('language');
-      machine.onLanguage(event);
+      state.onLanguage(event);
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -70,7 +75,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should transition to previous state', () => {
       const event = makeEvent('multi_line_comment');
-      machine.onMultiLineComment(event);
+      state.onMultiLineComment(event);
       expect(machine.state).toBe('CreateFeatureState');
     });
   });
@@ -79,7 +84,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('scenario');
-      machine.onScenario(event);
+      state.onScenario(event);
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -88,7 +93,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('single_line_comment');
-      machine.onSingleLineComment(event);
+      state.onSingleLineComment(event);
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -97,7 +102,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('step');
-      machine.onStep(event);
+      state.onStep(event);
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -106,7 +111,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('text');
-      machine.onText(event);
+      state.onText(event);
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });

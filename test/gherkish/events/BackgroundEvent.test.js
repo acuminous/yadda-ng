@@ -5,7 +5,7 @@ const { BackgroundEvent } = Events;
 
 describe('BackgroundEvent', () => {
 
-  class StubMachine {
+  class StubState {
     constructor() {
       this.events = [];
     }
@@ -38,16 +38,15 @@ describe('BackgroundEvent', () => {
 
   it('should handle backgrounds', () => {
     const event = new BackgroundEvent();
-    const session = {
-      language: Languages.utils.getDefault(),
-      machine: new StubMachine(),
-    };
-    event.handle({ line: 'Background:  Some background '}, session);
-    expect(session.machine.events.length).toBe(1);
+    const session = { language: Languages.utils.getDefault() };
+    const state = new StubState();
 
-    expect(session.machine.events[0].name).toBe('background');
-    expect(session.machine.events[0].source.line).toBe('Background:  Some background ');
-    expect(session.machine.events[0].data.title).toBe('Some background');
+    event.handle({ line: 'Background:  Some background '}, session, state);
+    expect(state.events.length).toBe(1);
+
+    expect(state.events[0].name).toBe('background');
+    expect(state.events[0].source.line).toBe('Background:  Some background ');
+    expect(state.events[0].data.title).toBe('Some background');
   });
 
 });

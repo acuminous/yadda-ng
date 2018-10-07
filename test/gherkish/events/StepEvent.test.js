@@ -5,7 +5,7 @@ const { StepEvent } = Events;
 
 describe('StepEvent', () => {
 
-  class StubMachine {
+  class StubState {
     constructor() {
       this.events = [];
     }
@@ -35,16 +35,15 @@ describe('StepEvent', () => {
 
   it('should handle steps', () => {
     const event = new StepEvent();
-    const session = {
-      language: Languages.utils.getDefault(),
-      machine: new StubMachine(),
-    };
-    event.handle({ line: '  Some step  '}, session);
-    expect(session.machine.events.length).toBe(1);
+    const session = { language: Languages.utils.getDefault() };
+    const state = new StubState();
 
-    expect(session.machine.events[0].name).toBe('step');
-    expect(session.machine.events[0].source.line).toBe('  Some step  ');
-    expect(session.machine.events[0].data.text).toBe('Some step');
+    event.handle({ line: '  Some step  '}, session, state);
+    expect(state.events.length).toBe(1);
+
+    expect(state.events[0].name).toBe('step');
+    expect(state.events[0].source.line).toBe('  Some step  ');
+    expect(state.events[0].data.text).toBe('Some step');
   });
 
 });

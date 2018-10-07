@@ -1,24 +1,28 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
-const { SpecificationParser, Specification, StateMachine } = Gherkish;
+const { SpecificationParser, Specification, StateMachine, States } = Gherkish;
+const { InitialState } = States;
 
 describe('Initial State', () => {
 
   let specification;
   let machine;
+  let state;
 
   beforeEach(() => {
     const parser = new SpecificationParser();
     specification = new Specification();
 
     machine = new StateMachine({ parser, specification });
+
+    state = new InitialState({ specification, machine });
   });
 
   describe('Annotation Events', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
-      machine.onAnnotation(event);
+      state.onAnnotation(event);
       expect(machine.state).toBe('InitialState');
     });
   });
@@ -27,7 +31,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('background');
-      expect(() => machine.onBackground(event)).toThrow('Background was unexpected while parsing specification on line 1: \'meh\'');
+      expect(() => state.onBackground(event)).toThrow('Background was unexpected in state: InitialState on line 1: \'meh\'');
     });
   });
 
@@ -35,7 +39,7 @@ describe('Initial State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('blank_line');
-      machine.onBlankLine(event);
+      state.onBlankLine(event);
       expect(machine.state).toBe('InitialState');
     });
   });
@@ -44,7 +48,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = { name: 'end' };
-      expect(() => machine.onEnd(event)).toThrow('Premature end of specification');
+      expect(() => state.onEnd(event)).toThrow('Premature end of specification');
     });
   });
 
@@ -52,22 +56,22 @@ describe('Initial State', () => {
 
     it('should transition to CreateFeatureState', () => {
       const event = makeEvent('feature', { title: 'Some feature' });
-      machine.onFeature(event);
+      state.onFeature(event);
       expect(machine.state).toBe('CreateFeatureState');
     });
 
     it('should capture feature title', () => {
       const event = makeEvent('feature', { title: 'Some feature' });
-      machine.onFeature(event);
+      state.onFeature(event);
 
       const exported = specification.export();
       expect(exported.title).toBe('Some feature');
     });
 
     it('should capture feature annotations', () => {
-      machine.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
-      machine.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      machine.onFeature(makeEvent('feature', { title: 'Meh' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state.onFeature(makeEvent('feature', { title: 'Meh' }));
 
       const exported = specification.export();
       expect(exported.annotations.length).toBe(2);
@@ -82,14 +86,14 @@ describe('Initial State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('language', { name: 'English' });
-      machine.onLanguage(event, {});
+      state.onLanguage(event, {});
       expect(machine.state).toBe('InitialState');
     });
 
     it('should set language', () => {
       const session = {};
       const event = makeEvent('language', { name: 'English' });
-      machine.onLanguage(event, session);
+      state.onLanguage(event, session);
       expect(session.language.name).toBe('English');
     });
   });
@@ -98,7 +102,7 @@ describe('Initial State', () => {
 
     it('should transition to CreateMultiLineCommentState', () => {
       const event = makeEvent('multi_line_comment', { comment: 'Meh' });
-      machine.onMultiLineComment(event);
+      state.onMultiLineComment(event);
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -107,7 +111,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('scenario');
-      expect(() => machine.onScenario(event)).toThrow('Scenario was unexpected while parsing specification on line 1: \'meh\'');
+      expect(() => state.onScenario(event)).toThrow('Scenario was unexpected in state: InitialState on line 1: \'meh\'');
     });
   });
 
@@ -115,7 +119,7 @@ describe('Initial State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('single_line_comment', { comment: 'meh' });
-      machine.onSingleLineComment(event);
+      state.onSingleLineComment(event);
       expect(machine.state).toBe('InitialState');
     });
   });
@@ -124,7 +128,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('step');
-      expect(() => machine.onStep(event)).toThrow('Step was unexpected while parsing specification on line 1: \'meh\'');
+      expect(() => state.onStep(event)).toThrow('Step was unexpected in state: InitialState on line 1: \'meh\'');
     });
   });
 
@@ -132,7 +136,7 @@ describe('Initial State', () => {
 
     it('should error', () => {
       const event = makeEvent('text');
-      expect(() => machine.onText(event)).toThrow('Text was unexpected while parsing specification on line 1: \'meh\'');
+      expect(() => state.onText(event)).toThrow('Text was unexpected in state: InitialState on line 1: \'meh\'');
     });
   });
 });

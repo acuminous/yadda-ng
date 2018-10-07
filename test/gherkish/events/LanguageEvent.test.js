@@ -5,7 +5,7 @@ const { LanguageEvent } = Events;
 
 describe('LanguageEvent', () => {
 
-  class StubMachine {
+  class StubState {
     constructor() {
       this.events = [];
     }
@@ -27,16 +27,15 @@ describe('LanguageEvent', () => {
 
   it('should handle languages', () => {
     const event = new LanguageEvent();
-    const session = {
-      language: Languages.utils.getDefault(),
-      machine: new StubMachine(),
-    };
-    event.handle({ line: '#Language : Pirate '}, session);
-    expect(session.machine.events.length).toBe(1);
+    const session = { language: Languages.utils.getDefault() };
+    const state = new StubState();
 
-    expect(session.machine.events[0].name).toBe('language');
-    expect(session.machine.events[0].source.line).toBe('#Language : Pirate ');
-    expect(session.machine.events[0].data.name).toBe('Pirate');
+    event.handle({ line: '#Language : Pirate '}, session, state);
+    expect(state.events.length).toBe(1);
+
+    expect(state.events[0].name).toBe('language');
+    expect(state.events[0].source.line).toBe('#Language : Pirate ');
+    expect(state.events[0].data.name).toBe('Pirate');
   });
 
 });

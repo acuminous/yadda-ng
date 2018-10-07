@@ -5,7 +5,7 @@ const { TextEvent } = Events;
 
 describe('TextEvent', () => {
 
-  class StubMachine {
+  class StubState {
     constructor() {
       this.events = [];
     }
@@ -34,16 +34,15 @@ describe('TextEvent', () => {
 
   it('should handle text', () => {
     const event = new TextEvent();
-    const session = {
-      language: Languages.utils.getDefault(),
-      machine: new StubMachine(),
-    };
-    event.handle({ line: '  Some text  '}, session);
-    expect(session.machine.events.length).toBe(1);
+    const session = { language: Languages.utils.getDefault() };
+    const state = new StubState();
 
-    expect(session.machine.events[0].name).toBe('text');
-    expect(session.machine.events[0].source.line).toBe('  Some text  ');
-    expect(session.machine.events[0].data.text).toBe('Some text');
+    event.handle({ line: '  Some text  '}, session, state);
+    expect(state.events.length).toBe(1);
+
+    expect(state.events[0].name).toBe('text');
+    expect(state.events[0].source.line).toBe('  Some text  ');
+    expect(state.events[0].data.text).toBe('Some text');
   });
 
 });

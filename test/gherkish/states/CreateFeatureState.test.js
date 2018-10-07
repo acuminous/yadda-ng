@@ -1,25 +1,29 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
-const { Specification, StateMachine } = Gherkish;
+const { Specification, StateMachine, States } = Gherkish;
+const { CreateFeatureState } = States;
 
 describe('Create Feature State', () => {
 
   let specification;
   let machine;
+  let state;
 
   beforeEach(() => {
-    specification = new Specification()
-      .createFeature({ annotations: [], title: 'Meh' });
+    specification = new Specification();
+    specification.createFeature({ annotations: [], title: 'Meh' });
 
     machine = new StateMachine({ specification });
     machine.toCreateFeatureState();
+
+    state = new CreateFeatureState({ specification, machine });
   });
 
   describe('Annotation Events', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
-      machine.onAnnotation(event);
+      state.onAnnotation(event);
       expect(machine.state).toBe('CreateFeatureState');
     });
   });
@@ -28,14 +32,14 @@ describe('Create Feature State', () => {
 
     it('should transition to CreateBackgroundState on background event', () => {
       const event = makeEvent('background', { title: 'Meh' });
-      machine.onBackground(event);
+      state.onBackground(event);
       expect(machine.state).toBe('CreateBackgroundState');
     });
 
     it('should capture backgrounds with annotations', () => {
-      machine.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
-      machine.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      machine.onBackground(makeEvent('background', { title: 'First background' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state.onBackground(makeEvent('background', { title: 'First background' }));
 
       const exported = specification.export();
       expect(exported.background.annotations.length).toBe(2);
@@ -50,7 +54,7 @@ describe('Create Feature State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('blank_line');
-      machine.onBlankLine(event);
+      state.onBlankLine(event);
       expect(machine.state).toBe('CreateFeatureState');
     });
   });
@@ -59,7 +63,7 @@ describe('Create Feature State', () => {
 
     it('should error', () => {
       const event = { name: 'end' };
-      expect(() => machine.onEnd(event)).toThrow('Premature end of specification');
+      expect(() => state.onEnd(event)).toThrow('Premature end of specification');
     });
   });
 
@@ -67,7 +71,7 @@ describe('Create Feature State', () => {
 
     it('should error', () => {
       const event = makeEvent('feature', { title: 'Meh' });
-      expect(() => machine.onFeature(event)).toThrow('Feature was unexpected while parsing feature on line 1: \'meh\'');
+      expect(() => state.onFeature(event)).toThrow('Feature was unexpected in state: CreateFeatureState on line 1: \'meh\'');
     });
   });
 
@@ -75,14 +79,14 @@ describe('Create Feature State', () => {
 
     it('should error', () => {
       const event = makeEvent('language');
-      expect(() => machine.onLanguage(event)).toThrow('Language was unexpected while parsing feature on line 1: \'meh\'');
+      expect(() => state.onLanguage(event)).toThrow('Language was unexpected in state: CreateFeatureState on line 1: \'meh\'');
     });
   });
 
   describe('Multi Line Comment Events', () => {
 
     it('should transition to CreateMultiLineCommentState', () => {
-      machine.onMultiLineComment(makeEvent('multi_line_comment'));
+      state.onMultiLineComment(makeEvent('multi_line_comment'));
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -91,14 +95,14 @@ describe('Create Feature State', () => {
 
     it('should transition to CreateScenarioState on scenario event', () => {
       const event = makeEvent('scenario', { title: 'Meh' });
-      machine.onScenario(event);
+      state.onScenario(event);
       expect(machine.state).toBe('CreateScenarioState');
     });
 
     it('should capture scenarios', () => {
-      machine.onScenario(makeEvent('scenario', { title: 'First scenario' }));
-      machine.onStep(makeEvent('step', { text: 'meh' }));
-      machine.onScenario(makeEvent('scenario', { title: 'Second scenario' }));
+      state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
+      state.onStep(makeEvent('step', { text: 'meh' }));
+      state.onScenario(makeEvent('scenario', { title: 'Second scenario' }));
 
       const exported = specification.export();
       expect(exported.scenarios.length).toBe(2);
@@ -107,9 +111,9 @@ describe('Create Feature State', () => {
     });
 
     it('should capture scenarios with annotations', () => {
-      machine.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
-      machine.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      machine.onScenario(makeEvent('scenario', { title: 'First scenario' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
 
       const exported = specification.export();
       expect(exported.scenarios.length).toBe(1);
@@ -125,7 +129,7 @@ describe('Create Feature State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('single_line_comment', { text: 'Meh' });
-      machine.onSingleLineComment(event);
+      state.onSingleLineComment(event);
       expect(machine.state).toBe('CreateFeatureState');
     });
   });
@@ -136,13 +140,13 @@ describe('Create Feature State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('step', { text: 'Meh' });
-      machine.onStep(event);
+      state.onStep(event);
       expect(machine.state).toBe('CreateFeatureState');
     });
 
     it('should capture description', () => {
-      machine.onStep(makeEvent('step', { text: 'meh' }));
-      machine.onStep(makeEvent('step', { text: 'bah' }));
+      state.onStep(makeEvent('step', { text: 'meh' }));
+      state.onStep(makeEvent('step', { text: 'bah' }));
 
       const exported = specification.export();
       expect(exported.description).toBe('meh\nbah');
@@ -153,13 +157,13 @@ describe('Create Feature State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('text', { text: 'Meh' });
-      machine.onText(event);
+      state.onText(event);
       expect(machine.state).toBe('CreateFeatureState');
     });
 
     it('should capture description', () => {
-      machine.onText(makeEvent('text', { text: 'meh' }));
-      machine.onText(makeEvent('text', { text: 'bah' }));
+      state.onText(makeEvent('text', { text: 'meh' }));
+      state.onText(makeEvent('text', { text: 'bah' }));
 
       const exported = specification.export();
       expect(exported.description).toBe('meh\nbah');

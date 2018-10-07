@@ -5,7 +5,7 @@ const { AnnotationEvent } = Events;
 
 describe('AnnotationEvent', () => {
 
-  class StubMachine {
+  class StubState {
     constructor() {
       this.events = [];
     }
@@ -29,31 +29,27 @@ describe('AnnotationEvent', () => {
 
   it('should handle simple annotations', () => {
     const event = new AnnotationEvent();
-    const session = {
-      language: Languages.utils.getDefault(),
-      machine: new StubMachine(),
-    };
-    event.handle({ line: '@skip'}, session);
+    const session = { language: Languages.utils.getDefault() };
+    const state = new StubState();
+    event.handle({ line: '@skip'}, session, state);
 
-    expect(session.machine.events.length).toBe(1);
-    expect(session.machine.events[0].name).toBe('annotation');
-    expect(session.machine.events[0].source.line).toBe('@skip');
-    expect(session.machine.events[0].data.name).toBe('skip');
-    expect(session.machine.events[0].data.value).toBe(true);
+    expect(state.events.length).toBe(1);
+    expect(state.events[0].name).toBe('annotation');
+    expect(state.events[0].source.line).toBe('@skip');
+    expect(state.events[0].data.name).toBe('skip');
+    expect(state.events[0].data.value).toBe(true);
   });
 
   it('should handle name/value annotations', () => {
     const event = new AnnotationEvent();
-    const session = {
-      language: Languages.utils.getDefault(),
-      machine: new StubMachine(),
-    };
-    event.handle({ line: '@foo=bar'}, session);
+    const session = { language: Languages.utils.getDefault() };
+    const state = new StubState();
+    event.handle({ line: '@foo=bar'}, session, state);
 
-    expect(session.machine.events.length).toBe(1);
-    expect(session.machine.events[0].name).toBe('annotation');
-    expect(session.machine.events[0].source.line).toBe('@foo=bar');
-    expect(session.machine.events[0].data.name).toBe('foo');
-    expect(session.machine.events[0].data.value).toBe('bar');
+    expect(state.events.length).toBe(1);
+    expect(state.events[0].name).toBe('annotation');
+    expect(state.events[0].source.line).toBe('@foo=bar');
+    expect(state.events[0].data.name).toBe('foo');
+    expect(state.events[0].data.value).toBe('bar');
   });
 });

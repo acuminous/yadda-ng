@@ -1,8 +1,5 @@
 # yadda-ng
 
-1. Remove return this from specifications
-1. List supported events in states
-1. Debug statements
 1. Yaddarc
 1. Term should use arity class
 1. Terms should be recursive: .define('coordinates', '$number, $number', new GeographicCoordinatesConverter());

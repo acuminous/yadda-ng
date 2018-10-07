@@ -5,7 +5,7 @@ const { BlankLineEvent } = Events;
 
 describe('BlankLineEvent', () => {
 
-  class StubMachine {
+  class StubState {
     constructor() {
       this.events = [];
     }
@@ -25,16 +25,15 @@ describe('BlankLineEvent', () => {
 
   it('should handle blank lines', () => {
     const event = new BlankLineEvent();
-    const session = {
-      language: Languages.utils.getDefault(),
-      machine: new StubMachine(),
-    };
-    event.handle({ line: ''}, session);
-    expect(session.machine.events.length).toBe(1);
+    const session = { language: Languages.utils.getDefault() };
+    const state = new StubState();
 
-    expect(session.machine.events[0].name).toBe('blank_line');
-    expect(session.machine.events[0].source.line).toBe('');
-    expect(session.machine.events[0].data).toEqual({});
+    event.handle({ line: ''}, session, state);
+    expect(state.events.length).toBe(1);
+
+    expect(state.events[0].name).toBe('blank_line');
+    expect(state.events[0].source.line).toBe('');
+    expect(state.events[0].data).toEqual({});
   });
 
 });

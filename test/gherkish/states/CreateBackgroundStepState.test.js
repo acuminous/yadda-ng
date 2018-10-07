@@ -1,27 +1,31 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
-const { Specification, StateMachine } = Gherkish;
+const { Specification, StateMachine, States } = Gherkish;
+const { CreateBackgroundStepState } = States;
 
 describe('Create Background Step State', () => {
 
   let specification;
   let machine;
+  let state;
 
   beforeEach(() => {
-    specification = new Specification()
-      .createFeature({ annotations: [], title: 'Meh' })
-      .createBackground({ annotations: [], title: 'Meh' })
-      .createBackgroundStep({ annotations: [], text: 'Meh' });
+    specification = new Specification();
+    specification.createFeature({ annotations: [], title: 'Meh' });
+    specification.createBackground({ annotations: [], title: 'Meh' });
+    specification.createBackgroundStep({ annotations: [], text: 'Meh' });
 
     machine = new StateMachine({ specification });
-    machine.toCreateBackgroundStepState({ indentation: 0 });
+    machine.toCreateBackgroundStepState();
+
+    state = new CreateBackgroundStepState({ specification, machine });
   });
 
   describe('Annotation Events', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
-      machine.onAnnotation(event);
+      state.onAnnotation(event);
       expect(machine.state).toBe('CreateBackgroundStepState');
     });
   });
@@ -30,7 +34,7 @@ describe('Create Background Step State', () => {
 
     it('should error', () => {
       const event = makeEvent('background');
-      expect(() => machine.onBackground(event)).toThrow('Background was unexpected while parsing background step on line 1: \'meh\'');
+      expect(() => state.onBackground(event)).toThrow('Background was unexpected in state: CreateBackgroundStepState on line 1: \'meh\'');
     });
   });
 
@@ -38,7 +42,7 @@ describe('Create Background Step State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('blank_line');
-      machine.onBlankLine(event);
+      state.onBlankLine(event);
       expect(machine.state).toBe('CreateBackgroundStepState');
     });
   });
@@ -47,7 +51,7 @@ describe('Create Background Step State', () => {
 
     it('should transition to final on end event', () => {
       const event = { name: 'end' };
-      machine.onEnd(event);
+      state.onEnd(event);
       expect(machine.state).toBe('FinalState');
     });
   });
@@ -56,14 +60,14 @@ describe('Create Background Step State', () => {
 
     it('should error on feature event', () => {
       const event = makeEvent('feature', { title: 'Meh' });
-      expect(() => machine.onFeature(event)).toThrow('Feature was unexpected while parsing background step on line 1: \'meh\'');
+      expect(() => state.onFeature(event)).toThrow('Feature was unexpected in state: CreateBackgroundStepState on line 1: \'meh\'');
     });
   });
 
   describe('Multi Line Comment Events', () => {
 
     it('should transition to CreateMultiLineCommentState', () => {
-      machine.onMultiLineComment(makeEvent('multi_line_comment'));
+      state.onMultiLineComment(makeEvent('multi_line_comment'));
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -72,7 +76,7 @@ describe('Create Background Step State', () => {
 
     it('should error', () => {
       const event = makeEvent('language');
-      expect(() => machine.onLanguage(event)).toThrow('Language was unexpected while parsing background step on line 1: \'meh\'');
+      expect(() => state.onLanguage(event)).toThrow('Language was unexpected in state: CreateBackgroundStepState on line 1: \'meh\'');
     });
   });
 
@@ -80,13 +84,13 @@ describe('Create Background Step State', () => {
 
     it('should transition to CreateScenarioState on scenario event', () => {
       const event = makeEvent('scenario', { title: 'Meh' });
-      machine.onScenario(event);
+      state.onScenario(event);
       expect(machine.state).toBe('CreateScenarioState');
     });
 
     it('should capture scenarios', () => {
-      machine.onScenario(makeEvent('scenario', { title: 'First scenario' }));
-      machine.onStep(makeEvent('step', { text: 'meh' }));
+      state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
+      state.onStep(makeEvent('step', { text: 'meh' }));
 
       const exported = specification.export();
       expect(exported.scenarios.length).toBe(1);
@@ -94,9 +98,9 @@ describe('Create Background Step State', () => {
     });
 
     it('should capture scenarios with annotations', () => {
-      machine.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
-      machine.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      machine.onScenario(makeEvent('scenario', { title: 'First scenario' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state.onScenario(makeEvent('scenario', { title: 'First scenario' }));
 
       const exported = specification.export();
       expect(exported.scenarios.length).toBe(1);
@@ -112,7 +116,7 @@ describe('Create Background Step State', () => {
 
     it('should not cause transition', () => {
       const event = makeEvent('single_line_comment', { comment: 'Meh' });
-      machine.onSingleLineComment(event);
+      state.onSingleLineComment(event);
       expect(machine.state).toBe('CreateBackgroundStepState');
     });
   });
@@ -121,12 +125,12 @@ describe('Create Background Step State', () => {
 
     it('should transition to new CreateBackgroundStepState on step event', () => {
       const event = makeEvent('step');
-      machine.onStep(event);
+      state.onStep(event);
       expect(machine.state).toBe('CreateBackgroundStepState');
     });
 
     it('should capture step', () => {
-      machine.onStep(makeEvent('step', { text: 'Bah', generalised: 'bah' }));
+      state.onStep(makeEvent('step', { text: 'Bah', generalised: 'bah' }));
 
       const exported = specification.export();
       expect(exported.background.steps.length).toBe(2);
@@ -136,9 +140,9 @@ describe('Create Background Step State', () => {
     });
 
     it('should capture steps with annotations', () => {
-      machine.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
-      machine.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      machine.onStep(makeEvent('step', { text: 'Bah' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state.onStep(makeEvent('step', { text: 'Bah' }));
 
       const exported = specification.export();
       expect(exported.background.steps[1].annotations.length).toBe(2);
@@ -153,12 +157,12 @@ describe('Create Background Step State', () => {
 
     it('should transition to CreateBackgroundStepState on text event', () => {
       const event = makeEvent('text');
-      machine.onText(event);
+      state.onText(event);
       expect(machine.state).toBe('CreateBackgroundStepState');
     });
 
     it('should capture step', () => {
-      machine.onText(makeEvent('text', { text: 'Bah', generalised: 'bah' }));
+      state.onText(makeEvent('text', { text: 'Bah', generalised: 'bah' }));
 
       const exported = specification.export();
       expect(exported.background.steps.length).toBe(2);
@@ -168,9 +172,9 @@ describe('Create Background Step State', () => {
     });
 
     it('should capture steps with annotations', () => {
-      machine.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
-      machine.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
-      machine.onText(makeEvent('text', { text: 'Bah' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'one', value: '1' }));
+      state.onAnnotation(makeEvent('annotation', { name: 'two', value: '2' }));
+      state.onText(makeEvent('text', { text: 'Bah' }));
 
       const exported = specification.export();
       expect(exported.background.steps[1].annotations.length).toBe(2);

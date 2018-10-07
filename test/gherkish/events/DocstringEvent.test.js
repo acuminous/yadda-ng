@@ -5,7 +5,7 @@ const { DocstringEvent } = Events;
 
 describe('DocstringEvent', () => {
 
-  class StubMachine {
+  class StubState {
     constructor() {
       this.events = [];
     }
@@ -34,30 +34,27 @@ describe('DocstringEvent', () => {
 
   it('should handle --- docstrings', () => {
     const event = new DocstringEvent();
-    const session = {
-      language: Languages.utils.getDefault(),
-      machine: new StubMachine(),
-    };
-    event.handle({ line: '   ---   '}, session);
-    expect(session.machine.events.length).toBe(1);
+    const session = { language: Languages.utils.getDefault() };
+    const state = new StubState();
+    event.handle({ line: '   ---   '}, session, state);
+    expect(state.events.length).toBe(1);
 
-    expect(session.machine.events[0].name).toBe('docstring');
-    expect(session.machine.events[0].source.line).toBe('   ---   ');
-    expect(session.machine.events[0].data.token).toBe('---');
+    expect(state.events[0].name).toBe('docstring');
+    expect(state.events[0].source.line).toBe('   ---   ');
+    expect(state.events[0].data.token).toBe('---');
   });
 
   it('should handle docstrings', () => {
     const event = new DocstringEvent();
-    const session = {
-      language: Languages.utils.getDefault(),
-      machine: new StubMachine(),
-    };
-    event.handle({ line: '   """   '}, session);
-    expect(session.machine.events.length).toBe(1);
+    const session = { language: Languages.utils.getDefault() };
+    const state = new StubState();
 
-    expect(session.machine.events[0].name).toBe('docstring');
-    expect(session.machine.events[0].source.line).toBe('   """   ');
-    expect(session.machine.events[0].data.token).toBe('"""');
+    event.handle({ line: '   """   '}, session, state);
+    expect(state.events.length).toBe(1);
+
+    expect(state.events[0].name).toBe('docstring');
+    expect(state.events[0].source.line).toBe('   """   ');
+    expect(state.events[0].data.token).toBe('"""');
   });
 
 });
