@@ -228,7 +228,7 @@ describe('Specification Parser', () => {
     expect(document.scenarios[0].steps[1].text).toBe('Second step');
   });
 
-  it('should support docstrings in the specified language', () => {
+  it('should not parse steps that are in docstrings', () => {
     const text = [
       '@skip',
       'Feature: Some feature',
