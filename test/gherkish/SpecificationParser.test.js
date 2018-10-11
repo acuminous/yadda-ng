@@ -1,7 +1,8 @@
 const expect = require('expect');
 const { Gherkish } = require('../..');
-const { SpecificationParser, Languages, StateMachine, States } = Gherkish;
+const { SpecificationParser, Languages, StateMachine, States, Events } = Gherkish;
 const { BaseState } = States;
+const { AnnotationEvent, BackgroundEvent, BlankLineEvent, DocstringEvent, EndEvent, FeatureEvent, LanguageEvent, MultiLineCommentEvent, ScenarioEvent, SingleLineCommentEvent, StepEvent, TextEvent } = Events;
 
 describe('Specification Parser', () => {
 
@@ -525,21 +526,6 @@ describe('Specification Parser', () => {
 
   describe('Text', () => {
 
-    it('should emit text events when not matching localised steps', () => {
-      const state = new StubState((event) => {
-        expect(event.name).toBe('text');
-        expect(event.source.line).toBe('Some text');
-        expect(event.source.number).toBe(1);
-        expect(event.data.text).toBe('Some text');
-      });
-
-      const machine = new StateMachine({ state });
-      const language = new Languages.English();
-      new SpecificationParser().parse('Some text', { machine, language });
-
-      expect(state.count).toBe(1);
-    });
-
     it('should trim text', () => {
       const state = new StubState((event) => {
         expect(event.data.text).toBe('Some text');
@@ -612,7 +598,7 @@ describe('Specification Parser', () => {
 
   class StubState extends BaseState {
     constructor(assertions) {
-      super({ subject: 'specification' });
+      super({ events: [ EndEvent, DocstringEvent, LanguageEvent, MultiLineCommentEvent, SingleLineCommentEvent, AnnotationEvent, FeatureEvent, BackgroundEvent, ScenarioEvent, BlankLineEvent, StepEvent, TextEvent ] });
       this.count = 0;
       this.assertions = assertions;
     }

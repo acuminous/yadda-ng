@@ -1,12 +1,13 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
-const { Specification, StateMachine, States } = Gherkish;
+const { Specification, StateMachine, States, Languages } = Gherkish;
 const { CreateMultiLineCommentState } = States;
 
 describe('Create Multi Line Comment State', () => {
 
   let machine;
   let state;
+  let session;
 
   beforeEach(() => {
     const specification = new Specification();
@@ -16,13 +17,14 @@ describe('Create Multi Line Comment State', () => {
     machine.toCreateMultiLineCommentState();
 
     state = new CreateMultiLineCommentState({ specification, machine });
+
+    session = { language: Languages.utils.getDefault() };
   });
 
   describe('Annotation Events', () => {
 
     it('should not cause transition', () => {
-      const event = makeEvent('annotation', { name: 'foo', value: 'bar' });
-      state.onAnnotation(event);
+      handle('@foo = bar');
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -30,8 +32,7 @@ describe('Create Multi Line Comment State', () => {
   describe('Background Events', () => {
 
     it('should not cause transition', () => {
-      const event = makeEvent('background');
-      state.onBackground(event);
+      handle('Background: foo');
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -39,8 +40,7 @@ describe('Create Multi Line Comment State', () => {
   describe('Blank Line Events', () => {
 
     it('should not cause transition', () => {
-      const event = makeEvent('blank_line');
-      state.onBlankLine(event);
+      handle('');
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -48,16 +48,14 @@ describe('Create Multi Line Comment State', () => {
   describe('End Events', () => {
 
     it('should error', () => {
-      const event = { name: 'end' };
-      expect(() => state.onEnd(event)).toThrow('Premature end of specification');
+      expect(() => handle('\u0000')).toThrow('Event: end was unexpected in state: CreateMultiLineCommentState on line 1: \'\u0000\'');
     });
   });
 
   describe('Feature Events', () => {
 
     it('should not cause transition', () => {
-      const event = makeEvent('feature');
-      state.onFeature(event);
+      handle('Feature: foo');
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -65,8 +63,7 @@ describe('Create Multi Line Comment State', () => {
   describe('Language Events', () => {
 
     it('should not cause transition', () => {
-      const event = makeEvent('language');
-      state.onLanguage(event);
+      handle('# Language: English');
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -74,8 +71,7 @@ describe('Create Multi Line Comment State', () => {
   describe('Multi Line Comment Events', () => {
 
     it('should transition to previous state', () => {
-      const event = makeEvent('multi_line_comment');
-      state.onMultiLineComment(event);
+      handle('###');
       expect(machine.state).toBe('CreateFeatureState');
     });
   });
@@ -83,8 +79,7 @@ describe('Create Multi Line Comment State', () => {
   describe('Scenario Events', () => {
 
     it('should not cause transition', () => {
-      const event = makeEvent('scenario');
-      state.onScenario(event);
+      handle('Scenario: foo');
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -92,8 +87,7 @@ describe('Create Multi Line Comment State', () => {
   describe('Single Line Comment Events', () => {
 
     it('should not cause transition', () => {
-      const event = makeEvent('single_line_comment');
-      state.onSingleLineComment(event);
+      handle('# Single comment');
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -101,8 +95,7 @@ describe('Create Multi Line Comment State', () => {
   describe('Step Events', () => {
 
     it('should not cause transition', () => {
-      const event = makeEvent('step');
-      state.onStep(event);
+      handle('Given some text');
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
@@ -110,13 +103,12 @@ describe('Create Multi Line Comment State', () => {
   describe('Text Events', () => {
 
     it('should not cause transition', () => {
-      const event = makeEvent('text');
-      state.onText(event);
+      handle('Some text');
       expect(machine.state).toBe('CreateMultiLineCommentState');
     });
   });
-});
 
-function makeEvent(name, data = {}) {
-  return { name, data, source: { number: 1, line: 'meh' } };
-}
+  function handle(line, number = 1) {
+    state.handle({ line, number }, session);
+  }
+});

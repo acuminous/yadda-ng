@@ -29,11 +29,30 @@ describe('StepEvent', () => {
     expect(event.test({ line: 'Then some step'}, session)).toBe(true);
     expect(event.test({ line: 'And some step'}, session)).toBe(true);
     expect(event.test({ line: '  Given some step  '}, session)).toBe(true);
-
-    expect(event.test({ line: 'Some step'}, session)).toBe(false);
   });
 
-  it('should handle steps', () => {
+  it('should recognise unlocalised steps', () => {
+    const event = new StepEvent();
+    const session = { language: Languages.utils.getDefault() };
+    expect(event.test({ line: 'Some text'}, session)).toBe(true);
+    expect(event.test({ line: ' Some text '}, session)).toBe(true);
+  });
+
+  it('should handle localised steps', () => {
+    const event = new StepEvent();
+    const session = { language: Languages.utils.get('English') };
+    const state = new StubState();
+
+    event.handle({ line: ' Given some step  '}, session, state);
+    expect(state.events.length).toBe(1);
+
+    expect(state.events[0].name).toBe('step');
+    expect(state.events[0].source.line).toBe(' Given some step  ');
+    expect(state.events[0].data.text).toBe('Given some step');
+    expect(state.events[0].data.generalised).toBe('some step');
+  });
+
+  it('should handle unlocalised steps', () => {
     const event = new StepEvent();
     const session = { language: Languages.utils.getDefault() };
     const state = new StubState();
