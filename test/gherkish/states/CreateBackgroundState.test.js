@@ -33,7 +33,7 @@ describe('Create Background State', () => {
   describe('Background Events', () => {
 
     it('should error', () => {
-      expect(() => handle('Background: foo')).toThrow('Event: background was unexpected in state: CreateBackgroundState on line 1: \'Background: foo\'');
+      expect(() => handle('Background: foo')).toThrow('\'Background: foo\' was unexpected in state: CreateBackgroundState on line 1');
     });
   });
 
@@ -48,21 +48,21 @@ describe('Create Background State', () => {
   describe('End Events', () => {
 
     it('should error', () => {
-      expect(() => handle('\u0000')).toThrow('Event: end was unexpected in state: CreateBackgroundState on line 1: \'\u0000\'');
+      expect(() => handle('\u0000')).toThrow('\'\u0000\' was unexpected in state: CreateBackgroundState on line 1');
     });
   });
 
   describe('Feature Events', () => {
 
     it('should error', () => {
-      expect(() => handle('Feature: foo')).toThrow('Event: feature was unexpected in state: CreateBackgroundState on line 1: \'Feature: foo\'');
+      expect(() => handle('Feature: foo')).toThrow('\'Feature: foo\' was unexpected in state: CreateBackgroundState on line 1');
     });
   });
 
   describe('Language Events', () => {
 
     it('should error', () => {
-      expect(() => handle('# Language: English')).toThrow('Event: language was unexpected in state: CreateBackgroundState on line 1: \'# Language: English\'');
+      expect(() => handle('# Language: English')).toThrow('\'# Language: English\' was unexpected in state: CreateBackgroundState on line 1');
     });
   });
 
@@ -77,7 +77,7 @@ describe('Create Background State', () => {
   describe('Scenario Events', () => {
 
     it('should error on scenario event', () => {
-      expect(() => handle('Scenario: First scenario')).toThrow('Event: scenario was unexpected in state: CreateBackgroundState on line 1: \'Scenario: First scenario\'');
+      expect(() => handle('Scenario: First scenario')).toThrow('\'Scenario: First scenario\' was unexpected in state: CreateBackgroundState on line 1');
     });
   });
 

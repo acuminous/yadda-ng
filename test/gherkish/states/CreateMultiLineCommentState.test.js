@@ -48,7 +48,7 @@ describe('Create Multi Line Comment State', () => {
   describe('End Events', () => {
 
     it('should error', () => {
-      expect(() => handle('\u0000')).toThrow('Event: end was unexpected in state: CreateMultiLineCommentState on line 1: \'\u0000\'');
+      expect(() => handle('\u0000')).toThrow('\'\u0000\' was unexpected in state: CreateMultiLineCommentState on line 1');
     });
   });
 

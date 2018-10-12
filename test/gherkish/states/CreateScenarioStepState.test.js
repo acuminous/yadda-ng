@@ -35,7 +35,7 @@ describe('Create Scenario Step State', () => {
   describe('Background Events', () => {
 
     it('should error', () => {
-      expect(() => handle('Background: Meh')).toThrow('Event: background was unexpected in state: CreateScenarioStepState on line 1: \'Background: Meh\'');
+      expect(() => handle('Background: Meh')).toThrow('\'Background: Meh\' was unexpected in state: CreateScenarioStepState on line 1');
     });
   });
 
@@ -58,7 +58,7 @@ describe('Create Scenario Step State', () => {
   describe('Feature Events', () => {
 
     it('should error', () => {
-      expect(() => handle('Feature: Meh')).toThrow('Event: feature was unexpected in state: CreateScenarioStepState on line 1: \'Feature: Meh\'');
+      expect(() => handle('Feature: Meh')).toThrow('\'Feature: Meh\' was unexpected in state: CreateScenarioStepState on line 1');
     });
   });
 
@@ -73,7 +73,7 @@ describe('Create Scenario Step State', () => {
   describe('Language Events', () => {
 
     it('should error', () => {
-      expect(() => handle('# Language: English')).toThrow('Event: language was unexpected in state: CreateScenarioStepState on line 1: \'# Language: English\'');
+      expect(() => handle('# Language: English')).toThrow('\'# Language: English\' was unexpected in state: CreateScenarioStepState on line 1');
     });
   });
 

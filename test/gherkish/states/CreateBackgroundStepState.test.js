@@ -35,7 +35,7 @@ describe('Create Background Step State', () => {
   describe('Background Events', () => {
 
     it('should error', () => {
-      expect(() => handle('Background: foo')).toThrow('Event: background was unexpected in state: CreateBackgroundStepState on line 1: \'Background: foo\'');
+      expect(() => handle('Background: foo')).toThrow('\'Background: foo\' was unexpected in state: CreateBackgroundStepState on line 1');
     });
   });
 
@@ -50,14 +50,14 @@ describe('Create Background Step State', () => {
   describe('End Events', () => {
 
     it('should transition to final on end event', () => {
-      expect(() => handle('\u0000')).toThrow('Event: end was unexpected in state: CreateBackgroundStepState on line 1: \'\u0000\'');
+      expect(() => handle('\u0000')).toThrow('\'\u0000\' was unexpected in state: CreateBackgroundStepState on line 1');
     });
   });
 
   describe('Feature Events', () => {
 
     it('should error on feature event', () => {
-      expect(() => handle('Feature: foo')).toThrow('Event: feature was unexpected in state: CreateBackgroundStepState on line 1: \'Feature: foo\'');
+      expect(() => handle('Feature: foo')).toThrow('\'Feature: foo\' was unexpected in state: CreateBackgroundStepState on line 1');
     });
   });
 
@@ -72,7 +72,7 @@ describe('Create Background Step State', () => {
   describe('Language Events', () => {
 
     it('should error', () => {
-      expect(() => handle('# Language: English')).toThrow('Event: language was unexpected in state: CreateBackgroundStepState on line 1: \'# Language: English\'');
+      expect(() => handle('# Language: English')).toThrow('\'# Language: English\' was unexpected in state: CreateBackgroundStepState on line 1');
     });
   });
 

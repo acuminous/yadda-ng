@@ -32,7 +32,7 @@ describe('Initial State', () => {
   describe('Background Events', () => {
 
     it('should error', () => {
-      expect(() => handle('Background: foo')).toThrow('Event: background was unexpected in state: InitialState on line 1: \'Background: foo\'');
+      expect(() => handle('Background: foo')).toThrow('\'Background: foo\' was unexpected in state: InitialState on line 1');
     });
   });
 
@@ -47,7 +47,7 @@ describe('Initial State', () => {
   describe('End Events', () => {
 
     it('should error', () => {
-      expect(() => handle('\u0000')).toThrow('Event: end was unexpected in state: InitialState on line 1: \'\u0000\'');
+      expect(() => handle('\u0000')).toThrow('\'\u0000\' was unexpected in state: InitialState on line 1');
     });
   });
 
@@ -103,7 +103,7 @@ describe('Initial State', () => {
   describe('Scenario Events', () => {
 
     it('should error', () => {
-      expect(() => handle('Scenario: foo')).toThrow('Event: scenario was unexpected in state: InitialState on line 1: \'Scenario: foo\'');
+      expect(() => handle('Scenario: foo')).toThrow('\'Scenario: foo\' was unexpected in state: InitialState on line 1');
     });
   });
 
@@ -118,7 +118,7 @@ describe('Initial State', () => {
   describe('Text Events', () => {
 
     it('should error', () => {
-      expect(() => handle('Some text')).toThrow('Event: text was unexpected in state: InitialState on line 1: \'Some text\'');
+      expect(() => handle('Some text')).toThrow('\'Some text\' was unexpected in state: InitialState on line 1');
     });
   });
 

@@ -62,21 +62,21 @@ describe('Create Feature State', () => {
   describe('End Events', () => {
 
     it('should error', () => {
-      expect(() => handle('\u0000')).toThrow('Event: end was unexpected in state: CreateFeatureState on line 1: \'\u0000\'');
+      expect(() => handle('\u0000')).toThrow('\'\u0000\' was unexpected in state: CreateFeatureState on line 1');
     });
   });
 
   describe('Feature Events', () => {
 
     it('should error', () => {
-      expect(() => handle('Feature: foo')).toThrow('Event: feature was unexpected in state: CreateFeatureState on line 1: \'Feature: foo\'');
+      expect(() => handle('Feature: foo')).toThrow('\'Feature: foo\' was unexpected in state: CreateFeatureState on line 1');
     });
   });
 
   describe('Language Events', () => {
 
     it('should error', () => {
-      expect(() => handle('# Language: English')).toThrow('Event: language was unexpected in state: CreateFeatureState on line 1: \'# Language: English\'');
+      expect(() => handle('# Language: English')).toThrow('\'# Language: English\' was unexpected in state: CreateFeatureState on line 1');
     });
   });
 
