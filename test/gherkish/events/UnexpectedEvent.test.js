@@ -28,7 +28,7 @@ describe('UnexpectedEvent', () => {
     event.handle({ line: 'anything'}, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('text');
+    expect(state.events[0].name).toBe('unexpected');
     expect(state.events[0].source.line).toBe('anything');
     expect(state.events[0].data).toEqual({});
   });
