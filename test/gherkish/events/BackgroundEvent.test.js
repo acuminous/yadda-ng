@@ -5,6 +5,14 @@ const { BackgroundEvent } = Events;
 
 describe('BackgroundEvent', () => {
 
+  let session;
+  let state;
+
+  beforeEach(() => {
+    session = { language: Languages.utils.getDefault() };
+    state = new StubState();
+  });
+
   class StubState {
     constructor() {
       this.events = [];
@@ -16,30 +24,28 @@ describe('BackgroundEvent', () => {
 
   it('should recognise backgrounds', () => {
     const event = new BackgroundEvent();
-    const session = { language: Languages.utils.getDefault() };
-    expect(event.test({ line: 'background: Some background'}, session)).toBe(true);
-    expect(event.test({ line: 'Background: Some background'}, session)).toBe(true);
-    expect(event.test({ line: '  Background  : Some background  '}, session)).toBe(true);
-    expect(event.test({ line: 'Background  :'}, session)).toBe(true);
+    expect(event.handle({ line: 'background: Some background'}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Background: Some background'}, session, state)).toBe(true);
+    expect(event.handle({ line: '  Background  : Some background  '}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Background  :'}, session, state)).toBe(true);
 
-    expect(event.test({ line: 'Background'}, session)).toBe(false);
+    expect(event.handle({ line: 'Background'}, session, state)).toBe(false);
   });
 
   it('should recognise localised backgrounds', () => {
     const event = new BackgroundEvent();
-    const session = { language: Languages.utils.get('Pirate') };
-    expect(event.test({ line: 'aftground: Some background'}, session)).toBe(true);
-    expect(event.test({ line: 'Aftground: Some background'}, session)).toBe(true);
-    expect(event.test({ line: '  Aftground  : Some background  '}, session)).toBe(true);
-    expect(event.test({ line: 'Aftground  :'}, session)).toBe(true);
+    session = { language: Languages.utils.get('Pirate') };
 
-    expect(event.test({ line: 'Aftground'}, session)).toBe(false);
+    expect(event.handle({ line: 'aftground: Some background'}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Aftground: Some background'}, session, state)).toBe(true);
+    expect(event.handle({ line: '  Aftground  : Some background  '}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Aftground  :'}, session, state)).toBe(true);
+
+    expect(event.handle({ line: 'Aftground'}, session, state)).toBe(false);
   });
 
   it('should handle backgrounds', () => {
     const event = new BackgroundEvent();
-    const session = { language: Languages.utils.getDefault() };
-    const state = new StubState();
 
     event.handle({ line: 'Background:  Some background '}, session, state);
     expect(state.events.length).toBe(1);

@@ -5,6 +5,14 @@ const { BlankLineEvent } = Events;
 
 describe('BlankLineEvent', () => {
 
+  let session;
+  let state;
+
+  beforeEach(() => {
+    session = { language: Languages.utils.getDefault() };
+    state = new StubState();
+  });
+
   class StubState {
     constructor() {
       this.events = [];
@@ -16,17 +24,14 @@ describe('BlankLineEvent', () => {
 
   it('should recognise blank lines', () => {
     const event = new BlankLineEvent();
-    const session = { language: Languages.utils.getDefault() };
-    expect(event.test({ line: ''}, session)).toBe(true);
-    expect(event.test({ line: '   '}, session)).toBe(true);
+    expect(event.handle({ line: ''}, session, state)).toBe(true);
+    expect(event.handle({ line: '   '}, session, state)).toBe(true);
 
-    expect(event.test({ line: 'Not Blank'}, session)).toBe(false);
+    expect(event.handle({ line: 'Not Blank'}, session, state)).toBe(false);
   });
 
   it('should handle blank lines', () => {
     const event = new BlankLineEvent();
-    const session = { language: Languages.utils.getDefault() };
-    const state = new StubState();
 
     event.handle({ line: ''}, session, state);
     expect(state.events.length).toBe(1);

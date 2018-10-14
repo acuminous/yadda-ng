@@ -5,6 +5,14 @@ const { EndEvent } = Events;
 
 describe('EndEvent', () => {
 
+  let session;
+  let state;
+
+  beforeEach(() => {
+    session = { language: Languages.utils.getDefault() };
+    state = new StubState();
+  });
+
   class StubState {
     constructor() {
       this.events = [];
@@ -16,17 +24,14 @@ describe('EndEvent', () => {
 
   it('should recognise end of specification', () => {
     const event = new EndEvent();
-    const session = { language: Languages.utils.getDefault() };
-    expect(event.test({ line: '\u0000'}, session)).toBe(true);
+    expect(event.handle({ line: '\u0000'}, session, state)).toBe(true);
 
-    expect(event.test({ line: ' \u0000'}, session)).toBe(false);
-    expect(event.test({ line: '\u0000 '}, session)).toBe(false);
+    expect(event.handle({ line: ' \u0000'}, session, state)).toBe(false);
+    expect(event.handle({ line: '\u0000 '}, session, state)).toBe(false);
   });
 
   it('should handle end of specification', () => {
     const event = new EndEvent();
-    const session = { language: Languages.utils.getDefault() };
-    const state = new StubState();
 
     event.handle({ line: '\u0000'}, session, state);
     expect(state.events.length).toBe(1);

@@ -5,6 +5,14 @@ const { UnexpectedEvent } = Events;
 
 describe('UnexpectedEvent', () => {
 
+  let session;
+  let state;
+
+  beforeEach(() => {
+    session = { language: Languages.utils.getDefault() };
+    state = new StubState();
+  });
+
   class StubState {
     constructor() {
       this.events = [];
@@ -16,14 +24,11 @@ describe('UnexpectedEvent', () => {
 
   it('should recognise anything', () => {
     const event = new UnexpectedEvent();
-    const session = { language: Languages.utils.getDefault() };
-    expect(event.test({ line: 'anything'}, session)).toBe(true);
+    expect(event.handle({ line: 'anything'}, session, state)).toBe(true);
   });
 
   it('should handle anything', () => {
     const event = new UnexpectedEvent();
-    const session = { language: Languages.utils.getDefault() };
-    const state = new StubState();
 
     event.handle({ line: 'anything'}, session, state);
     expect(state.events.length).toBe(1);

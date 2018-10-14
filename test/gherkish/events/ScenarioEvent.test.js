@@ -5,6 +5,14 @@ const { ScenarioEvent } = Events;
 
 describe('ScenarioEvent', () => {
 
+  let session;
+  let state;
+
+  beforeEach(() => {
+    session = { language: Languages.utils.getDefault() };
+    state = new StubState();
+  });
+
   class StubState {
     constructor() {
       this.events = [];
@@ -16,25 +24,25 @@ describe('ScenarioEvent', () => {
 
   it('should recognise scenarios', () => {
     const event = new ScenarioEvent();
-    const session = { language: Languages.utils.getDefault() };
-    expect(event.test({ line: 'scenario: Some scenario'}, session)).toBe(true);
-    expect(event.test({ line: 'Scenario: Some scenario'}, session)).toBe(true);
-    expect(event.test({ line: '  Scenario  : Some scenario  '}, session)).toBe(true);
-    expect(event.test({ line: 'Scenario  :'}, session)).toBe(true);
+    expect(event.handle({ line: 'scenario: Some scenario'}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Scenario: Some scenario'}, session, state)).toBe(true);
+    expect(event.handle({ line: '  Scenario  : Some scenario  '}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Scenario  :'}, session, state)).toBe(true);
 
-    expect(event.test({ line: 'Scenario'}, session)).toBe(false);
+    expect(event.handle({ line: 'Scenario'}, session, state)).toBe(false);
   });
 
 
   it('should recognise localised scenarios', () => {
     const event = new ScenarioEvent();
     const session = { language: Languages.utils.get('Pirate') };
-    expect(event.test({ line: 'sortie: Some scenario'}, session)).toBe(true);
-    expect(event.test({ line: 'Sortie: Some scenario'}, session)).toBe(true);
-    expect(event.test({ line: '  Sortie  : Some scenario  '}, session)).toBe(true);
-    expect(event.test({ line: 'Sortie  :'}, session)).toBe(true);
 
-    expect(event.test({ line: 'Scenario'}, session)).toBe(false);
+    expect(event.handle({ line: 'sortie: Some scenario'}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Sortie: Some scenario'}, session, state)).toBe(true);
+    expect(event.handle({ line: '  Sortie  : Some scenario  '}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Sortie  :'}, session, state)).toBe(true);
+
+    expect(event.handle({ line: 'Scenario'}, session, state)).toBe(false);
   });
 
   it('should handle scenarios', () => {

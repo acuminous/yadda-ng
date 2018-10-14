@@ -5,6 +5,14 @@ const { AnnotationEvent } = Events;
 
 describe('AnnotationEvent', () => {
 
+  let session;
+  let state;
+
+  beforeEach(() => {
+    session = { language: Languages.utils.getDefault() };
+    state = new StubState();
+  });
+
   class StubState {
     constructor() {
       this.events = [];
@@ -16,21 +24,18 @@ describe('AnnotationEvent', () => {
 
   it('should recognise annotations', () => {
     const event = new AnnotationEvent();
-    const session = { language: Languages.utils.getDefault() };
-    expect(event.test({ line: '@skip'}, session)).toBe(true);
-    expect(event.test({ line: '@name=value '}, session)).toBe(true);
-    expect(event.test({ line: ' @skip '}, session)).toBe(true);
-    expect(event.test({ line: ' @name = value '}, session)).toBe(true);
+    expect(event.handle({ line: '@skip'}, session, state)).toBe(true);
+    expect(event.handle({ line: '@name=value '}, session, state)).toBe(true);
+    expect(event.handle({ line: ' @skip '}, session, state)).toBe(true);
+    expect(event.handle({ line: ' @name = value '}, session, state)).toBe(true);
 
-    expect(event.test({ line: 'skip'}, session)).toBe(false);
-    expect(event.test({ line: 'name=value'}, session)).toBe(false);
-    expect(event.test({ line: 'email@example.com'}, session)).toBe(false);
+    expect(event.handle({ line: 'skip'}, session, state)).toBe(false);
+    expect(event.handle({ line: 'name=value'}, session, state)).toBe(false);
+    expect(event.handle({ line: 'email@example.com'}, session, state)).toBe(false);
   });
 
   it('should handle simple annotations', () => {
     const event = new AnnotationEvent();
-    const session = { language: Languages.utils.getDefault() };
-    const state = new StubState();
     event.handle({ line: '@skip'}, session, state);
 
     expect(state.events.length).toBe(1);
@@ -42,8 +47,6 @@ describe('AnnotationEvent', () => {
 
   it('should handle name/value annotations', () => {
     const event = new AnnotationEvent();
-    const session = { language: Languages.utils.getDefault() };
-    const state = new StubState();
     event.handle({ line: '@foo=bar'}, session, state);
 
     expect(state.events.length).toBe(1);

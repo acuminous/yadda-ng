@@ -230,6 +230,50 @@ describe('Specification Parser', () => {
     expect(document.scenarios[0].steps[1].text).toBe('Second step');
   });
 
+  xit('should support indented docstrings', () => {
+    const text = [
+      '@skip',
+      'Feature: Some feature',
+      '',
+      'Some free form text',
+      '',
+      '   @timeout=1000',
+      '   Background: The background',
+      '      First background step',
+      '         Docstring 1',
+      '            Docstring 2',
+      '         Docstring 3   ',
+      '      Second background step',
+      '',
+      '   @browser = Firefox',
+      '   Scenario: First scenario',
+      '      First step',
+      '         Docstring 1',
+      '            Docstring 2',
+      '         Docstring 3   ',
+      '     Second step',
+    ].join('\n');
+
+    const document = new SpecificationParser().parse(text);
+
+    expect(document.background.steps.length).toBe(2);
+    expect(document.background.steps[0].text).toBe('First background step');
+    expect(document.background.steps[0].docstring.length).toBe(3);
+    expect(document.background.steps[0].docstring[0]).toBe('Docstring 1');
+    expect(document.background.steps[0].docstring[1]).toBe('   Docstring 2');
+    expect(document.background.steps[0].docstring[2]).toBe('Docstring 3   ');
+    expect(document.background.steps[1].text).toBe('Second background step');
+
+    expect(document.scenarios.length).toBe(1);
+    expect(document.scenarios[0].steps.length).toBe(2);
+    expect(document.scenarios[0].steps[0].text).toBe('First step');
+    expect(document.scenarios[0].steps[0].docstring.length).toBe(3);
+    expect(document.scenarios[0].steps[0].docstring[0]).toBe('Docstring 1');
+    expect(document.scenarios[0].steps[0].docstring[1]).toBe('   Docstring 2');
+    expect(document.scenarios[0].steps[0].docstring[2]).toBe('Docstring 3   ');
+    expect(document.scenarios[0].steps[1].text).toBe('Second step');
+  });
+
   it('should not parse steps that are in docstrings', () => {
     const text = [
       '@skip',

@@ -5,6 +5,14 @@ const { TextEvent } = Events;
 
 describe('TextEvent', () => {
 
+  let session;
+  let state;
+
+  beforeEach(() => {
+    session = { language: Languages.utils.getDefault() };
+    state = new StubState();
+  });
+
   class StubState {
     constructor() {
       this.events = [];
@@ -16,26 +24,23 @@ describe('TextEvent', () => {
 
   it('should recognise text', () => {
     const event = new TextEvent();
-    const session = { language: Languages.utils.getDefault() };
-    expect(event.test({ line: 'Some text'}, session)).toBe(true);
-    expect(event.test({ line: ' Some text '}, session)).toBe(true);
+    expect(event.handle({ line: 'Some text'}, session, state)).toBe(true);
+    expect(event.handle({ line: ' Some text '}, session, state)).toBe(true);
   });
 
   it('should recognise localised text', () => {
     const event = new TextEvent();
     const session = { language: Languages.utils.get('English') };
-    expect(event.test({ line: 'Given some text'}, session)).toBe(true);
-    expect(event.test({ line: 'When some text'}, session)).toBe(true);
-    expect(event.test({ line: 'Then some text'}, session)).toBe(true);
-    expect(event.test({ line: 'And some text'}, session)).toBe(true);
-    expect(event.test({ line: '  Given some text  '}, session)).toBe(true);
-    expect(event.test({ line: 'Some text'}, session)).toBe(true);
+    expect(event.handle({ line: 'Given some text'}, session, state)).toBe(true);
+    expect(event.handle({ line: 'When some text'}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Then some text'}, session, state)).toBe(true);
+    expect(event.handle({ line: 'And some text'}, session, state)).toBe(true);
+    expect(event.handle({ line: '  Given some text  '}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Some text'}, session, state)).toBe(true);
   });
 
   it('should handle text', () => {
     const event = new TextEvent();
-    const session = { language: Languages.utils.getDefault() };
-    const state = new StubState();
 
     event.handle({ line: '  Some text  '}, session, state);
     expect(state.events.length).toBe(1);

@@ -5,6 +5,14 @@ const { SingleLineCommentEvent } = Events;
 
 describe('SingleLineCommentEvent', () => {
 
+  let session;
+  let state;
+
+  beforeEach(() => {
+    session = { language: Languages.utils.getDefault() };
+    state = new StubState();
+  });
+
   class StubState {
     constructor() {
       this.events = [];
@@ -16,19 +24,16 @@ describe('SingleLineCommentEvent', () => {
 
   it('should recognise single line comments', () => {
     const event = new SingleLineCommentEvent();
-    const session = { language: Languages.utils.getDefault() };
-    expect(event.test({ line: '# Some comment'}, session)).toBe(true);
-    expect(event.test({ line: ' # Some comment'}, session)).toBe(true);
-    expect(event.test({ line: '#'}, session)).toBe(true);
-    expect(event.test({ line: '## Some comment'}, session)).toBe(true);
+    expect(event.handle({ line: '# Some comment'}, session, state)).toBe(true);
+    expect(event.handle({ line: ' # Some comment'}, session, state)).toBe(true);
+    expect(event.handle({ line: '#'}, session, state)).toBe(true);
+    expect(event.handle({ line: '## Some comment'}, session, state)).toBe(true);
 
-    expect(event.test({ line: 'No commment'}, session)).toBe(false);
+    expect(event.handle({ line: 'No commment'}, session, state)).toBe(false);
   });
 
   it('should handle single line comments', () => {
     const event = new SingleLineCommentEvent();
-    const session = { language: Languages.utils.getDefault() };
-    const state = new StubState();
 
     event.handle({ line: '# Some comment '}, session, state);
     expect(state.events.length).toBe(1);

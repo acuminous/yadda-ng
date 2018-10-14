@@ -5,6 +5,14 @@ const { LanguageEvent } = Events;
 
 describe('LanguageEvent', () => {
 
+  let session;
+  let state;
+
+  beforeEach(() => {
+    session = { language: Languages.utils.getDefault() };
+    state = new StubState();
+  });
+
   class StubState {
     constructor() {
       this.events = [];
@@ -16,19 +24,16 @@ describe('LanguageEvent', () => {
 
   it('should recognise languages', () => {
     const event = new LanguageEvent();
-    const session = { language: Languages.utils.getDefault() };
-    expect(event.test({ line: '#Language:Pirate'}, session)).toBe(true);
-    expect(event.test({ line: '#Language : Pirate'}, session)).toBe(true);
-    expect(event.test({ line: '# Language : Pirate '}, session)).toBe(true);
-    expect(event.test({ line: '#language:Pirate'}, session)).toBe(true);
+    expect(event.handle({ line: '#Language:Pirate'}, session, state)).toBe(true);
+    expect(event.handle({ line: '#Language : Pirate'}, session, state)).toBe(true);
+    expect(event.handle({ line: '# Language : Pirate '}, session, state)).toBe(true);
+    expect(event.handle({ line: '#language:Pirate'}, session, state)).toBe(true);
 
-    expect(event.test({ line: 'Language'}, session)).toBe(false);
+    expect(event.handle({ line: 'Language'}, session, state)).toBe(false);
   });
 
   it('should handle languages', () => {
     const event = new LanguageEvent();
-    const session = { language: Languages.utils.getDefault() };
-    const state = new StubState();
 
     event.handle({ line: '#Language : Pirate '}, session, state);
     expect(state.events.length).toBe(1);

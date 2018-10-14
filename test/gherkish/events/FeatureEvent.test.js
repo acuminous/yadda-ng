@@ -5,6 +5,14 @@ const { FeatureEvent } = Events;
 
 describe('FeatureEvent', () => {
 
+  let session;
+  let state;
+
+  beforeEach(() => {
+    session = { language: Languages.utils.getDefault() };
+    state = new StubState();
+  });
+
   class StubState {
     constructor() {
       this.events = [];
@@ -16,30 +24,28 @@ describe('FeatureEvent', () => {
 
   it('should recognise features', () => {
     const event = new FeatureEvent();
-    const session = { language: Languages.utils.getDefault() };
-    expect(event.test({ line: 'feature: Some feature'}, session)).toBe(true);
-    expect(event.test({ line: 'Feature: Some feature'}, session)).toBe(true);
-    expect(event.test({ line: '  Feature  : Some feature  '}, session)).toBe(true);
-    expect(event.test({ line: 'Feature  :'}, session)).toBe(true);
+    expect(event.handle({ line: 'feature: Some feature'}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Feature: Some feature'}, session, state)).toBe(true);
+    expect(event.handle({ line: '  Feature  : Some feature  '}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Feature  :'}, session, state)).toBe(true);
 
-    expect(event.test({ line: 'Feature'}, session)).toBe(false);
+    expect(event.handle({ line: 'Feature'}, session, state)).toBe(false);
   });
 
   it('should recognise localised features', () => {
     const event = new FeatureEvent();
-    const session = { language: Languages.utils.get('Pirate') };
-    expect(event.test({ line: 'yarn: Some feature'}, session)).toBe(true);
-    expect(event.test({ line: 'Yarn: Some feature'}, session)).toBe(true);
-    expect(event.test({ line: '  Yarn  : Some feature  '}, session)).toBe(true);
-    expect(event.test({ line: 'Yarn  :'}, session)).toBe(true);
+    session = { language: Languages.utils.get('Pirate') };
 
-    expect(event.test({ line: 'Yarn'}, session)).toBe(false);
+    expect(event.handle({ line: 'yarn: Some feature'}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Yarn: Some feature'}, session, state)).toBe(true);
+    expect(event.handle({ line: '  Yarn  : Some feature  '}, session, state)).toBe(true);
+    expect(event.handle({ line: 'Yarn  :'}, session, state)).toBe(true);
+
+    expect(event.handle({ line: 'Yarn'}, session, state)).toBe(false);
   });
 
   it('should handle features', () => {
     const event = new FeatureEvent();
-    const session = { language: Languages.utils.getDefault() };
-    const state = new StubState();
 
     event.handle({ line: 'Feature:  Some feature '}, session, state);
     expect(state.events.length).toBe(1);
