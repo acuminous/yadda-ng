@@ -62,7 +62,7 @@ describe('Create Feature State', () => {
   describe('End Events', () => {
 
     it('should error', () => {
-      expect(() => handle('\u0000')).toThrow('\'\u0000\' was unexpected in state: CreateFeatureState on line 1');
+      expect(() => handle('\u0000')).toThrow('Premature end of specification in state: CreateFeatureState on line 1');
     });
   });
 

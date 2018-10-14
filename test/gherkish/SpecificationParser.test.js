@@ -1,3 +1,4 @@
+
 const expect = require('expect');
 const { Gherkish } = require('../..');
 const { SpecificationParser, Languages, StateMachine, States, Events } = Gherkish;

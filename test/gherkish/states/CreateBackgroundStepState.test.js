@@ -50,7 +50,7 @@ describe('Create Background Step State', () => {
   describe('End Events', () => {
 
     it('should transition to final on end event', () => {
-      expect(() => handle('\u0000')).toThrow('\'\u0000\' was unexpected in state: CreateBackgroundStepState on line 1');
+      expect(() => handle('\u0000')).toThrow('Premature end of specification in state: CreateBackgroundStepState on line 1');
     });
   });
 
