@@ -3,7 +3,7 @@ const expect = require('expect');
 const { Gherkish } = require('../..');
 const { SpecificationParser, Languages, StateMachine, States, Events } = Gherkish;
 const { BaseState } = States;
-const { AnnotationEvent, BackgroundEvent, BlankLineEvent, DocStringEvent, EndEvent, FeatureEvent, LanguageEvent, MultiLineCommentEvent, ScenarioEvent, SingleLineCommentEvent, StepEvent, TextEvent } = Events;
+const { AnnotationEvent, BackgroundEvent, BlankLineEvent, DocStringStartEvent, EndEvent, FeatureEvent, LanguageEvent, MultiLineCommentEvent, ScenarioEvent, SingleLineCommentEvent, StepEvent, TextEvent } = Events;
 
 describe('Specification Parser', () => {
 
@@ -643,7 +643,7 @@ describe('Specification Parser', () => {
 
   class StubState extends BaseState {
     constructor(assertions) {
-      super({ events: [ EndEvent, DocStringEvent, LanguageEvent, MultiLineCommentEvent, SingleLineCommentEvent, AnnotationEvent, FeatureEvent, BackgroundEvent, ScenarioEvent, BlankLineEvent, StepEvent, TextEvent ] });
+      super({ events: [ EndEvent, DocStringStartEvent, LanguageEvent, MultiLineCommentEvent, SingleLineCommentEvent, AnnotationEvent, FeatureEvent, BackgroundEvent, ScenarioEvent, BlankLineEvent, StepEvent, TextEvent ] });
       this.count = 0;
       this.assertions = assertions;
     }
@@ -654,6 +654,9 @@ describe('Specification Parser', () => {
       return this.handleEvent(event);
     }
     onBlankLine(event) {
+      return this.handleEvent(event);
+    }
+    onDocStringStart(event) {
       return this.handleEvent(event);
     }
     onEnd(event) {
