@@ -1,6 +1,6 @@
 # yadda-ng
 
-1. Docstring state tests
+1. DocString state tests
 1. .yaddarc
 1. Term should use arity class
 1. Terms should be recursive: .define('coordinates', '$number, $number', new GeographicCoordinatesConverter());

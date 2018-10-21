@@ -7,10 +7,10 @@ Feature: Advanced examples
     * You can use [ ] as well as < >
     * Data tables headings can have a horizontal border row beneath the header
     * You cannot use scenario or background descriptions
-    * docstrings are delimited by indentation not triple quotes
+    * DocStrings are delimited by indentation not triple quotes
 
 @only
-Scenario: A multiline step (a.k.a. docstring) using prose
+Scenario: A multiline step (a.k.a. DocString) using prose
   Given the following graffiti is sprayed on the wall
 
     May we go our separate ways,
@@ -41,7 +41,7 @@ Scenario: A multiline step (a.k.a. docstring) using prose
 
 
 ###
-  Scenario: A multiline step (a.k.a. docstring) using a list converter
+  Scenario: A multiline step (a.k.a. DocString) using a list converter
     Given the following bottles are standing on the wall
 
       a) 40 green

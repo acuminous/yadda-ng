@@ -3,7 +3,7 @@ const expect = require('expect');
 const { Gherkish } = require('../..');
 const { SpecificationParser, Languages, StateMachine, States, Events } = Gherkish;
 const { BaseState } = States;
-const { AnnotationEvent, BackgroundEvent, BlankLineEvent, DocstringEvent, EndEvent, FeatureEvent, LanguageEvent, MultiLineCommentEvent, ScenarioEvent, SingleLineCommentEvent, StepEvent, TextEvent } = Events;
+const { AnnotationEvent, BackgroundEvent, BlankLineEvent, DocStringEvent, EndEvent, FeatureEvent, LanguageEvent, MultiLineCommentEvent, ScenarioEvent, SingleLineCommentEvent, StepEvent, TextEvent } = Events;
 
 describe('Specification Parser', () => {
 
@@ -182,7 +182,7 @@ describe('Specification Parser', () => {
     expect(result2.title).toBe('Another feature');
   });
 
-  it('should support docstrings', () => {
+  it('should support DocStrings', () => {
     const text = [
       '@skip',
       'Feature: Some feature',
@@ -193,9 +193,9 @@ describe('Specification Parser', () => {
       '   Background: The background',
       '      First background step',
       '         ---',
-      '         Docstring 1',
-      '            Docstring 2',
-      '         Docstring 3   ',
+      '         DocString 1',
+      '            DocString 2',
+      '         DocString 3   ',
       '         ---',
       '      Second background step',
       '',
@@ -203,9 +203,9 @@ describe('Specification Parser', () => {
       '   Scenario: First scenario',
       '      First step',
       '         """',
-      '         Docstring 1',
-      '            Docstring 2',
-      '         Docstring 3   ',
+      '         DocString 1',
+      '            DocString 2',
+      '         DocString 3   ',
       '         """',
       '     Second step',
     ].join('\n');
@@ -214,23 +214,23 @@ describe('Specification Parser', () => {
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].text).toBe('First background step');
-    expect(document.background.steps[0].docstring.length).toBe(3);
-    expect(document.background.steps[0].docstring[0]).toBe('Docstring 1');
-    expect(document.background.steps[0].docstring[1]).toBe('   Docstring 2');
-    expect(document.background.steps[0].docstring[2]).toBe('Docstring 3   ');
+    expect(document.background.steps[0].DocString.length).toBe(3);
+    expect(document.background.steps[0].DocString[0]).toBe('DocString 1');
+    expect(document.background.steps[0].DocString[1]).toBe('   DocString 2');
+    expect(document.background.steps[0].DocString[2]).toBe('DocString 3   ');
     expect(document.background.steps[1].text).toBe('Second background step');
 
     expect(document.scenarios.length).toBe(1);
     expect(document.scenarios[0].steps.length).toBe(2);
     expect(document.scenarios[0].steps[0].text).toBe('First step');
-    expect(document.scenarios[0].steps[0].docstring.length).toBe(3);
-    expect(document.scenarios[0].steps[0].docstring[0]).toBe('Docstring 1');
-    expect(document.scenarios[0].steps[0].docstring[1]).toBe('   Docstring 2');
-    expect(document.scenarios[0].steps[0].docstring[2]).toBe('Docstring 3   ');
+    expect(document.scenarios[0].steps[0].DocString.length).toBe(3);
+    expect(document.scenarios[0].steps[0].DocString[0]).toBe('DocString 1');
+    expect(document.scenarios[0].steps[0].DocString[1]).toBe('   DocString 2');
+    expect(document.scenarios[0].steps[0].DocString[2]).toBe('DocString 3   ');
     expect(document.scenarios[0].steps[1].text).toBe('Second step');
   });
 
-  xit('should support indented docstrings', () => {
+  xit('should support indented DocStrings', () => {
     const text = [
       '@skip',
       'Feature: Some feature',
@@ -240,17 +240,17 @@ describe('Specification Parser', () => {
       '   @timeout=1000',
       '   Background: The background',
       '      First background step',
-      '         Docstring 1',
-      '            Docstring 2',
-      '         Docstring 3   ',
+      '         DocString 1',
+      '            DocString 2',
+      '         DocString 3   ',
       '      Second background step',
       '',
       '   @browser = Firefox',
       '   Scenario: First scenario',
       '      First step',
-      '         Docstring 1',
-      '            Docstring 2',
-      '         Docstring 3   ',
+      '         DocString 1',
+      '            DocString 2',
+      '         DocString 3   ',
       '     Second step',
     ].join('\n');
 
@@ -258,23 +258,23 @@ describe('Specification Parser', () => {
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].text).toBe('First background step');
-    expect(document.background.steps[0].docstring.length).toBe(3);
-    expect(document.background.steps[0].docstring[0]).toBe('Docstring 1');
-    expect(document.background.steps[0].docstring[1]).toBe('   Docstring 2');
-    expect(document.background.steps[0].docstring[2]).toBe('Docstring 3   ');
+    expect(document.background.steps[0].DocString.length).toBe(3);
+    expect(document.background.steps[0].DocString[0]).toBe('DocString 1');
+    expect(document.background.steps[0].DocString[1]).toBe('   DocString 2');
+    expect(document.background.steps[0].DocString[2]).toBe('DocString 3   ');
     expect(document.background.steps[1].text).toBe('Second background step');
 
     expect(document.scenarios.length).toBe(1);
     expect(document.scenarios[0].steps.length).toBe(2);
     expect(document.scenarios[0].steps[0].text).toBe('First step');
-    expect(document.scenarios[0].steps[0].docstring.length).toBe(3);
-    expect(document.scenarios[0].steps[0].docstring[0]).toBe('Docstring 1');
-    expect(document.scenarios[0].steps[0].docstring[1]).toBe('   Docstring 2');
-    expect(document.scenarios[0].steps[0].docstring[2]).toBe('Docstring 3   ');
+    expect(document.scenarios[0].steps[0].DocString.length).toBe(3);
+    expect(document.scenarios[0].steps[0].DocString[0]).toBe('DocString 1');
+    expect(document.scenarios[0].steps[0].DocString[1]).toBe('   DocString 2');
+    expect(document.scenarios[0].steps[0].DocString[2]).toBe('DocString 3   ');
     expect(document.scenarios[0].steps[1].text).toBe('Second step');
   });
 
-  it('should not parse steps that are in docstrings', () => {
+  it('should not parse steps that are in DocStrings', () => {
     const text = [
       '@skip',
       'Feature: Some feature',
@@ -285,8 +285,8 @@ describe('Specification Parser', () => {
       '   Background: The background',
       '      Given a background step',
       '         ---',
-      '         Given a docstring',
-      '         Given another docstring',
+      '         Given a DocString',
+      '         Given another DocString',
       '                                ',
       '         ---',
       '      Given another background step',
@@ -295,8 +295,8 @@ describe('Specification Parser', () => {
       '   Scenario: First scenario',
       '      Given a step',
       '         """',
-      '         Given a docstring',
-      '         Given another docstring',
+      '         Given a DocString',
+      '         Given another DocString',
       '                                ',
       '         """',
       '     Given another step',
@@ -307,19 +307,19 @@ describe('Specification Parser', () => {
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].generalised).toBe('a background step');
-    expect(document.background.steps[0].docstring.length).toBe(3);
-    expect(document.background.steps[0].docstring[0]).toBe('Given a docstring');
-    expect(document.background.steps[0].docstring[1]).toBe('Given another docstring');
-    expect(document.background.steps[0].docstring[2]).toBe('                       ');
+    expect(document.background.steps[0].DocString.length).toBe(3);
+    expect(document.background.steps[0].DocString[0]).toBe('Given a DocString');
+    expect(document.background.steps[0].DocString[1]).toBe('Given another DocString');
+    expect(document.background.steps[0].DocString[2]).toBe('                       ');
     expect(document.background.steps[1].generalised).toBe('another background step');
 
     expect(document.scenarios.length).toBe(1);
     expect(document.scenarios[0].steps.length).toBe(2);
     expect(document.scenarios[0].steps[0].generalised).toBe('a step');
-    expect(document.scenarios[0].steps[0].docstring.length).toBe(3);
-    expect(document.scenarios[0].steps[0].docstring[0]).toBe('Given a docstring');
-    expect(document.scenarios[0].steps[0].docstring[1]).toBe('Given another docstring');
-    expect(document.scenarios[0].steps[0].docstring[2]).toBe('                       ');
+    expect(document.scenarios[0].steps[0].DocString.length).toBe(3);
+    expect(document.scenarios[0].steps[0].DocString[0]).toBe('Given a DocString');
+    expect(document.scenarios[0].steps[0].DocString[1]).toBe('Given another DocString');
+    expect(document.scenarios[0].steps[0].DocString[2]).toBe('                       ');
     expect(document.scenarios[0].steps[1].generalised).toBe('another step');
   });
 
@@ -643,7 +643,7 @@ describe('Specification Parser', () => {
 
   class StubState extends BaseState {
     constructor(assertions) {
-      super({ events: [ EndEvent, DocstringEvent, LanguageEvent, MultiLineCommentEvent, SingleLineCommentEvent, AnnotationEvent, FeatureEvent, BackgroundEvent, ScenarioEvent, BlankLineEvent, StepEvent, TextEvent ] });
+      super({ events: [ EndEvent, DocStringEvent, LanguageEvent, MultiLineCommentEvent, SingleLineCommentEvent, AnnotationEvent, FeatureEvent, BackgroundEvent, ScenarioEvent, BlankLineEvent, StepEvent, TextEvent ] });
       this.count = 0;
       this.assertions = assertions;
     }
