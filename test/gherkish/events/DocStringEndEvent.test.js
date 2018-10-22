@@ -22,15 +22,17 @@ describe('DocStringEndEvent', () => {
     }
   }
 
-  it.only('should handle --- DocStrings', () => {
+  it('should handle --- DocStrings', () => {
     const event = new DocStringEndEvent();
     session.docString = { token: '---' };
+    session.indentation = 6;
 
-    event.handle({ line: '   ---   '}, session, state);
+    event.handle({ line: '   ---   ' }, session, state);
     expect(state.events.length).toBe(1);
 
     expect(state.events[0].name).toBe('DocStringStart');
     expect(state.events[0].source.line).toBe('   ---   ');
+    expect(session.indentation).toBe(0);
     expect(session.docString).toBe(undefined);
   });
 
@@ -38,11 +40,12 @@ describe('DocStringEndEvent', () => {
     const event = new DocStringEndEvent();
     session.docString = { token: '"""' };
 
-    event.handle({ line: '   """   '}, session, state);
+    event.handle({ line: '   """   ' }, session, state);
     expect(state.events.length).toBe(1);
 
     expect(state.events[0].name).toBe('DocStringStart');
     expect(state.events[0].source.line).toBe('   """   ');
+    expect(session.indentation).toBe(0);
     expect(session.docString).toBe(undefined);
   });
 

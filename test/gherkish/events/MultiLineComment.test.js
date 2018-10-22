@@ -24,18 +24,18 @@ describe('MultiLineCommentEvent', () => {
 
   it('should recognise multi line comments', () => {
     const event = new MultiLineCommentEvent();
-    expect(event.handle({ line: '### Some comment'}, session, state)).toBe(true);
-    expect(event.handle({ line: ' ### Some comment'}, session, state)).toBe(true);
-    expect(event.handle({ line: '###'}, session, state)).toBe(true);
-    expect(event.handle({ line: '#### Some comment'}, session, state)).toBe(true);
+    expect(event.handle({ line: '### Some comment' }, session, state)).toBe(true);
+    expect(event.handle({ line: ' ### Some comment' }, session, state)).toBe(true);
+    expect(event.handle({ line: '###' }, session, state)).toBe(true);
+    expect(event.handle({ line: '#### Some comment' }, session, state)).toBe(true);
 
-    expect(event.handle({ line: '## No commment'}, session, state)).toBe(false);
+    expect(event.handle({ line: '## No commment' }, session, state)).toBe(false);
   });
 
   it('should handle multi line comments', () => {
     const event = new MultiLineCommentEvent();
 
-    event.handle({ line: '### Some comment '}, session, state);
+    event.handle({ line: '### Some comment ' }, session, state);
     expect(state.events.length).toBe(1);
 
     expect(state.events[0].name).toBe('multi_line_comment');

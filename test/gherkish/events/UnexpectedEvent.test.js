@@ -24,13 +24,13 @@ describe('UnexpectedEvent', () => {
 
   it('should recognise anything', () => {
     const event = new UnexpectedEvent();
-    expect(event.handle({ line: 'anything'}, session, state)).toBe(true);
+    expect(event.handle({ line: 'anything' }, session, state)).toBe(true);
   });
 
   it('should handle anything', () => {
     const event = new UnexpectedEvent();
 
-    event.handle({ line: 'anything'}, session, state);
+    event.handle({ line: 'anything' }, session, state);
     expect(state.events.length).toBe(1);
 
     expect(state.events[0].name).toBe('unexpected');

@@ -24,18 +24,18 @@ describe('LanguageEvent', () => {
 
   it('should recognise languages', () => {
     const event = new LanguageEvent();
-    expect(event.handle({ line: '#Language:Pirate'}, session, state)).toBe(true);
-    expect(event.handle({ line: '#Language : Pirate'}, session, state)).toBe(true);
-    expect(event.handle({ line: '# Language : Pirate '}, session, state)).toBe(true);
-    expect(event.handle({ line: '#language:Pirate'}, session, state)).toBe(true);
+    expect(event.handle({ line: '#Language:Pirate' }, session, state)).toBe(true);
+    expect(event.handle({ line: '#Language : Pirate' }, session, state)).toBe(true);
+    expect(event.handle({ line: '# Language : Pirate ' }, session, state)).toBe(true);
+    expect(event.handle({ line: '#language:Pirate' }, session, state)).toBe(true);
 
-    expect(event.handle({ line: 'Language'}, session, state)).toBe(false);
+    expect(event.handle({ line: 'Language' }, session, state)).toBe(false);
   });
 
   it('should handle languages', () => {
     const event = new LanguageEvent();
 
-    event.handle({ line: '#Language : Pirate '}, session, state);
+    event.handle({ line: '#Language : Pirate ' }, session, state);
     expect(state.events.length).toBe(1);
 
     expect(state.events[0].name).toBe('language');

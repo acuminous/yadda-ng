@@ -24,18 +24,18 @@ describe('SingleLineCommentEvent', () => {
 
   it('should recognise single line comments', () => {
     const event = new SingleLineCommentEvent();
-    expect(event.handle({ line: '# Some comment'}, session, state)).toBe(true);
-    expect(event.handle({ line: ' # Some comment'}, session, state)).toBe(true);
-    expect(event.handle({ line: '#'}, session, state)).toBe(true);
-    expect(event.handle({ line: '## Some comment'}, session, state)).toBe(true);
+    expect(event.handle({ line: '# Some comment' }, session, state)).toBe(true);
+    expect(event.handle({ line: ' # Some comment' }, session, state)).toBe(true);
+    expect(event.handle({ line: '#' }, session, state)).toBe(true);
+    expect(event.handle({ line: '## Some comment' }, session, state)).toBe(true);
 
-    expect(event.handle({ line: 'No commment'}, session, state)).toBe(false);
+    expect(event.handle({ line: 'No commment' }, session, state)).toBe(false);
   });
 
   it('should handle single line comments', () => {
     const event = new SingleLineCommentEvent();
 
-    event.handle({ line: '# Some comment '}, session, state);
+    event.handle({ line: '# Some comment ' }, session, state);
     expect(state.events.length).toBe(1);
 
     expect(state.events[0].name).toBe('single_line_comment');

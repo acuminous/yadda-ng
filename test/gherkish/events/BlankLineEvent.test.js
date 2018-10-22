@@ -24,16 +24,16 @@ describe('BlankLineEvent', () => {
 
   it('should recognise blank lines', () => {
     const event = new BlankLineEvent();
-    expect(event.handle({ line: ''}, session, state)).toBe(true);
-    expect(event.handle({ line: '   '}, session, state)).toBe(true);
+    expect(event.handle({ line: '' }, session, state)).toBe(true);
+    expect(event.handle({ line: '   ' }, session, state)).toBe(true);
 
-    expect(event.handle({ line: 'Not Blank'}, session, state)).toBe(false);
+    expect(event.handle({ line: 'Not Blank' }, session, state)).toBe(false);
   });
 
   it('should handle blank lines', () => {
     const event = new BlankLineEvent();
 
-    event.handle({ line: ''}, session, state);
+    event.handle({ line: '' }, session, state);
     expect(state.events.length).toBe(1);
 
     expect(state.events[0].name).toBe('blank_line');

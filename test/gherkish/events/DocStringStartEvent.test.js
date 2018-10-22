@@ -24,39 +24,41 @@ describe('DocStringStartEvent', () => {
 
   it('should recognise delimited DocStrings', () => {
     const event = new DocStringStartEvent();
-    expect(event.handle({ line: '---'}, session, state)).toBe(true);
-    expect(event.handle({ line: ' --- '}, session, state)).toBe(true);
-    expect(event.handle({ line: ' ------ '}, session, state)).toBe(true);
-    expect(event.handle({ line: '"""'}, session, state)).toBe(true);
-    expect(event.handle({ line: ' """ '}, session, state)).toBe(true);
-    expect(event.handle({ line: ' """""" '}, session, state)).toBe(true);
+    expect(event.handle({ line: '---' }, session, state)).toBe(true);
+    expect(event.handle({ line: ' --- ' }, session, state)).toBe(true);
+    expect(event.handle({ line: ' ------ ' }, session, state)).toBe(true);
+    expect(event.handle({ line: '"""' }, session, state)).toBe(true);
+    expect(event.handle({ line: ' """ ' }, session, state)).toBe(true);
+    expect(event.handle({ line: ' """""" ' }, session, state)).toBe(true);
 
-    expect(event.handle({ line: '-'}, session, state)).toBe(false);
-    expect(event.handle({ line: '--'}, session, state)).toBe(false);
-    expect(event.handle({ line: '--- not a doc string'}, session, state)).toBe(false);
-    expect(event.handle({ line: '"'}, session, state)).toBe(false);
-    expect(event.handle({ line: '""'}, session, state)).toBe(false);
-    expect(event.handle({ line: '""" not a doc string'}, session, state)).toBe(false);
+    expect(event.handle({ line: '-' }, session, state)).toBe(false);
+    expect(event.handle({ line: '--' }, session, state)).toBe(false);
+    expect(event.handle({ line: '--- not a doc string' }, session, state)).toBe(false);
+    expect(event.handle({ line: '"' }, session, state)).toBe(false);
+    expect(event.handle({ line: '""' }, session, state)).toBe(false);
+    expect(event.handle({ line: '""" not a doc string' }, session, state)).toBe(false);
   });
 
   it('should handle --- DocStrings', () => {
     const event = new DocStringStartEvent();
-    event.handle({ line: '   ---   '}, session, state);
+    event.handle({ line: '   ---   ', indentation: 3 }, session, state);
     expect(state.events.length).toBe(1);
 
     expect(state.events[0].name).toBe('DocStringStart');
     expect(state.events[0].source.line).toBe('   ---   ');
+    expect(session.indentation).toBe(3);
     expect(session.docString.token).toBe('---');
   });
 
   it('should handle DocStrings', () => {
     const event = new DocStringStartEvent();
 
-    event.handle({ line: '   """   '}, session, state);
+    event.handle({ line: '   """   ', indentation: 3 }, session, state);
     expect(state.events.length).toBe(1);
 
     expect(state.events[0].name).toBe('DocStringStart');
     expect(state.events[0].source.line).toBe('   """   ');
+    expect(session.indentation).toBe(3);
     expect(session.docString.token).toBe('"""');
   });
 

@@ -24,16 +24,16 @@ describe('EndEvent', () => {
 
   it('should recognise end of specification', () => {
     const event = new EndEvent();
-    expect(event.handle({ line: '\u0000'}, session, state)).toBe(true);
+    expect(event.handle({ line: '\u0000' }, session, state)).toBe(true);
 
-    expect(event.handle({ line: ' \u0000'}, session, state)).toBe(false);
-    expect(event.handle({ line: '\u0000 '}, session, state)).toBe(false);
+    expect(event.handle({ line: ' \u0000' }, session, state)).toBe(false);
+    expect(event.handle({ line: '\u0000 ' }, session, state)).toBe(false);
   });
 
   it('should handle end of specification', () => {
     const event = new EndEvent();
 
-    event.handle({ line: '\u0000'}, session, state);
+    event.handle({ line: '\u0000' }, session, state);
     expect(state.events.length).toBe(1);
 
     expect(state.events[0].name).toBe('end');
