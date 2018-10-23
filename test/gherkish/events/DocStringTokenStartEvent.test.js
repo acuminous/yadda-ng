@@ -1,9 +1,9 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
 const { Events, Languages } = Gherkish;
-const { DocStringStartEvent } = Events;
+const { DocStringTokenStartEvent } = Events;
 
-describe('DocStringStartEvent', () => {
+describe('DocStringTokenStartEvent', () => {
 
   let session;
   let state;
@@ -17,13 +17,13 @@ describe('DocStringStartEvent', () => {
     constructor() {
       this.events = [];
     }
-    onDocStringStart(event) {
+    onDocStringTokenStart(event) {
       this.events.push(event);
     }
   }
 
   it('should recognise delimited DocStrings', () => {
-    const event = new DocStringStartEvent();
+    const event = new DocStringTokenStartEvent();
     expect(event.handle({ line: '---' }, session, state)).toBe(true);
     expect(event.handle({ line: ' --- ' }, session, state)).toBe(true);
     expect(event.handle({ line: ' ------ ' }, session, state)).toBe(true);
@@ -40,25 +40,23 @@ describe('DocStringStartEvent', () => {
   });
 
   it('should handle --- DocStrings', () => {
-    const event = new DocStringStartEvent();
+    const event = new DocStringTokenStartEvent();
     event.handle({ line: '   ---   ', indentation: 3 }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('DocStringStart');
+    expect(state.events[0].name).toBe('DocStringTokenStart');
     expect(state.events[0].source.line).toBe('   ---   ');
-    expect(session.indentation).toBe(3);
     expect(session.docString.token).toBe('---');
   });
 
   it('should handle DocStrings', () => {
-    const event = new DocStringStartEvent();
+    const event = new DocStringTokenStartEvent();
 
     event.handle({ line: '   """   ', indentation: 3 }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('DocStringStart');
+    expect(state.events[0].name).toBe('DocStringTokenStart');
     expect(state.events[0].source.line).toBe('   """   ');
-    expect(session.indentation).toBe(3);
     expect(session.docString.token).toBe('"""');
   });
 

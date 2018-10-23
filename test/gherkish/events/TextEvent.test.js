@@ -49,17 +49,4 @@ describe('TextEvent', () => {
     expect(state.events[0].source.line).toBe('  Some text  ');
     expect(state.events[0].data.text).toBe('  Some text  ');
   });
-
-
-  it('should handle indented text', () => {
-    const event = new TextEvent();
-
-    event.handle({ line: '  Some text  ' }, { ...session, indentation: 2 }, state);
-    expect(state.events.length).toBe(1);
-
-    expect(state.events[0].name).toBe('text');
-    expect(state.events[0].source.line).toBe('  Some text  ');
-    expect(state.events[0].data.text).toBe('Some text  ');
-  });
-
 });
