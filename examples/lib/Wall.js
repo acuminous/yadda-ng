@@ -1,6 +1,7 @@
 module.exports = class Wall {
 
-  constructor() {
+  constructor(height) {
+    this._height = height;
     this._bottles = [];
   }
 
