@@ -53,7 +53,7 @@ describe('StepEvent', () => {
     event.handle({ line: ' Given some step  ' }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('step');
+    expect(state.events[0].name).toBe('StepEvent');
     expect(state.events[0].source.line).toBe(' Given some step  ');
     expect(state.events[0].data.text).toBe('Given some step');
     expect(state.events[0].data.generalised).toBe('some step');
@@ -65,7 +65,7 @@ describe('StepEvent', () => {
     event.handle({ line: '  Some step  ' }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('step');
+    expect(state.events[0].name).toBe('StepEvent');
     expect(state.events[0].source.line).toBe('  Some step  ');
     expect(state.events[0].data.text).toBe('Some step');
   });

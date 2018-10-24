@@ -39,7 +39,7 @@ describe('AnnotationEvent', () => {
     event.handle({ line: '@skip' }, session, state);
 
     expect(state.events.length).toBe(1);
-    expect(state.events[0].name).toBe('annotation');
+    expect(state.events[0].name).toBe('AnnotationEvent');
     expect(state.events[0].source.line).toBe('@skip');
     expect(state.events[0].data.name).toBe('skip');
     expect(state.events[0].data.value).toBe(true);
@@ -50,7 +50,7 @@ describe('AnnotationEvent', () => {
     event.handle({ line: '@foo=bar' }, session, state);
 
     expect(state.events.length).toBe(1);
-    expect(state.events[0].name).toBe('annotation');
+    expect(state.events[0].name).toBe('AnnotationEvent');
     expect(state.events[0].source.line).toBe('@foo=bar');
     expect(state.events[0].data.name).toBe('foo');
     expect(state.events[0].data.value).toBe('bar');

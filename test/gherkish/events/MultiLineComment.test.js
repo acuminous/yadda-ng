@@ -38,7 +38,7 @@ describe('MultiLineCommentEvent', () => {
     event.handle({ line: '### Some comment ' }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('multi_line_comment');
+    expect(state.events[0].name).toBe('MultiLineCommentEvent');
     expect(state.events[0].source.line).toBe('### Some comment ');
     expect(state.events[0].data.text).toBe('Some comment');
   });

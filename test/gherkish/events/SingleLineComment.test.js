@@ -38,7 +38,7 @@ describe('SingleLineCommentEvent', () => {
     event.handle({ line: '# Some comment ' }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('single_line_comment');
+    expect(state.events[0].name).toBe('SingleLineCommentEvent');
     expect(state.events[0].source.line).toBe('# Some comment ');
     expect(state.events[0].data.text).toBe('Some comment');
   });

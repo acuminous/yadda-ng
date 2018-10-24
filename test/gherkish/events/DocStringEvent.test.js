@@ -33,7 +33,7 @@ describe('DocStringEvent', () => {
     event.handle({ line: '   Some text   ', indentation: 3 }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('DocString');
+    expect(state.events[0].name).toBe('DocStringEvent');
     expect(state.events[0].source.line).toBe('   Some text   ');
   });
 });

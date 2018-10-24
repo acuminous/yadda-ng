@@ -30,7 +30,7 @@ describe('DocStringTokenEndEvent', () => {
     event.handle({ line: '   ---   ' }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('DocStringTokenEnd');
+    expect(state.events[0].name).toBe('DocStringTokenEndEvent');
     expect(state.events[0].source.line).toBe('   ---   ');
     expect(session.indentation).toBe(0);
     expect(session.docString).toBe(undefined);
@@ -43,7 +43,7 @@ describe('DocStringTokenEndEvent', () => {
     event.handle({ line: '   """   ' }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('DocStringTokenEnd');
+    expect(state.events[0].name).toBe('DocStringTokenEndEvent');
     expect(state.events[0].source.line).toBe('   """   ');
     expect(session.indentation).toBe(0);
     expect(session.docString).toBe(undefined);

@@ -53,7 +53,7 @@ describe('ScenarioEvent', () => {
     event.handle({ line: 'Scenario:  Some scenario ' }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('scenario');
+    expect(state.events[0].name).toBe('ScenarioEvent');
     expect(state.events[0].source.line).toBe('Scenario:  Some scenario ');
     expect(state.events[0].data.title).toBe('Some scenario');
   });

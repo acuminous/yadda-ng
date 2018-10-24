@@ -38,7 +38,7 @@ describe('LanguageEvent', () => {
     event.handle({ line: '#Language : Pirate ' }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('language');
+    expect(state.events[0].name).toBe('LanguageEvent');
     expect(state.events[0].source.line).toBe('#Language : Pirate ');
     expect(state.events[0].data.name).toBe('Pirate');
   });

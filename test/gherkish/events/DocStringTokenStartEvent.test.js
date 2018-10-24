@@ -44,7 +44,7 @@ describe('DocStringTokenStartEvent', () => {
     event.handle({ line: '   ---   ', indentation: 3 }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('DocStringTokenStart');
+    expect(state.events[0].name).toBe('DocStringTokenStartEvent');
     expect(state.events[0].source.line).toBe('   ---   ');
     expect(session.docString.token).toBe('---');
   });
@@ -55,7 +55,7 @@ describe('DocStringTokenStartEvent', () => {
     event.handle({ line: '   """   ', indentation: 3 }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('DocStringTokenStart');
+    expect(state.events[0].name).toBe('DocStringTokenStartEvent');
     expect(state.events[0].source.line).toBe('   """   ');
     expect(session.docString.token).toBe('"""');
   });

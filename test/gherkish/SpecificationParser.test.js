@@ -327,7 +327,7 @@ describe('Specification Parser', () => {
 
     it('should emit simple annotation events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('annotation');
+        expect(event.name).toBe('AnnotationEvent');
         expect(event.source.line).toBe('@skip');
         expect(event.source.number).toBe(1);
         expect(event.data.name).toBe('skip');
@@ -354,7 +354,7 @@ describe('Specification Parser', () => {
 
     it('should emit name value annotation events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('annotation');
+        expect(event.name).toBe('AnnotationEvent');
         expect(event.source.line).toBe('@browser=firefox');
         expect(event.source.number).toBe(1);
         expect(event.data.name).toBe('browser');
@@ -385,7 +385,7 @@ describe('Specification Parser', () => {
 
     it('should emit feature events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('feature');
+        expect(event.name).toBe('FeatureEvent');
         expect(event.source.line).toBe('Feature: Some feature');
         expect(event.source.number).toBe(1);
         expect(event.data.title).toBe('Some feature');
@@ -427,7 +427,7 @@ describe('Specification Parser', () => {
 
     it('should emit scenario events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('scenario');
+        expect(event.name).toBe('ScenarioEvent');
         expect(event.source.line).toBe('Scenario: Some scenario');
         expect(event.source.number).toBe(1);
         expect(event.data.title).toBe('Some scenario');
@@ -456,7 +456,7 @@ describe('Specification Parser', () => {
 
     it('should emit background events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('background');
+        expect(event.name).toBe('BackgroundEvent');
         expect(event.source.line).toBe('Background: Some background');
         expect(event.source.number).toBe(1);
         expect(event.data.title).toBe('Some background');
@@ -485,7 +485,7 @@ describe('Specification Parser', () => {
 
     it('should emit blank line events (1)', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('blank_line');
+        expect(event.name).toBe('BlankLineEvent');
         expect(event.source.line).toBe('');
         expect(event.source.number).toBe(1);
       });
@@ -498,7 +498,7 @@ describe('Specification Parser', () => {
 
     it('should emit blank line events (2)', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('blank_line');
+        expect(event.name).toBe('BlankLineEvent');
         expect(event.source.line).toBe('  ');
         expect(event.source.number).toBe(1);
       });
@@ -514,7 +514,7 @@ describe('Specification Parser', () => {
 
     it('should emit step events when matching localised steps', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('step');
+        expect(event.name).toBe('StepEvent');
         expect(event.source.line).toBe('Given some step');
         expect(event.source.number).toBe(1);
         expect(event.data.text).toBe('Given some step');
@@ -543,7 +543,7 @@ describe('Specification Parser', () => {
 
     it('should emit step events when matching unlocalised text', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('step');
+        expect(event.name).toBe('StepEvent');
         expect(event.source.line).toBe('Some step');
         expect(event.source.number).toBe(1);
         expect(event.data.text).toBe('Some step');
@@ -587,7 +587,7 @@ describe('Specification Parser', () => {
 
     it('should emit single line comment events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('single_line_comment');
+        expect(event.name).toBe('SingleLineCommentEvent');
         expect(event.source.line).toBe('#Some comment');
         expect(event.source.number).toBe(1);
         expect(event.data.text).toBe('Some comment');
@@ -601,7 +601,7 @@ describe('Specification Parser', () => {
 
     it('should trim single line comments', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('single_line_comment');
+        expect(event.name).toBe('SingleLineCommentEvent');
         expect(event.source.line).toBe('  #   Some comment   ');
         expect(event.data.text).toBe('Some comment');
       });
@@ -617,7 +617,7 @@ describe('Specification Parser', () => {
 
     it('should emit multi line comment events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('multi_line_comment');
+        expect(event.name).toBe('MultiLineCommentEvent');
         expect(event.source.line).toBe('###Some comment');
         expect(event.data.text).toBe('Some comment');
       });

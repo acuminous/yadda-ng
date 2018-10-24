@@ -50,7 +50,7 @@ describe('BackgroundEvent', () => {
     event.handle({ line: 'Background:  Some background ' }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('background');
+    expect(state.events[0].name).toBe('BackgroundEvent');
     expect(state.events[0].source.line).toBe('Background:  Some background ');
     expect(state.events[0].data.title).toBe('Some background');
   });

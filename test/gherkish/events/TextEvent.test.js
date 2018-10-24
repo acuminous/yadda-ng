@@ -45,7 +45,7 @@ describe('TextEvent', () => {
     event.handle({ line: '  Some text  ' }, { ...session, indentation: 0 }, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('text');
+    expect(state.events[0].name).toBe('TextEvent');
     expect(state.events[0].source.line).toBe('  Some text  ');
     expect(state.events[0].data.text).toBe('  Some text  ');
   });

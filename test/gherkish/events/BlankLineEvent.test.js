@@ -36,7 +36,7 @@ describe('BlankLineEvent', () => {
     event.handle({ line: '' }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('blank_line');
+    expect(state.events[0].name).toBe('BlankLineEvent');
     expect(state.events[0].source.line).toBe('');
     expect(state.events[0].data).toEqual({});
   });

@@ -36,7 +36,7 @@ describe('EndEvent', () => {
     event.handle({ line: '\u0000' }, session, state);
     expect(state.events.length).toBe(1);
 
-    expect(state.events[0].name).toBe('end');
+    expect(state.events[0].name).toBe('EndEvent');
     expect(state.events[0].source.line).toBe('\u0000');
     expect(state.events[0].data).toEqual({});
   });
