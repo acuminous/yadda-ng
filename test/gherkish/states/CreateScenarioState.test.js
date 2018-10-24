@@ -47,6 +47,13 @@ describe('Create Scenario State', () => {
     });
   });
 
+  describe('DocString Token Start Events', () => {
+
+    it('should error', () => {
+      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: CreateScenarioState on line 1');
+    });
+  });
+
   describe('End Events', () => {
 
     it('should error', () => {

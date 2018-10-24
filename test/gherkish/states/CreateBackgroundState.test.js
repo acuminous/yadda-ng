@@ -45,6 +45,13 @@ describe('Create Background State', () => {
     });
   });
 
+  describe('DocString Token Start Events', () => {
+
+    it('should error', () => {
+      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: CreateBackgroundState on line 1');
+    });
+  });
+
   describe('End Events', () => {
 
     it('should error', () => {

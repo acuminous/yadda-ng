@@ -47,6 +47,14 @@ describe('Create Background Step State', () => {
     });
   });
 
+  describe('DocString Token Start Events', () => {
+
+    it('should transition to new CreateBackgroundStepDocStringState on DocStringTokenStart event', () => {
+      handle('---');
+      expect(machine.state).toBe('CreateBackgroundStepDocStringState');
+    });
+  });
+
   describe('End Events', () => {
 
     it('should transition to final on end event', () => {

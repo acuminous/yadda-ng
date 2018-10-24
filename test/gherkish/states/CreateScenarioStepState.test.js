@@ -47,6 +47,14 @@ describe('Create Scenario Step State', () => {
     });
   });
 
+  describe('DocString Token Start Events', () => {
+
+    it('should transition to new CreateScenarioStepDocStringState on DocStringTokenStart event', () => {
+      handle('---');
+      expect(machine.state).toBe('CreateScenarioStepDocStringState');
+    });
+  });
+
   describe('End Events', () => {
 
     it('should transition to final on end event', () => {

@@ -45,6 +45,14 @@ describe('Create Multi Line Comment State', () => {
     });
   });
 
+  describe('DocString Token Start Events', () => {
+
+    it('should not cause transition', () => {
+      handle('---');
+      expect(machine.state).toBe('CreateMultiLineCommentState');
+    });
+  });
+
   describe('End Events', () => {
 
     it('should error', () => {
