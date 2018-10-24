@@ -214,19 +214,19 @@ describe('Specification Parser', () => {
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].text).toBe('First background step');
-    expect(document.background.steps[0].DocString.length).toBe(3);
-    expect(document.background.steps[0].DocString[0]).toBe('DocString 1');
-    expect(document.background.steps[0].DocString[1]).toBe('   DocString 2');
-    expect(document.background.steps[0].DocString[2]).toBe('DocString 3   ');
+    expect(document.background.steps[0].docString.length).toBe(3);
+    expect(document.background.steps[0].docString[0]).toBe('DocString 1');
+    expect(document.background.steps[0].docString[1]).toBe('   DocString 2');
+    expect(document.background.steps[0].docString[2]).toBe('DocString 3   ');
     expect(document.background.steps[1].text).toBe('Second background step');
 
     expect(document.scenarios.length).toBe(1);
     expect(document.scenarios[0].steps.length).toBe(2);
     expect(document.scenarios[0].steps[0].text).toBe('First step');
-    expect(document.scenarios[0].steps[0].DocString.length).toBe(3);
-    expect(document.scenarios[0].steps[0].DocString[0]).toBe('DocString 1');
-    expect(document.scenarios[0].steps[0].DocString[1]).toBe('   DocString 2');
-    expect(document.scenarios[0].steps[0].DocString[2]).toBe('DocString 3   ');
+    expect(document.scenarios[0].steps[0].docString.length).toBe(3);
+    expect(document.scenarios[0].steps[0].docString[0]).toBe('DocString 1');
+    expect(document.scenarios[0].steps[0].docString[1]).toBe('   DocString 2');
+    expect(document.scenarios[0].steps[0].docString[2]).toBe('DocString 3   ');
     expect(document.scenarios[0].steps[1].text).toBe('Second step');
   });
 
@@ -258,19 +258,19 @@ describe('Specification Parser', () => {
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].text).toBe('First background step');
-    expect(document.background.steps[0].DocString.length).toBe(3);
-    expect(document.background.steps[0].DocString[0]).toBe('DocString 1');
-    expect(document.background.steps[0].DocString[1]).toBe('   DocString 2');
-    expect(document.background.steps[0].DocString[2]).toBe('DocString 3   ');
+    expect(document.background.steps[0].docString.length).toBe(3);
+    expect(document.background.steps[0].docString[0]).toBe('DocString 1');
+    expect(document.background.steps[0].docString[1]).toBe('   DocString 2');
+    expect(document.background.steps[0].docString[2]).toBe('DocString 3   ');
     expect(document.background.steps[1].text).toBe('Second background step');
 
     expect(document.scenarios.length).toBe(1);
     expect(document.scenarios[0].steps.length).toBe(2);
     expect(document.scenarios[0].steps[0].text).toBe('First step');
-    expect(document.scenarios[0].steps[0].DocString.length).toBe(3);
-    expect(document.scenarios[0].steps[0].DocString[0]).toBe('DocString 1');
-    expect(document.scenarios[0].steps[0].DocString[1]).toBe('   DocString 2');
-    expect(document.scenarios[0].steps[0].DocString[2]).toBe('DocString 3   ');
+    expect(document.scenarios[0].steps[0].docString.length).toBe(3);
+    expect(document.scenarios[0].steps[0].docString[0]).toBe('DocString 1');
+    expect(document.scenarios[0].steps[0].docString[1]).toBe('   DocString 2');
+    expect(document.scenarios[0].steps[0].docString[2]).toBe('DocString 3   ');
     expect(document.scenarios[0].steps[1].text).toBe('Second step');
   });
 
@@ -307,19 +307,19 @@ describe('Specification Parser', () => {
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].generalised).toBe('a background step');
-    expect(document.background.steps[0].DocString.length).toBe(3);
-    expect(document.background.steps[0].DocString[0]).toBe('Given a DocString');
-    expect(document.background.steps[0].DocString[1]).toBe('Given another DocString');
-    expect(document.background.steps[0].DocString[2]).toBe('                       ');
+    expect(document.background.steps[0].docString.length).toBe(3);
+    expect(document.background.steps[0].docString[0]).toBe('Given a DocString');
+    expect(document.background.steps[0].docString[1]).toBe('Given another DocString');
+    expect(document.background.steps[0].docString[2]).toBe('                       ');
     expect(document.background.steps[1].generalised).toBe('another background step');
 
     expect(document.scenarios.length).toBe(1);
     expect(document.scenarios[0].steps.length).toBe(2);
     expect(document.scenarios[0].steps[0].generalised).toBe('a step');
-    expect(document.scenarios[0].steps[0].DocString.length).toBe(3);
-    expect(document.scenarios[0].steps[0].DocString[0]).toBe('Given a DocString');
-    expect(document.scenarios[0].steps[0].DocString[1]).toBe('Given another DocString');
-    expect(document.scenarios[0].steps[0].DocString[2]).toBe('                       ');
+    expect(document.scenarios[0].steps[0].docString.length).toBe(3);
+    expect(document.scenarios[0].steps[0].docString[0]).toBe('Given a DocString');
+    expect(document.scenarios[0].steps[0].docString[1]).toBe('Given another DocString');
+    expect(document.scenarios[0].steps[0].docString[2]).toBe('                       ');
     expect(document.scenarios[0].steps[1].generalised).toBe('another step');
   });
 
