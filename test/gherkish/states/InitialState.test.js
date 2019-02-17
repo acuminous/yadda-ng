@@ -68,7 +68,7 @@ describe('Initial State', () => {
     it('should capture feature title', () => {
       handle('Feature: Some feature');
 
-      const exported = specification.export();
+      const exported = specification.serialize();
       expect(exported.title).toBe('Some feature');
     });
 
@@ -77,7 +77,7 @@ describe('Initial State', () => {
       handle('@two = 2');
       handle('Feature: First scenario');
 
-      const exported = specification.export();
+      const exported = specification.serialize();
       expect(exported.annotations.length).toBe(2);
       expect(exported.annotations[0].name).toBe('one');
       expect(exported.annotations[0].value).toBe('1');

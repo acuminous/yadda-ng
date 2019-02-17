@@ -108,7 +108,7 @@ describe('Create Scenario State', () => {
     it('should capture steps', () => {
       handle('First step');
 
-      const exported = specification.export();
+      const exported = specification.serialize();
       expect(exported.scenarios[0].steps.length).toBe(1);
       expect(exported.scenarios[0].steps[0].text).toBe('First step');
       expect(exported.scenarios[0].steps[0].generalised).toBe('First step');
@@ -119,7 +119,7 @@ describe('Create Scenario State', () => {
       handle('@two=2');
       handle('First step');
 
-      const exported = specification.export();
+      const exported = specification.serialize();
       expect(exported.scenarios[0].steps[0].annotations.length).toBe(2);
       expect(exported.scenarios[0].steps[0].annotations[0].name).toBe('one');
       expect(exported.scenarios[0].steps[0].annotations[0].value).toBe('1');

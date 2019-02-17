@@ -94,7 +94,7 @@ describe('Create Background Step State', () => {
     it('should capture scenarios', () => {
       handle('Scenario: First scenario');
 
-      const exported = specification.export();
+      const exported = specification.serialize();
       expect(exported.scenarios.length).toBe(1);
       expect(exported.scenarios[0].title).toBe('First scenario');
     });
@@ -104,7 +104,7 @@ describe('Create Background Step State', () => {
       handle('@two = 2');
       handle('Scenario: First scenario');
 
-      const exported = specification.export();
+      const exported = specification.serialize();
       expect(exported.scenarios.length).toBe(1);
       expect(exported.scenarios[0].annotations.length).toBe(2);
       expect(exported.scenarios[0].annotations[0].name).toBe('one');
@@ -132,7 +132,7 @@ describe('Create Background Step State', () => {
     it('should capture step', () => {
       handle('Given some text');
 
-      const exported = specification.export();
+      const exported = specification.serialize();
       expect(exported.background.steps.length).toBe(2);
       expect(exported.background.steps[1].text).toBe('Given some text');
     });
@@ -143,7 +143,7 @@ describe('Create Background Step State', () => {
       handle('Given some text');
 
 
-      const exported = specification.export();
+      const exported = specification.serialize();
       expect(exported.background.steps[1].annotations.length).toBe(2);
       expect(exported.background.steps[1].annotations[0].name).toBe('one');
       expect(exported.background.steps[1].annotations[0].value).toBe('1');

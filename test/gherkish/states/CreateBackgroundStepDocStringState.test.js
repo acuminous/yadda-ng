@@ -58,7 +58,7 @@ describe('Create Background Step DocString State', () => {
       handle('Some text');
       handle('Some more text');
 
-      const exported = specification.export();
+      const exported = specification.serialize();
       expect(exported.background.steps[0].docString.length).toBe(2);
       expect(exported.background.steps[0].docString[0]).toBe('Some text');
       expect(exported.background.steps[0].docString[1]).toBe('Some more text');
