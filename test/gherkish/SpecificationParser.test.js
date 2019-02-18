@@ -273,7 +273,7 @@ describe('Specification Parser', () => {
       '     Second step',
     ].join('\n');
 
-    expect(() => new SpecificationParser().parse(text)).toThrow("'         ---' was unexpected in state: CreateScenarioStepState on line 11'");
+    expect(() => new SpecificationParser().parse(text)).toThrow("'         ---' was unexpected in state: AfterScenarioStepDocStringState on line 11'");
   });
 
   xit('should support indented DocStrings', () => {
