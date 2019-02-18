@@ -3,7 +3,7 @@ const { Gherkish } = require('../../..');
 const { Specification, StateMachine, States, Languages } = Gherkish;
 const { CreateBackgroundStepDocStringState } = States;
 
-describe('Create Background Step DocString State', () => {
+describe('CreateBackgroundStepDocStringState', () => {
 
   let specification;
   let machine;

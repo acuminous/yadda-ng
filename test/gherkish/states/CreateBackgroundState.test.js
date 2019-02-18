@@ -3,7 +3,7 @@ const { Gherkish } = require('../../..');
 const { Specification, StateMachine, States, Languages } = Gherkish;
 const { CreateBackgroundState } = States;
 
-describe('Create Background State', () => {
+describe('CreateBackgroundState', () => {
 
   let specification;
   let machine;

@@ -3,7 +3,7 @@ const { Gherkish } = require('../../..');
 const { Specification, StateMachine, States, Languages } = Gherkish;
 const { CreateScenarioState } = States;
 
-describe('Create Scenario State', () => {
+describe('CreateScenarioState', () => {
 
   let specification;
   let machine;

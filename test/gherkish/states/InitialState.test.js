@@ -3,7 +3,7 @@ const { Gherkish } = require('../../..');
 const { SpecificationParser, Specification, StateMachine, States, Languages } = Gherkish;
 const { InitialState } = States;
 
-describe('Initial State', () => {
+describe('InitialState', () => {
 
   let specification;
   let machine;
