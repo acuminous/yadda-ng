@@ -1,10 +1,10 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
 const { Specification, StateMachine, States, Languages } = Gherkish;
-const { CreateBackgroundStepState } = States;
+const { AfterBackgroundStepDocStringState } = States;
 
 
-describe('Create Background Step Or DocString State', () => {
+describe('AfterBackgroundStepDocStringState', () => {
 
   let specification;
   let machine;
@@ -18,9 +18,9 @@ describe('Create Background Step Or DocString State', () => {
     specification.createBackgroundStep({ annotations: [], text: 'Meh' });
 
     machine = new StateMachine({ specification });
-    machine.toCreateBackgroundStepState();
+    machine.toAfterBackgroundStepDocStringState();
 
-    state = new CreateBackgroundStepState({ specification, machine });
+    state = new AfterBackgroundStepDocStringState({ specification, machine });
 
     session = { language: Languages.utils.getDefault() };
   });
@@ -29,14 +29,14 @@ describe('Create Background Step Or DocString State', () => {
 
     it('should not cause transition', () => {
       handle('@foo=bar');
-      expect(machine.state).toBe('CreateBackgroundStepState');
+      expect(machine.state).toBe('AfterBackgroundStepDocStringState');
     });
   });
 
   describe('Background Events', () => {
 
     it('should error', () => {
-      expect(() => handle('Background: foo')).toThrow('\'Background: foo\' was unexpected in state: CreateBackgroundStepState on line 1');
+      expect(() => handle('Background: foo')).toThrow('\'Background: foo\' was unexpected in state: AfterBackgroundStepDocStringState on line 1');
     });
   });
 
@@ -44,28 +44,28 @@ describe('Create Background Step Or DocString State', () => {
 
     it('should not cause transition', () => {
       handle('');
-      expect(machine.state).toBe('CreateBackgroundStepState');
+      expect(machine.state).toBe('AfterBackgroundStepDocStringState');
     });
   });
 
   describe('DocString Token Start Events', () => {
 
     it('should error on DocStringTokenStart event', () => {
-      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: CreateBackgroundStepState on line 1');
+      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: AfterBackgroundStepDocStringState on line 1');
     });
   });
 
   describe('End Events', () => {
 
     it('should transition to final on end event', () => {
-      expect(() => handle('\u0000')).toThrow('Premature end of specification in state: CreateBackgroundStepState on line 1');
+      expect(() => handle('\u0000')).toThrow('Premature end of specification in state: AfterBackgroundStepDocStringState on line 1');
     });
   });
 
   describe('Feature Events', () => {
 
     it('should error on feature event', () => {
-      expect(() => handle('Feature: foo')).toThrow('\'Feature: foo\' was unexpected in state: CreateBackgroundStepState on line 1');
+      expect(() => handle('Feature: foo')).toThrow('\'Feature: foo\' was unexpected in state: AfterBackgroundStepDocStringState on line 1');
     });
   });
 
@@ -80,7 +80,7 @@ describe('Create Background Step Or DocString State', () => {
   describe('Language Events', () => {
 
     it('should error', () => {
-      expect(() => handle('# Language: English')).toThrow('\'# Language: English\' was unexpected in state: CreateBackgroundStepState on line 1');
+      expect(() => handle('# Language: English')).toThrow('\'# Language: English\' was unexpected in state: AfterBackgroundStepDocStringState on line 1');
     });
   });
 
@@ -118,7 +118,7 @@ describe('Create Background Step Or DocString State', () => {
 
     it('should not cause transition', () => {
       handle('# foo');
-      expect(machine.state).toBe('CreateBackgroundStepState');
+      expect(machine.state).toBe('AfterBackgroundStepDocStringState');
     });
   });
 

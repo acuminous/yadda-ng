@@ -251,7 +251,7 @@ describe('Specification Parser', () => {
       '     First step',
     ].join('\n');
 
-    expect(() => new SpecificationParser().parse(text)).toThrow("'         ---' was unexpected in state: CreateBackgroundStepState on line 11");
+    expect(() => new SpecificationParser().parse(text)).toThrow("'         ---' was unexpected in state: AfterBackgroundStepDocStringState on line 11");
   });
 
 
