@@ -100,9 +100,9 @@ describe('Create Scenario State', () => {
 
   describe('Step Events', () => {
 
-    it('should transition to CreateScenarioStepState on step event', () => {
+    it('should transition to CreateScenarioStepOrDocStringState on step event', () => {
       handle('First step');
-      expect(machine.state).toBe('CreateScenarioStepState');
+      expect(machine.state).toBe('CreateScenarioStepOrDocStringState');
     });
 
     it('should capture steps', () => {
