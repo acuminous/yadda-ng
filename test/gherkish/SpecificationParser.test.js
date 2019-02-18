@@ -230,6 +230,53 @@ describe('Specification Parser', () => {
     expect(document.scenarios[0].steps[1].text).toBe('Second step');
   });
 
+  xit('should not allow multiple DocStrings in background steps', () => {
+    const text = [
+      '@skip',
+      'Feature: Some feature',
+      '',
+      '   Background: The background',
+      '      First background step',
+      '         ---',
+      '         DocString 1',
+      '            DocString 2',
+      '         DocString 3   ',
+      '         ---',
+      '         ---',
+      '         Should error',
+      '         ---',
+      '      Second background step',
+      '',
+      '   Scenario: First scenario',
+      '     First step',
+    ].join('\n');
+
+    expect(() => new SpecificationParser().parse(text)).toThrow('Unexpected event');
+  });
+
+
+  xit('should not allow multiple DocStrings in background steps', () => {
+    const text = [
+      '@skip',
+      'Feature: Some feature',
+      '',
+      '   @browser = Firefox',
+      '   Scenario: First scenario',
+      '      First step',
+      '         ---',
+      '         DocString 1',
+      '            DocString 2',
+      '         DocString 3   ',
+      '         ---',
+      '         ---',
+      '         Should error',
+      '         ---',
+      '     Second step',
+    ].join('\n');
+
+    expect(() => new SpecificationParser().parse(text)).toThrow('Unexpected event');
+  });
+
   xit('should support indented DocStrings', () => {
     const text = [
       '@skip',
