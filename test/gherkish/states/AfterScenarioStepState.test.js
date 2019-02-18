@@ -1,9 +1,9 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
 const { Specification, StateMachine, States, Languages } = Gherkish;
-const { CreateScenarioStepOrDocStringState } = States;
+const { AfterScenarioStepState } = States;
 
-describe('Create Scenario Step Or DocString State', () => {
+describe('AfterCreateScenarioStepState', () => {
 
   let specification;
   let machine;
@@ -17,9 +17,9 @@ describe('Create Scenario Step Or DocString State', () => {
     specification.createScenarioStep({ annotations: [], text: 'First step' });
 
     machine = new StateMachine({ specification });
-    machine.toCreateScenarioStepOrDocStringState();
+    machine.toAfterScenarioStepState();
 
-    state = new CreateScenarioStepOrDocStringState({ specification, machine });
+    state = new AfterScenarioStepState({ specification, machine });
 
     session = { language: Languages.utils.getDefault() };
   });
@@ -28,14 +28,14 @@ describe('Create Scenario Step Or DocString State', () => {
 
     it('should not cause transition', () => {
       handle('@foo=bar');
-      expect(machine.state).toBe('CreateScenarioStepOrDocStringState');
+      expect(machine.state).toBe('AfterScenarioStepState');
     });
   });
 
   describe('Background Events', () => {
 
     it('should error', () => {
-      expect(() => handle('Background: Meh')).toThrow('\'Background: Meh\' was unexpected in state: CreateScenarioStepOrDocStringState on line 1');
+      expect(() => handle('Background: Meh')).toThrow('\'Background: Meh\' was unexpected in state: AfterScenarioStepState on line 1');
     });
   });
 
@@ -43,7 +43,7 @@ describe('Create Scenario Step Or DocString State', () => {
 
     it('should not cause transition', () => {
       handle('');
-      expect(machine.state).toBe('CreateScenarioStepOrDocStringState');
+      expect(machine.state).toBe('AfterScenarioStepState');
     });
   });
 
@@ -66,7 +66,7 @@ describe('Create Scenario Step Or DocString State', () => {
   describe('Feature Events', () => {
 
     it('should error', () => {
-      expect(() => handle('Feature: Meh')).toThrow('\'Feature: Meh\' was unexpected in state: CreateScenarioStepOrDocStringState on line 1');
+      expect(() => handle('Feature: Meh')).toThrow('\'Feature: Meh\' was unexpected in state: AfterScenarioStepState on line 1');
     });
   });
 
@@ -81,7 +81,7 @@ describe('Create Scenario Step Or DocString State', () => {
   describe('Language Events', () => {
 
     it('should error', () => {
-      expect(() => handle('# Language: English')).toThrow('\'# Language: English\' was unexpected in state: CreateScenarioStepOrDocStringState on line 1');
+      expect(() => handle('# Language: English')).toThrow('\'# Language: English\' was unexpected in state: AfterScenarioStepState on line 1');
     });
   });
 
@@ -120,15 +120,15 @@ describe('Create Scenario Step Or DocString State', () => {
 
     it('should not cause transition', () => {
       handle('#');
-      expect(machine.state).toBe('CreateScenarioStepOrDocStringState');
+      expect(machine.state).toBe('AfterScenarioStepState');
     });
   });
 
   describe('Step Events', () => {
 
-    it('should transition to CreateScenarioStepOrDocStringState on step event', () => {
+    it('should transition to AfterScenarioStepState on step event', () => {
       handle('Second step');
-      expect(machine.state).toBe('CreateScenarioStepOrDocStringState');
+      expect(machine.state).toBe('AfterScenarioStepState');
     });
 
     it('should capture step', () => {

@@ -124,9 +124,9 @@ describe('Create Scenario Step State', () => {
 
   describe('Step Events', () => {
 
-    it('should transition to CreateScenarioStepOrDocStringState on step event', () => {
+    it('should transition to AfterScenarioStepState on step event', () => {
       handle('Second step');
-      expect(machine.state).toBe('CreateScenarioStepOrDocStringState');
+      expect(machine.state).toBe('AfterScenarioStepState');
     });
 
     it('should capture step', () => {
