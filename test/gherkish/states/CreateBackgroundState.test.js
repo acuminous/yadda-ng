@@ -98,9 +98,9 @@ describe('Create Background State', () => {
 
   describe('Step Events', () => {
 
-    it('should transition to CreateBackgroundStepOrDocStringState on step event', () => {
+    it('should transition to AfterBackgroundStepState on step event', () => {
       handle('First step');
-      expect(machine.state).toBe('CreateBackgroundStepOrDocStringState');
+      expect(machine.state).toBe('AfterBackgroundStepState');
     });
 
     it('should capture steps', () => {
