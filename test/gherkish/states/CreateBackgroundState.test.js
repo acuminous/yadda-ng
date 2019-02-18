@@ -75,9 +75,9 @@ describe('Create Background State', () => {
 
   describe('Multi Line Comment Events', () => {
 
-    it('should transition to CreateMultiLineCommentState', () => {
+    it('should transition to ConsumeMultiLineCommentState', () => {
       handle('###');
-      expect(machine.state).toBe('CreateMultiLineCommentState');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
     });
   });
 

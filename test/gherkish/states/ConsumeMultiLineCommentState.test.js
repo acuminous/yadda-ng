@@ -1,9 +1,9 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
 const { Specification, StateMachine, States, Languages } = Gherkish;
-const { CreateMultiLineCommentState } = States;
+const { ConsumeMultiLineCommentState } = States;
 
-describe('Create Multi Line Comment State', () => {
+describe('ConsumeMultiLineCommentState', () => {
 
   let machine;
   let state;
@@ -14,9 +14,9 @@ describe('Create Multi Line Comment State', () => {
 
     machine = new StateMachine({ specification });
     machine.toCreateFeatureState();
-    machine.toCreateMultiLineCommentState();
+    machine.toConsumeMultiLineCommentState();
 
-    state = new CreateMultiLineCommentState({ specification, machine });
+    state = new ConsumeMultiLineCommentState({ specification, machine });
 
     session = { language: Languages.utils.getDefault() };
   });
@@ -25,7 +25,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       handle('@foo = bar');
-      expect(machine.state).toBe('CreateMultiLineCommentState');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
     });
   });
 
@@ -33,7 +33,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       handle('Background: foo');
-      expect(machine.state).toBe('CreateMultiLineCommentState');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
     });
   });
 
@@ -41,7 +41,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       handle('');
-      expect(machine.state).toBe('CreateMultiLineCommentState');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
     });
   });
 
@@ -49,14 +49,14 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       handle('---');
-      expect(machine.state).toBe('CreateMultiLineCommentState');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
     });
   });
 
   describe('End Events', () => {
 
     it('should error', () => {
-      expect(() => handle('\u0000')).toThrow('Premature end of specification in state: CreateMultiLineCommentState on line 1');
+      expect(() => handle('\u0000')).toThrow('Premature end of specification in state: ConsumeMultiLineCommentState on line 1');
     });
   });
 
@@ -64,7 +64,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       handle('Feature: foo');
-      expect(machine.state).toBe('CreateMultiLineCommentState');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
     });
   });
 
@@ -72,7 +72,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       handle('# Language: English');
-      expect(machine.state).toBe('CreateMultiLineCommentState');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
     });
   });
 
@@ -88,7 +88,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       handle('Scenario: foo');
-      expect(machine.state).toBe('CreateMultiLineCommentState');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
     });
   });
 
@@ -96,7 +96,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       handle('# Single comment');
-      expect(machine.state).toBe('CreateMultiLineCommentState');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
     });
   });
 
@@ -104,7 +104,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       handle('Given some text');
-      expect(machine.state).toBe('CreateMultiLineCommentState');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
     });
   });
 
@@ -112,7 +112,7 @@ describe('Create Multi Line Comment State', () => {
 
     it('should not cause transition', () => {
       handle('Some text');
-      expect(machine.state).toBe('CreateMultiLineCommentState');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
     });
   });
 
