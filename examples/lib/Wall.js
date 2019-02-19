@@ -1,11 +1,9 @@
-const os = require('os');
-
 module.exports = class Wall {
 
   constructor(height) {
     this._height = height;
     this._bottles = [];
-    this._graffiti = [];
+    this._graffiti = '';
   }
 
   add(bottle) {
@@ -35,11 +33,11 @@ module.exports = class Wall {
   }
 
   spray(graffiti) {
-    this._graffiti = graffiti.split(os.EOL);
+    this._graffiti = graffiti;
   }
 
   isCovered() {
-    return this._graffiti.length >= 8;
+    return this._graffiti.length >= 100;
   }
 
 };
