@@ -59,9 +59,8 @@ describe('AfterScenarioStepState', () => {
       session.indentation = 0;
       handle('   Some text');
 
-      const exported = specification.serialize();
-      expect(exported.scenarios[0].steps[0].docString.length).toBe(1);
-      expect(exported.scenarios[0].steps[0].docString[0]).toBe('Some text');
+      const exported = specification.serialise();
+      expect(exported.scenarios[0].steps[0].docString).toBe('Some text');
     });
   });
 
@@ -130,7 +129,7 @@ describe('AfterScenarioStepState', () => {
     it('should capture scenarios', () => {
       handle('Scenario: Second scenario');
 
-      const exported = specification.serialize();
+      const exported = specification.serialise();
       expect(exported.scenarios.length).toBe(2);
       expect(exported.scenarios[0].title).toBe('First scenario');
       expect(exported.scenarios[1].title).toBe('Second scenario');
@@ -141,7 +140,7 @@ describe('AfterScenarioStepState', () => {
       handle('@two=2');
       handle('Scenario: Second scenario');
 
-      const exported = specification.serialize();
+      const exported = specification.serialise();
       expect(exported.scenarios.length).toBe(2);
       expect(exported.scenarios[1].annotations.length).toBe(2);
       expect(exported.scenarios[1].annotations[0].name).toBe('one');
@@ -169,7 +168,7 @@ describe('AfterScenarioStepState', () => {
     it('should capture step', () => {
       handle('Second step');
 
-      const exported = specification.serialize();
+      const exported = specification.serialise();
       expect(exported.scenarios[0].steps.length).toBe(2);
       expect(exported.scenarios[0].steps[0].text).toBe('First step');
       expect(exported.scenarios[0].steps[1].text).toBe('Second step');
@@ -181,7 +180,7 @@ describe('AfterScenarioStepState', () => {
       handle('@two=2');
       handle('Bah');
 
-      const exported = specification.serialize();
+      const exported = specification.serialise();
       expect(exported.scenarios[0].steps[1].annotations.length).toBe(2);
       expect(exported.scenarios[0].steps[1].annotations[0].name).toBe('one');
       expect(exported.scenarios[0].steps[1].annotations[0].value).toBe('1');

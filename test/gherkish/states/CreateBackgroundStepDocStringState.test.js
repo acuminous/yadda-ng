@@ -1,4 +1,5 @@
 const expect = require('expect');
+const os = require('os');
 const { Gherkish } = require('../../..');
 const { SpecificationParser, Specification, StateMachine, States, Languages } = Gherkish;
 const { CreateBackgroundStepDocStringState } = States;
@@ -87,10 +88,11 @@ describe('CreateBackgroundStepDocStringState', () => {
       handle('Some text');
       handle('Some more text');
 
-      const exported = specification.serialize();
-      expect(exported.background.steps[0].docString.length).toBe(2);
-      expect(exported.background.steps[0].docString[0]).toBe('Some text');
-      expect(exported.background.steps[0].docString[1]).toBe('Some more text');
+      const exported = specification.serialise();
+      expect(exported.background.steps[0].docString).toBe([
+        'Some text',
+        'Some more text',
+      ].join(os.EOL));
     });
   });
 

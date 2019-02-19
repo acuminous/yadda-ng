@@ -1,5 +1,6 @@
 
 const expect = require('expect');
+const os = require('os');
 const { Gherkish } = require('../..');
 const { SpecificationParser, Languages, StateMachine, States, Events } = Gherkish;
 const { BaseState } = States;
@@ -26,7 +27,7 @@ describe('Specification Parser', () => {
       '   Scenario: Second scenario',
       '      Third step',
       '      Fourth step',
-    ].join('\n');
+    ].join(os.EOL);
 
     const document = new SpecificationParser().parse(text);
 
@@ -73,7 +74,7 @@ describe('Specification Parser', () => {
       '',
       '   Sortie: Third scenario',
       '      Steps can still be free form',
-    ].join('\n');
+    ].join(os.EOL);
 
     const document = new SpecificationParser().parse(text);
 
@@ -104,7 +105,7 @@ describe('Specification Parser', () => {
     const text = [
       '#language: Missing',
       'Feature: Some feature',
-    ].join('\n');
+    ].join(os.EOL);
 
 
     expect(() => new SpecificationParser().parse(text)).toThrow('Language: Missing was not found');
@@ -129,7 +130,7 @@ describe('Specification Parser', () => {
       '   Sortie: Second scenario',
       '      Thence third step',
       '      And fourth step',
-    ].join('\n');
+    ].join(os.EOL);
 
     const language = new Languages.Pirate();
     const document = new SpecificationParser().parse(text, { language });
@@ -172,7 +173,7 @@ describe('Specification Parser', () => {
       '   Scenario: Second scenario',
       '      Third step',
       '      Fourth step',
-    ].join('\n');
+    ].join(os.EOL);
     const text2 = text1.replace('Some feature', 'Another feature');
 
     const result1 = new SpecificationParser().parse(text1);
@@ -208,25 +209,27 @@ describe('Specification Parser', () => {
       '         DocString 3   ',
       '         """',
       '     Second step',
-    ].join('\n');
+    ].join(os.EOL);
 
     const document = new SpecificationParser().parse(text);
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].text).toBe('First background step');
-    expect(document.background.steps[0].docString.length).toBe(3);
-    expect(document.background.steps[0].docString[0]).toBe('DocString 1');
-    expect(document.background.steps[0].docString[1]).toBe('   DocString 2');
-    expect(document.background.steps[0].docString[2]).toBe('DocString 3   ');
+    expect(document.background.steps[0].docString).toBe([
+      'DocString 1',
+      '   DocString 2',
+      'DocString 3   '
+    ].join(os.EOL));
     expect(document.background.steps[1].text).toBe('Second background step');
 
     expect(document.scenarios.length).toBe(1);
     expect(document.scenarios[0].steps.length).toBe(2);
     expect(document.scenarios[0].steps[0].text).toBe('First step');
-    expect(document.scenarios[0].steps[0].docString.length).toBe(3);
-    expect(document.scenarios[0].steps[0].docString[0]).toBe('DocString 1');
-    expect(document.scenarios[0].steps[0].docString[1]).toBe('   DocString 2');
-    expect(document.scenarios[0].steps[0].docString[2]).toBe('DocString 3   ');
+    expect(document.scenarios[0].steps[0].docString).toBe([
+      'DocString 1',
+      '   DocString 2',
+      'DocString 3   ',
+    ].join(os.EOL));
     expect(document.scenarios[0].steps[1].text).toBe('Second step');
   });
 
@@ -249,7 +252,7 @@ describe('Specification Parser', () => {
       '',
       '   Scenario: First scenario',
       '     First step',
-    ].join('\n');
+    ].join(os.EOL);
 
     expect(() => new SpecificationParser().parse(text)).toThrow("'         ---' was unexpected in state: AfterBackgroundStepDocStringState on line 11");
   });
@@ -271,7 +274,7 @@ describe('Specification Parser', () => {
       '         Should error',
       '         ---',
       '     Second step',
-    ].join('\n');
+    ].join(os.EOL);
 
     expect(() => new SpecificationParser().parse(text)).toThrow("'         ---' was unexpected in state: AfterScenarioStepDocStringState on line 11'");
   });
@@ -300,25 +303,27 @@ describe('Specification Parser', () => {
       '            DocString 2',
       '         DocString 3   ',
       '     Second step',
-    ].join('\n');
+    ].join(os.EOL);
 
     const document = new SpecificationParser().parse(text);
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].text).toBe('First background step');
-    expect(document.background.steps[0].docString.length).toBe(3);
-    expect(document.background.steps[0].docString[0]).toBe('DocString 1');
-    expect(document.background.steps[0].docString[1]).toBe('   DocString 2');
-    expect(document.background.steps[0].docString[2]).toBe('DocString 3   ');
+    expect(document.background.steps[0].docString).toBe([
+      'DocString 1',
+      '   DocString 2',
+      'DocString 3   ',
+    ].join(os.EOL));
     expect(document.background.steps[1].text).toBe('Second background step');
 
     expect(document.scenarios.length).toBe(1);
     expect(document.scenarios[0].steps.length).toBe(2);
     expect(document.scenarios[0].steps[0].text).toBe('First step');
-    expect(document.scenarios[0].steps[0].docString.length).toBe(3);
-    expect(document.scenarios[0].steps[0].docString[0]).toBe('DocString 1');
-    expect(document.scenarios[0].steps[0].docString[1]).toBe('   DocString 2');
-    expect(document.scenarios[0].steps[0].docString[2]).toBe('DocString 3   ');
+    expect(document.scenarios[0].steps[0].docString).toBe([
+      'DocString 1',
+      '   DocString 2',
+      'DocString 3   '
+    ].join(os.EOL));
     expect(document.scenarios[0].steps[1].text).toBe('Second step');
   });
 
@@ -348,26 +353,28 @@ describe('Specification Parser', () => {
       '                                ',
       '         """',
       '     Given another step',
-    ].join('\n');
+    ].join(os.EOL);
 
     const language = new Languages.English();
     const document = new SpecificationParser().parse(text, { language });
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].generalised).toBe('a background step');
-    expect(document.background.steps[0].docString.length).toBe(3);
-    expect(document.background.steps[0].docString[0]).toBe('Given a DocString');
-    expect(document.background.steps[0].docString[1]).toBe('Given another DocString');
-    expect(document.background.steps[0].docString[2]).toBe('                       ');
+    expect(document.background.steps[0].docString).toBe([
+      'Given a DocString',
+      'Given another DocString',
+      '                       '
+    ].join(os.EOL));
     expect(document.background.steps[1].generalised).toBe('another background step');
 
     expect(document.scenarios.length).toBe(1);
     expect(document.scenarios[0].steps.length).toBe(2);
     expect(document.scenarios[0].steps[0].generalised).toBe('a step');
-    expect(document.scenarios[0].steps[0].docString.length).toBe(3);
-    expect(document.scenarios[0].steps[0].docString[0]).toBe('Given a DocString');
-    expect(document.scenarios[0].steps[0].docString[1]).toBe('Given another DocString');
-    expect(document.scenarios[0].steps[0].docString[2]).toBe('                       ');
+    expect(document.scenarios[0].steps[0].docString).toBe([
+      'Given a DocString',
+      'Given another DocString',
+      '                       ',
+    ].join(os.EOL));
     expect(document.scenarios[0].steps[1].generalised).toBe('another step');
   });
 

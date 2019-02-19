@@ -42,7 +42,7 @@ describe('CreateFeatureState', () => {
       handle('@two=2');
       handle('Background: First background');
 
-      const exported = specification.serialize();
+      const exported = specification.serialise();
       expect(exported.background.annotations.length).toBe(2);
       expect(exported.background.annotations[0].name).toBe('one');
       expect(exported.background.annotations[0].value).toBe('1');
@@ -130,7 +130,7 @@ describe('CreateFeatureState', () => {
     it('should capture scenarios', () => {
       handle('Scenario: First scenario');
 
-      const exported = specification.serialize();
+      const exported = specification.serialise();
       expect(exported.scenarios.length).toBe(1);
       expect(exported.scenarios[0].title).toBe('First scenario');
     });
@@ -140,7 +140,7 @@ describe('CreateFeatureState', () => {
       handle('@two=2');
       handle('Scenario: First scenario');
 
-      const exported = specification.serialize();
+      const exported = specification.serialise();
       expect(exported.scenarios.length).toBe(1);
       expect(exported.scenarios[0].annotations.length).toBe(2);
       expect(exported.scenarios[0].annotations[0].name).toBe('one');
@@ -169,7 +169,7 @@ describe('CreateFeatureState', () => {
       handle('Some text');
       handle('Some more text');
 
-      const exported = specification.serialize();
+      const exported = specification.serialise();
       expect(exported.description).toBe('Some text\nSome more text');
     });
   });

@@ -59,9 +59,8 @@ describe('AfterBackgroundStepState', () => {
       session.indentation = 0;
       handle('   Some text');
 
-      const exported = specification.serialize();
-      expect(exported.background.steps[0].docString.length).toBe(1);
-      expect(exported.background.steps[0].docString[0]).toBe('Some text');
+      const exported = specification.serialise();
+      expect(exported.background.steps[0].docString).toBe('Some text');
     });
   });
 
@@ -129,7 +128,7 @@ describe('AfterBackgroundStepState', () => {
     it('should capture scenarios', () => {
       handle('Scenario: First scenario');
 
-      const exported = specification.serialize();
+      const exported = specification.serialise();
       expect(exported.scenarios.length).toBe(1);
       expect(exported.scenarios[0].title).toBe('First scenario');
     });
@@ -139,7 +138,7 @@ describe('AfterBackgroundStepState', () => {
       handle('@two = 2');
       handle('Scenario: First scenario');
 
-      const exported = specification.serialize();
+      const exported = specification.serialise();
       expect(exported.scenarios.length).toBe(1);
       expect(exported.scenarios[0].annotations.length).toBe(2);
       expect(exported.scenarios[0].annotations[0].name).toBe('one');
@@ -167,7 +166,7 @@ describe('AfterBackgroundStepState', () => {
     it('should capture step', () => {
       handle('Given some text');
 
-      const exported = specification.serialize();
+      const exported = specification.serialise();
       expect(exported.background.steps.length).toBe(2);
       expect(exported.background.steps[1].text).toBe('Given some text');
     });
@@ -177,7 +176,7 @@ describe('AfterBackgroundStepState', () => {
       handle('@two = 2');
       handle('Given some text');
 
-      const exported = specification.serialize();
+      const exported = specification.serialise();
       expect(exported.background.steps[1].annotations.length).toBe(2);
       expect(exported.background.steps[1].annotations[0].name).toBe('one');
       expect(exported.background.steps[1].annotations[0].value).toBe('1');
