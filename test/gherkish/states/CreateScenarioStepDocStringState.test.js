@@ -1,6 +1,6 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
-const { Specification, StateMachine, States, Languages } = Gherkish;
+const { SpecificationParser, Specification, StateMachine, States, Languages } = Gherkish;
 const { CreateScenarioStepDocStringState } = States;
 
 describe('CreateScenarioStepDocStringState', () => {
@@ -21,20 +21,47 @@ describe('CreateScenarioStepDocStringState', () => {
 
     state = new CreateScenarioStepDocStringState({ specification, machine });
 
-    session = { language: Languages.utils.getDefault(), docString: { token: '---' } };
+    session = { language: Languages.utils.getDefault(), indentation: 0 };
   });
 
   describe('Blank Line Events', () => {
 
     it('should not cause transition', () => {
+      session.docString = { token: '---' };
       handle('');
       expect(machine.state).toBe('CreateScenarioStepDocStringState');
     });
   });
 
-  describe('DocString Token End Events', () => {
+  describe('DocString Indent Start Events', () => {
 
-    it('should transition to new AfterScenarioStepDocStringState on DocStringTokenEnd event', () => {
+    it('should error on DocStringIndentStart event', () => {
+      session.indentation = 0;
+      expect(() => handle('   Some text')).toThrow('\'   Some text\' was unexpected in state: CreateScenarioStepDocStringState on line 1');
+    });
+  });
+
+  describe('DocString Indent Stop Events', () => {
+
+    it('should transition to new AfterScenarioStepDocStringState on DocStringIndentEnd event', () => {
+      session.docString = { indentation: 3 };
+      session.indentation = 0;
+      handle('Some text');
+      expect(machine.state).toBe('AfterScenarioStepState');
+    });
+  });
+
+  describe('DocString Token Start Events', () => {
+
+    it('should error on DocStringTokenStart event', () => {
+      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: CreateScenarioStepDocStringState on line 1');
+    });
+  });
+
+  describe('DocString Token Stop Events', () => {
+
+    it('should transition to new AfterScenarioStepDocStringState on DocStringTokenStop event', () => {
+      session.docString = { token: '---' };
       handle('---');
       expect(machine.state).toBe('AfterScenarioStepDocStringState');
     });
@@ -50,11 +77,13 @@ describe('CreateScenarioStepDocStringState', () => {
   describe('DocString Events', () => {
 
     it('should not cause transition', () => {
+      session.docString = { token: '---' };
       handle('Some text');
       expect(machine.state).toBe('CreateScenarioStepDocStringState');
     });
 
     it('should capture docstrings', () => {
+      session.docString = { token: '---' };
       handle('Some text');
       handle('Some more text');
 
@@ -65,7 +94,7 @@ describe('CreateScenarioStepDocStringState', () => {
     });
   });
 
-  function handle(line, number = 1) {
-    state.handle({ line, number }, session);
+  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line) ) {
+    state.handle({ line, number, indentation }, session);
   }
 });

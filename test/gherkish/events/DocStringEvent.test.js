@@ -9,7 +9,12 @@ describe('DocStringEvent', () => {
   let state;
 
   beforeEach(() => {
-    session = { language: Languages.utils.getDefault() };
+    session = {
+      language: Languages.utils.getDefault(),
+      docString: {
+        indentation: 3
+      }
+    };
     state = new StubState();
   });
 
@@ -22,7 +27,7 @@ describe('DocStringEvent', () => {
     }
   }
 
-  it('should recogniseDocStrings', () => {
+  it('should recognise DocStrings', () => {
     const event = new DocStringEvent();
     expect(event.handle({ line: 'Some text' }, session, state)).toBe(true);
     expect(event.handle({ line: ' some text ' }, session, state)).toBe(true);

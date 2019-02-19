@@ -44,9 +44,35 @@ describe('InitialState', () => {
     });
   });
 
+
+  describe('DocString Indent Start Events', () => {
+
+    it('should error on DocStringIndentStart event', () => {
+      session.indentation = 0;
+      expect(() => handle('   Some text')).toThrow('\'   Some text\' was unexpected in state: InitialState on line 1');
+    });
+  });
+
+  describe('DocString Indent Stop Events', () => {
+
+    it('should error on DocStringIndentStop event', () => {
+      session.docString = { indentation: 3 };
+      session.indentation = 0;
+      expect(() => handle('Some text')).toThrow('\'Some text\' was unexpected in state: InitialState on line 1');
+    });
+  });
+
   describe('DocString Token Start Events', () => {
 
-    it('should error', () => {
+    it('should error on DocStringTokenStart event', () => {
+      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: InitialState on line 1');
+    });
+  });
+
+  describe('DocString Token Stop Events', () => {
+
+    it('should error on DocStringTokenStop event', () => {
+      session.docString = { token: '---' };
       expect(() => handle('---')).toThrow('\'---\' was unexpected in state: InitialState on line 1');
     });
   });
@@ -129,7 +155,7 @@ describe('InitialState', () => {
     });
   });
 
-  function handle(line, number = 1) {
-    state.handle({ line, number }, session);
+  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line) ) {
+    state.handle({ line, number, indentation }, session);
   }
 });

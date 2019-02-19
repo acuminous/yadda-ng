@@ -1,6 +1,6 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
-const { Specification, StateMachine, States, Languages } = Gherkish;
+const { SpecificationParser, Specification, StateMachine, States, Languages } = Gherkish;
 const { AfterBackgroundStepState } = States;
 
 describe('AfterBackgroundStepState', () => {
@@ -47,11 +47,46 @@ describe('AfterBackgroundStepState', () => {
     });
   });
 
+  describe('DocString Indent Start Events', () => {
+
+    it('should transition to new CreateBackgroundStepDocStringState on DocStringIndentStart event', () => {
+      session.indentation = 0;
+      handle('   Some text');
+      expect(machine.state).toBe('CreateBackgroundStepDocStringState');
+    });
+
+    it('should capture DocStrings', () => {
+      session.indentation = 0;
+      handle('   Some text');
+
+      const exported = specification.serialize();
+      expect(exported.background.steps[0].docString.length).toBe(1);
+      expect(exported.background.steps[0].docString[0]).toBe('Some text');
+    });
+  });
+
+  describe('DocString Indent Stop Events', () => {
+
+    it('should error on DocStringIndentStop event', () => {
+      session.docString = { indentation: 3 };
+      session.indentation = 0;
+      expect(() => handle('Some text')).toThrow('\'Some text\' was unexpected in state: AfterBackgroundStepState on line 1');
+    });
+  });
+
   describe('DocString Token Start Events', () => {
 
     it('should transition to new CreateBackgroundStepDocStringState on DocStringTokenStart event', () => {
       handle('---');
       expect(machine.state).toBe('CreateBackgroundStepDocStringState');
+    });
+  });
+
+  describe('DocString Token Stop Events', () => {
+
+    it('should error on DocStringTokenStop event', () => {
+      session.docString = { token: '---' };
+      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: AfterBackgroundStepState on line 1');
     });
   });
 
@@ -142,7 +177,6 @@ describe('AfterBackgroundStepState', () => {
       handle('@two = 2');
       handle('Given some text');
 
-
       const exported = specification.serialize();
       expect(exported.background.steps[1].annotations.length).toBe(2);
       expect(exported.background.steps[1].annotations[0].name).toBe('one');
@@ -152,7 +186,7 @@ describe('AfterBackgroundStepState', () => {
     });
   });
 
-  function handle(line, number = 1) {
-    state.handle({ line, number }, session);
+  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line) ) {
+    state.handle({ line, number, indentation }, session);
   }
 });

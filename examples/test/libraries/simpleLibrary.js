@@ -24,7 +24,7 @@ module.exports = new Library({ name: 'Simple Library', dictionaries: [ commonDic
     const count = await state.wall.count();
     assert.equal(number, count);
   })
-  .define('I spray the following graffiti on the wall: $graffiti', (state, graffiti) => {
+  .define('I spray the following graffiti on the wall:', (state, graffiti) => {
     state.wall.spray(graffiti);
   })
   .define('Then there is no more room for graffiti', (state) => {

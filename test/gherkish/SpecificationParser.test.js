@@ -276,7 +276,7 @@ describe('Specification Parser', () => {
     expect(() => new SpecificationParser().parse(text)).toThrow("'         ---' was unexpected in state: AfterScenarioStepDocStringState on line 11'");
   });
 
-  xit('should support indented DocStrings', () => {
+  it('should support indented DocStrings', () => {
     const text = [
       '@skip',
       'Feature: Some feature',
@@ -286,6 +286,7 @@ describe('Specification Parser', () => {
       '   @timeout=1000',
       '   Background: The background',
       '      First background step',
+      '',
       '         DocString 1',
       '            DocString 2',
       '         DocString 3   ',
@@ -294,6 +295,7 @@ describe('Specification Parser', () => {
       '   @browser = Firefox',
       '   Scenario: First scenario',
       '      First step',
+      '',
       '         DocString 1',
       '            DocString 2',
       '         DocString 3   ',

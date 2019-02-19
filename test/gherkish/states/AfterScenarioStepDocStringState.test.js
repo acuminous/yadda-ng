@@ -1,6 +1,6 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
-const { Specification, StateMachine, States, Languages } = Gherkish;
+const { SpecificationParser, Specification, StateMachine, States, Languages } = Gherkish;
 const { AfterScenarioStepDocStringState } = States;
 
 describe('AfterScenarioStepDocStringState', () => {
@@ -46,10 +46,42 @@ describe('AfterScenarioStepDocStringState', () => {
     });
   });
 
+  describe('DocString Indent Start Events', () => {
+
+    it('should error on DocStringIndentStart event', () => {
+      session.indentation = 0;
+      expect(() => handle('   Some text')).toThrow('\'   Some text\' was unexpected in state: AfterScenarioStepDocStringState on line 1');
+    });
+  });
+
+  describe('DocString Indent Stop Events', () => {
+
+    it('should error on DocStringIndentStop event', () => {
+      session.docString = { indentation: 3 };
+      session.indentation = 0;
+      expect(() => handle('Some text')).toThrow('\'Some text\' was unexpected in state: AfterScenarioStepDocStringState on line 1');
+    });
+  });
+
   describe('DocString Token Start Events', () => {
 
     it('should error on DocStringTokenStart event', () => {
       expect(() => handle('---')).toThrow('\'---\' was unexpected in state: AfterScenarioStepDocStringState on line 1');
+    });
+  });
+
+  describe('DocString Token Stop Events', () => {
+
+    it('should error on DocStringTokenStop event', () => {
+      session.docString = { token: '---' };
+      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: AfterScenarioStepDocStringState on line 1');
+    });
+  });
+
+  describe('Feature Events', () => {
+
+    it('should error on feature event', () => {
+      expect(() => handle('Feature: foo')).toThrow('\'Feature: foo\' was unexpected in state: AfterScenarioStepDocStringState on line 1');
     });
   });
 
@@ -153,8 +185,8 @@ describe('AfterScenarioStepDocStringState', () => {
     });
   });
 
-  function handle(line, number = 1) {
-    state.handle({ line, number }, session);
+  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line) ) {
+    state.handle({ line, number, indentation }, session);
   }
 
 });

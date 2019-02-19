@@ -45,9 +45,37 @@ describe('ConsumeMultiLineCommentState', () => {
     });
   });
 
+  describe('DocString Indent Start Events', () => {
+
+    it('should not cause transition', () => {
+      session.indentation = 0;
+      handle('   Some text');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+    });
+  });
+
+  describe('DocString Indent Stop Events', () => {
+
+    it('should not cause transition', () => {
+      session.docString = { indentation: 3 };
+      session.indentation = 0;
+      handle('Some text');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+    });
+  });
+
   describe('DocString Token Start Events', () => {
 
     it('should not cause transition', () => {
+      handle('---');
+      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+    });
+  });
+
+  describe('DocString Token Stop Events', () => {
+
+    it('should not cause transition', () => {
+      session.docString = { token: '---' };
       handle('---');
       expect(machine.state).toBe('ConsumeMultiLineCommentState');
     });

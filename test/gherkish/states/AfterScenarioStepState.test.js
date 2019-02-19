@@ -1,9 +1,9 @@
 const expect = require('expect');
 const { Gherkish } = require('../../..');
-const { Specification, StateMachine, States, Languages } = Gherkish;
+const { SpecificationParser, Specification, StateMachine, States, Languages } = Gherkish;
 const { AfterScenarioStepState } = States;
 
-describe('AfterAfterScenarioStepDocStringState', () => {
+describe('AfterScenarioStepState', () => {
 
   let specification;
   let machine;
@@ -47,11 +47,46 @@ describe('AfterAfterScenarioStepDocStringState', () => {
     });
   });
 
+  describe('DocString Indent Start Events', () => {
+
+    it('should transition to new CreateScenarioStepDocStringState on DocStringIndentStart event', () => {
+      session.indentation = 0;
+      handle('   Some text');
+      expect(machine.state).toBe('CreateScenarioStepDocStringState');
+    });
+
+    it('should capture DocStrings', () => {
+      session.indentation = 0;
+      handle('   Some text');
+
+      const exported = specification.serialize();
+      expect(exported.scenarios[0].steps[0].docString.length).toBe(1);
+      expect(exported.scenarios[0].steps[0].docString[0]).toBe('Some text');
+    });
+  });
+
+  describe('DocString Indent Stop Events', () => {
+
+    it('should error on DocStringIndentStop event', () => {
+      session.docString = { indentation: 3 };
+      session.indentation = 0;
+      expect(() => handle('Some text')).toThrow('\'Some text\' was unexpected in state: AfterScenarioStepState on line 1');
+    });
+  });
+
   describe('DocString Token Start Events', () => {
 
     it('should transition to new CreateScenarioStepDocStringState on DocStringTokenStart event', () => {
       handle('---');
       expect(machine.state).toBe('CreateScenarioStepDocStringState');
+    });
+  });
+
+  describe('DocString Token Stop Events', () => {
+
+    it('should error on DocStringTokenStop event', () => {
+      session.docString = { token: '---' };
+      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: AfterScenarioStepState on line 1');
     });
   });
 
@@ -155,8 +190,8 @@ describe('AfterAfterScenarioStepDocStringState', () => {
     });
   });
 
-  function handle(line, number = 1) {
-    state.handle({ line, number }, session);
+  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line) ) {
+    state.handle({ line, number, indentation }, session);
   }
 
 });

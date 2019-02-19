@@ -17,36 +17,45 @@ describe('DocStringTokenStopEvent', () => {
     constructor() {
       this.events = [];
     }
-    onDocStringTokenEnd(event) {
+    onDocStringTokenStop(event) {
       this.events.push(event);
     }
   }
 
   it('should handle --- DocStrings', () => {
     const event = new DocStringTokenStopEvent();
-    session.docString = { token: '---' };
-    session.indentation = 6;
+    session.docString = { token: '---', indentation: 6 };
 
     event.handle({ line: '   ---   ' }, session, state);
     expect(state.events.length).toBe(1);
 
     expect(state.events[0].name).toBe('DocStringTokenStopEvent');
     expect(state.events[0].source.line).toBe('   ---   ');
-    expect(session.indentation).toBe(0);
     expect(session.docString).toBe(undefined);
   });
 
-  it('should handle DocStrings', () => {
+  it('should handle """ DocStrings', () => {
     const event = new DocStringTokenStopEvent();
-    session.docString = { token: '"""' };
+    session.docString = { token: '"""', indentation: 6 };
 
     event.handle({ line: '   """   ' }, session, state);
     expect(state.events.length).toBe(1);
 
     expect(state.events[0].name).toBe('DocStringTokenStopEvent');
     expect(state.events[0].source.line).toBe('   """   ');
-    expect(session.indentation).toBe(0);
     expect(session.docString).toBe(undefined);
+  });
+
+  it('should do nothing when not handling a DocString', () => {
+    const event = new DocStringTokenStopEvent();
+    expect(event.handle({ line: '   """   ' }, session, state)).toBe(false);
+  });
+
+  it('should do nothing when already handling an indented DocString', () => {
+    const event = new DocStringTokenStopEvent();
+    session.docString = {};
+
+    expect(event.handle({ line: '   """   ' }, session, state)).toBe(false);
   });
 
 });

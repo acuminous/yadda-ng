@@ -5,7 +5,7 @@ Feature: Simple examples
     * Yadda supports block comments
     * Scenarios can have example tables as well as Scenario Outlines
     * You can use [ ] as well as < > to specify place holders
-    * Data tables headings can have a horizontal border row beneath the header
+    * Data table headings can have a horizontal border row beneath the header
     * You cannot use scenario or background descriptions
     * DocStrings are delimited by indentation, 3 or more dashes or 3 or more quotes
 
