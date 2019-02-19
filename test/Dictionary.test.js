@@ -1,6 +1,6 @@
 const expect = require('expect');
 const { Dictionary, Converters } = require('..');
-const { UpperCaseConverter, LowerCaseConverter, PassthroughConverter } = Converters;
+const { UpperCaseConverter, LowerCaseConverter, PassThroughConverter } = Converters;
 
 describe('Dictionary', () => {
 
@@ -109,12 +109,12 @@ describe('Dictionary', () => {
 
     it('should raise an error when an expandable term is defined with too few converter arguments', () => {
       expect(() => new Dictionary().define('$term', /(.*)/, [])).toThrow('Pattern [(.*)] for term [$term] has 1 matching group, but only a total of 0 converter arguments were specified');
-      expect(() => new Dictionary().define('$term', /(.*) (.*) (.*)/, [ new PassthroughConverter({ demand: 2 }) ])).toThrow('Pattern [(.*) (.*) (.*)] for term [$term] has 3 matching groups, but only a total of 2 converter arguments were specified');
+      expect(() => new Dictionary().define('$term', /(.*) (.*) (.*)/, [ new PassThroughConverter({ demand: 2 }) ])).toThrow('Pattern [(.*) (.*) (.*)] for term [$term] has 3 matching groups, but only a total of 2 converter arguments were specified');
     });
 
     it('should raise an error when an expandable term is defined with many few converter arguments', () => {
-      expect(() => new Dictionary().define('$term', /(.*)/, [ new PassthroughConverter(), new PassthroughConverter() ])).toThrow('Pattern [(.*)] for term [$term] has only 1 matching group, but a total of 2 converter arguments were specified');
-      expect(() => new Dictionary().define('$term', /(.*)/, [ new PassthroughConverter({ demand: 2 }) ])).toThrow('Pattern [(.*)] for term [$term] has only 1 matching group, but a total of 2 converter arguments were specified');
+      expect(() => new Dictionary().define('$term', /(.*)/, [ new PassThroughConverter(), new PassThroughConverter() ])).toThrow('Pattern [(.*)] for term [$term] has only 1 matching group, but a total of 2 converter arguments were specified');
+      expect(() => new Dictionary().define('$term', /(.*)/, [ new PassThroughConverter({ demand: 2 }) ])).toThrow('Pattern [(.*)] for term [$term] has only 1 matching group, but a total of 2 converter arguments were specified');
     });
   });
 

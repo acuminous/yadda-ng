@@ -21,4 +21,4 @@
 1. Feature Parser
 1. Dedupe scenario and feature
 1. Add filename to specification parser for better error messages
-
+1. Error Codes
