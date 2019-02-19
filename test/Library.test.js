@@ -98,7 +98,11 @@ describe('Library', () => {
       .define('step $number', (state, value) => {
         expect(value).toBe(1);
         state.invocations++;
-      }, new NumberConverter());
+      }, {
+        arguments: {
+          converters: [ new NumberConverter() ]
+        }
+      });
 
     const step = { text: 'step 1', generalised: 'step 1'} ;
     const candidates = library.getCompatibleMacros(step);
@@ -114,9 +118,91 @@ describe('Library', () => {
       .define(/step (\d)/, (state, value) => {
         expect(value).toBe(1);
         state.invocations++;
-      }, new NumberConverter());
+      }, {
+        arguments: {
+          converters: [ new NumberConverter() ]
+        }
+      });
 
     const step = { text: 'step 1', generalised: 'step 1'} ;
+    const candidates = library.getCompatibleMacros(step);
+    expect(candidates.length).toBe(1);
+
+    await candidates[0].run(state, step);
+    expect(state.invocations).toBe(1);
+  });
+
+  it('should define a step using a single string with no arguments and a docstring with default converters', async () => {
+    const state = { invocations: 0 };
+    const library = new Library()
+      .define('step', (state, value) => {
+        expect(value).toBe('1');
+        state.invocations++;
+      }, { docString: true });
+
+    const step = { text: 'step', generalised: 'step', docString: '1' } ;
+    const candidates = library.getCompatibleMacros(step);
+    expect(candidates.length).toBe(1);
+
+    await candidates[0].run(state, step);
+    expect(state.invocations).toBe(1);
+  });
+
+  it('should define a step using a single string with arguments and a docstring with default converters', async () => {
+    const state = { invocations: 0 };
+    const library = new Library()
+      .define('step $value', (state, value, docString) => {
+        expect(value).toBe('1');
+        expect(docString).toBe('2');
+        state.invocations++;
+      }, { docString: true });
+
+    const step = { text: 'step 1', generalised: 'step 1', docString: '2' } ;
+    const candidates = library.getCompatibleMacros(step);
+    expect(candidates.length).toBe(1);
+
+    await candidates[0].run(state, step);
+    expect(state.invocations).toBe(1);
+  });
+
+  it('should define a step using a single string and a docstring with custom converters', async () => {
+    const state = { invocations: 0 };
+    const library = new Library()
+      .define('step', (state, value) => {
+        expect(value).toBe(1);
+        state.invocations++;
+      }, {
+        docString: {
+          converter: new NumberConverter()
+        }
+      });
+
+    const step = { text: 'step', generalised: 'step', docString: '1'} ;
+    const candidates = library.getCompatibleMacros(step);
+    expect(candidates.length).toBe(1);
+
+    await candidates[0].run(state, step);
+    expect(state.invocations).toBe(1);
+  });
+
+
+  it('should define a step using a single string with arguments using custom converters and a docstring with custom converters', async () => {
+    const state = { invocations: 0 };
+    const library = new Library()
+      .define('step $value', (state, value, docString) => {
+        expect(value).toBe(1);
+        expect(docString).toBe(2);
+        state.invocations++;
+      }, {
+        arguments: {
+          converters: [ new NumberConverter() ]
+        },
+        docString: {
+          converter: new NumberConverter()
+        }
+      });
+
+    const step = { text: 'step 1', generalised: 'step 1', docString: '2'} ;
     const candidates = library.getCompatibleMacros(step);
     expect(candidates.length).toBe(1);
 

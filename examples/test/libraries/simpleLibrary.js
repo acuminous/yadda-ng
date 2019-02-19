@@ -26,7 +26,9 @@ module.exports = new Library({ name: 'Simple Library', dictionaries: [ commonDic
   })
   .define('I spray the following graffiti on the wall:', (state, graffiti) => {
     state.wall.spray(graffiti);
+  }, {
+    docString: true,
   })
-  .define('Then there is no more room for graffiti', (state) => {
-
+  .define('there is no more room for graffiti', (state) => {
+    assert.ok(state.wall.isCovered());
   });
