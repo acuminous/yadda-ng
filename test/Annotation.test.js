@@ -16,6 +16,10 @@ describe('Annotation', () => {
     expect(new Annotation({ name: 'Bob' }).answersTo('Bob')).toBe(true);
   });
 
+  it('should answer to it\'s own name with a different case', () => {
+    expect(new Annotation({ name: 'bob' }).answersTo('Bob')).toBe(true);
+  });
+
   it('should not answer to another\'s name', () => {
     expect(new Annotation({ name: 'Bob' }).answersTo('Jim')).toBe(false);
   });

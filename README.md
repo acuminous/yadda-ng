@@ -3,7 +3,6 @@
 1. Specification Parser
   - Example tables
 1. Scenarios need to get libraries from annotations (see Script)
-1. hasAnnotationsIgnoreCase
 1. Injectable / Configurable competition
 1. Term should use arity class
 1. Terms should be recursive: .define('coordinates', '$number, $number', new GeographicCoordinatesConverter());
