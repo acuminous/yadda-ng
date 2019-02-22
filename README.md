@@ -1,5 +1,7 @@
 # yadda-ng
 
+1. Steps should be able to mark themselves as pending
+1. How do you get access to annotations while running tests or in life cycle methods
 1. Specification Parser
   - Example tables
 1. Injectable / Configurable competition
