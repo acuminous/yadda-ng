@@ -1,10 +1,15 @@
 const { Gherkish, Playbooks, Convenience } = require('../..');
 const { MochaPlaybook } = Playbooks;
 const { compileFeatures } = Convenience;
-const { simpleLibrary, convertersLibrary } = require('./libraries');
+const { simpleLibrary, convertersLibrary, duplicateLibrary1, duplicateLibrary2 } = require('./libraries');
 
 Gherkish.Languages.utils.setDefault('English');
 
-const features = compileFeatures({ libraries: [ simpleLibrary, convertersLibrary ] });
+const features = compileFeatures({ libraries: [
+    simpleLibrary,
+    convertersLibrary,
+    duplicateLibrary1,
+    duplicateLibrary2,
+] });
 const playbook = new MochaPlaybook({ features });
 playbook.run();
