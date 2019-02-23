@@ -2,6 +2,7 @@
 
 1. Steps should be able to mark themselves as pending
 1. How do you get access to annotations while running tests or in life cycle methods
+  - Think I need to refactor to make step/scenario/feature available via state. Then the step can call state.step.getAnnotation(...) or state.feature.getAnnotation(...) etc
 1. Specification Parser
   - Example tables
 1. Injectable / Configurable competition
@@ -15,7 +16,9 @@
   - Other languages
   - All specification parser regexes
   - Annotations (pending)
-  - Directives (language)
+    - The MochaPlugin uses annotations too.
+    - Possible solution - pass the language into the annotations and add a language identifier to get and has functions, e.g. getAnnotation('timeout', 'en')
+  - Directives (language) - Language cannot be locallised (because by implication the language has not yet been set)
 1. Dedupe scenario and feature
 1. Add filename to specification parser for better error messages
 1. .yaddarc

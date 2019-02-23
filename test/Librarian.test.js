@@ -2,7 +2,7 @@ const expect = require('expect');
 
 const { Librarian, Library } = require('..');
 
-describe.only('Librarian', () => {
+describe('Librarian', () => {
 
   it('should return compatible macros', () => {
     const librarian = new Librarian({ libraries: [
