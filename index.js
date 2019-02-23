@@ -18,6 +18,7 @@ const Macro = require('./lib/Macro');
 const Competition = require('./lib/Competition');
 const Functions = require('./lib/functions');
 const Convenience = require('./lib/Convenience');
+const State = require('./lib/State');
 
 module.exports = {
   Gherkish,
@@ -40,4 +41,5 @@ module.exports = {
   Competition,
   Functions,
   Convenience,
+  State,
 };

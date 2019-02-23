@@ -5,7 +5,7 @@ const { NumberConverter } = Converters;
 
 describe('Library', () => {
 
-  it('should use the specified name name', () => {
+  it('should use the specified name', () => {
     expect(new Library({ name: 'Search' }).name).toBe('Search');
   });
 
