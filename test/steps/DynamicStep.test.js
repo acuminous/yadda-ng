@@ -1,6 +1,6 @@
 const expect = require('expect');
 
-const { Librarian, Library, Annotations, Steps } = require('../..');
+const { Librarian, Library, Annotations, Steps, State } = require('../..');
 const { DynamicStep } = Steps;
 
 describe('DynamicStep', () => {
@@ -10,7 +10,7 @@ describe('DynamicStep', () => {
     const step = new DynamicStep({ librarian, annotations: new Annotations(), text: 'foo', generalised: 'bar' });
     expect(step.isPending()).toBe(false);
 
-    const outcome = await step.run({});
+    const outcome = await step.run(new State());
     expect(outcome.status).toBe('undefined');
     expect(outcome.suggestion).toBe('.define(\'bar\', (state) => { // your code here })');
   });
@@ -25,7 +25,7 @@ describe('DynamicStep', () => {
     const step = new DynamicStep({ librarian, annotations, text: 'foo', generalised: 'foo' });
     expect(step.isPending()).toBe(false);
 
-    const outcome = await step.run({});
+    const outcome = await step.run(new State());
     expect(outcome.status).toBe('pending');
   });
 
@@ -39,7 +39,7 @@ describe('DynamicStep', () => {
     const step = new DynamicStep({ librarian, annotations: new Annotations(), text: 'foo', generalised: 'foo' });
     expect(step.isPending()).toBe(false);
 
-    const outcome = await step.run({});
+    const outcome = await step.run(new State());
     expect(run).toBe(true);
     expect(outcome.status).toBe('run');
   });
@@ -53,7 +53,7 @@ describe('DynamicStep', () => {
     const step = new DynamicStep({ librarian, annotations: new Annotations(), text: 'foo', generalised: 'foo' });
     expect(step.isPending()).toBe(false);
 
-    const outcome = await step.run({});
+    const outcome = await step.run(new State());
     expect(outcome.status).toBe('ambiguous');
     expect(outcome.contenders.length).toBe(2);
   });
@@ -70,7 +70,9 @@ describe('DynamicStep', () => {
 
     const step = new DynamicStep({ librarian, annotations: new Annotations(), text: 'B', generalised: 'B' });
 
-    const outcome = await step.run({ currentLibrary: 'B' });
+    const state = new State();
+    state.set('currentLibrary', 'B');
+    const outcome = await step.run(state);
     expect(run).toBe(true);
     expect(outcome.status).toBe('run');
   });

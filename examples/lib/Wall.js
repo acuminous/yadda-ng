@@ -1,3 +1,4 @@
+// All functions use setTimeout and promises to simulate asynchronous operations
 module.exports = class Wall {
 
   constructor(height) {
@@ -33,11 +34,20 @@ module.exports = class Wall {
   }
 
   spray(graffiti) {
-    this._graffiti = graffiti;
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this._graffiti = graffiti;
+        resolve();
+      }, 100);
+    });
   }
 
   isCovered() {
-    return this._graffiti.length >= 100;
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this._graffiti.length >= 100);
+      }, 100);
+    });
   }
 
 };

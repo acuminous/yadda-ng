@@ -1,6 +1,6 @@
 const expect = require('expect');
 
-const { Steps, Macro, Pattern, Library, Signature } = require('../..');
+const { Steps, Macro, Pattern, Library, Signature, State } = require('../..');
 const { AmbiguousStep } = Steps;
 
 describe('AmbiguousStep', () => {
@@ -10,7 +10,7 @@ describe('AmbiguousStep', () => {
     const signature = new Signature({ library, pattern: new Pattern(/.*/) });
     const macro = new Macro({ signature, fn: () => {} });
     const step = new AmbiguousStep({ text: 'Given A', contenders: [ macro ] });
-    const outcome = await step.run({});
+    const outcome = await step.run(new State());
     expect(outcome.status).toBe('ambiguous');
     expect(outcome.contenders).toEqual([ macro ]);
   });
@@ -20,7 +20,7 @@ describe('AmbiguousStep', () => {
     const signature = new Signature({ library, pattern: new Pattern(/.*/) });
     const macro = new Macro({ signature, fn: () => {} });
     const step = new AmbiguousStep({ text: 'Given A', contenders: [ macro ] });
-    const outcome = await step.abort().run({});
+    const outcome = await step.abort().run(new State());
 
     expect(step.isAborted()).toBe(false);
     expect(outcome.status).toBe('ambiguous');
@@ -33,7 +33,8 @@ describe('AmbiguousStep', () => {
 
   it('should delete current library from state', async () => {
     const step = new AmbiguousStep({ text: 'Given A', contenders: [] });
-    const state = { currentLibrary: 'A' };
+    const state = new State();
+    state.set('currentLibrary', 'A');
     await step.run(state);
     expect(state.currentLibrary).toBe(undefined);
   });

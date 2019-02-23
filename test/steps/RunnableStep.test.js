@@ -1,6 +1,6 @@
 const expect = require('expect');
 
-const { Steps, Macro, Library, Pattern, Signature, Functions } = require('../..');
+const { Steps, Macro, Library, Pattern, Signature, Functions, State } = require('../..');
 const { RunnableStep } = Steps;
 const { AsyncFunction, PendingFunction } = Functions;
 
@@ -12,18 +12,18 @@ describe('RunnableStep', () => {
 
   it('should run a runnable step', async () => {
     const step = new RunnableStep({ text: 'Given A', macro });
-    await expect(step.run({})).resolves.toEqual({ status: 'run' });
+    await expect(step.run(new State())).resolves.toEqual({ status: 'run' });
   });
 
   it('should not run a pending step', async () => {
     const step = new RunnableStep({ text: 'Given A', macro: pendingMacro });
-    await expect(step.run({})).resolves.toEqual({ status: 'pending' });
+    await expect(step.run(new State())).resolves.toEqual({ status: 'pending' });
   });
 
   it('should not run an aborted step', async () => {
     const step = new RunnableStep({ text: 'Given A', macro }).abort();
     expect(step.isAborted()).toBe(true);
-    await expect(step.run({})).resolves.toEqual({ status: 'aborted' });
+    await expect(step.run(new State())).resolves.toEqual({ status: 'aborted' });
   });
 
   it('should be pending the macro is without a function', async () => {
