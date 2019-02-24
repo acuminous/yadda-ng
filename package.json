@@ -7,6 +7,7 @@
     "lint": "eslint .",
     "test": "nyc --reporter text-summary mocha 'test/*.test.js' 'test/**/*.test.js'",
     "coverage": "nyc report --reporter lcov",
+    "complexity": "es6-plato -r -d ./complexity lib",
     "precommit": "npm run lint && npm run test"
   },
   "author": "Stephen Cresswell",
