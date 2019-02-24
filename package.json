@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha 'test/*.test.js' 'test/**/*.test.js'",
+    "test": "nyc --reporter text-summary mocha 'test/*.test.js' 'test/**/*.test.js'",
+    "coverage": "nyc report --reporter lcov",
     "precommit": "npm run lint && npm run test"
   },
   "author": "Stephen Cresswell",

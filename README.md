@@ -18,3 +18,18 @@
 1. Dedupe scenario and feature
 1. Add filename to specification parser for better error messages
 1. .yaddarc
+1. Rename specification => feature / specifications => features?
+
+
+#### Annotations
+1. Vocabulary needs to be dynamic
+1. Vocabulary should just be a list of word mappings with two functions
+    1. generalise
+    2. localise
+
+1. Add annotation language to constructor
+1. Generalise annotation name passed to constructor
+1. Generalise annotation name when added
+1. If no generalisation exists leave as is
+1. Generalise given name in answers to
+1. Mocha plugin should add vocabulary
