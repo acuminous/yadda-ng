@@ -35,4 +35,7 @@ module.exports = new Library({ name: 'Simple Library', dictionaries: [ commonDic
     const wall = state.get('wall');
     const isCovered = await wall.isCovered();
     assert.ok(isCovered);
+  })
+  .define('there can be programatically $status steps', async (state, status) => {
+    return { status };
   });

@@ -70,3 +70,10 @@ Feature: Simple examples
     ---
 
     Then there is no more room for graffiti
+
+  Scenario: Step status can be programatically set
+
+    there can be programatically pending steps
+    there can be programatically aborted steps
+
+

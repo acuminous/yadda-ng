@@ -1,6 +1,5 @@
 # yadda-ng
 
-1. Steps should be able to mark themselves, scenarios and features as pending (e.g. abort)
 1. Specification Parser
   - Example tables
 1. Injectable / Configurable competition

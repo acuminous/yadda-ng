@@ -7,8 +7,9 @@ const { AsyncFunction, PendingFunction } = Functions;
 describe('RunnableStep', () => {
   const library = new Library();
   const signature = new Signature({ library, pattern: new Pattern(/.*/) });
-  const macro = new Macro({ signature, fn: new AsyncFunction  ({ fn: () => {} }) });
+  const macro = new Macro({ signature, fn: new AsyncFunction ({ fn: () => {} }) });
   const pendingMacro = new Macro({ signature, fn: new PendingFunction() });
+  const programaticallyPendingMacro = new Macro({ signature, fn: new AsyncFunction ({ fn: () => ({ status: 'pending' }) }) });
 
   it('should run a runnable step', async () => {
     const step = new RunnableStep({ text: 'Given A', macro });
@@ -34,6 +35,11 @@ describe('RunnableStep', () => {
   it('should not be pending the macro has a function', async () => {
     const step = new RunnableStep({ text: 'Given A', macro: pendingMacro });
     expect(step.isPending()).toBe(true);
+  });
+
+  it('should honour return status', async () => {
+    const step = new RunnableStep({ text: 'Given A', macro: programaticallyPendingMacro });
+    await expect(step.run(new State())).resolves.toEqual({ status: 'pending' });
   });
 
 });
