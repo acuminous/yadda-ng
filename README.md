@@ -13,7 +13,7 @@
   - Annotations (pending)
     - The MochaPlugin uses annotations too.
     - Possible solution - pass the language into the annotations and add a language identifier to get and has functions, e.g. getAnnotation('timeout', 'en')
-  - Directives (language) - Language cannot be locallised (because by implication the language has not yet been set)
+  - Directives (language) - Language cannot be localised (because by implication the language has not yet been set)
 1. Dedupe scenario and feature
 1. Add filename to specification parser for better error messages
 1. .yaddarc

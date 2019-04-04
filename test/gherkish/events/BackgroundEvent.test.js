@@ -36,12 +36,12 @@ describe('BackgroundEvent', () => {
     const event = new BackgroundEvent();
     session = { language: Languages.utils.get('Pirate') };
 
-    expect(event.handle({ line: 'aftground: Some background' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'Aftground: Some background' }, session, state)).toBe(true);
-    expect(event.handle({ line: '  Aftground  : Some background  ' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'Aftground  :' }, session, state)).toBe(true);
+    expect(event.handle({ line: 'Lore: Some background' }, session, state)).toBe(true);
+    expect(event.handle({ line: 'Lore: Some background' }, session, state)).toBe(true);
+    expect(event.handle({ line: '  Lore  : Some background  ' }, session, state)).toBe(true);
+    expect(event.handle({ line: 'Lore  :' }, session, state)).toBe(true);
 
-    expect(event.handle({ line: 'Aftground' }, session, state)).toBe(false);
+    expect(event.handle({ line: 'Lore' }, session, state)).toBe(false);
   });
 
   it('should handle backgrounds', () => {
