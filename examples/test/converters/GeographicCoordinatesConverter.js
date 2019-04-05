@@ -1,9 +1,15 @@
-const debug = require('debug')('yadda:examples:FeetConverter');
+const Debug = require('debug');
 const { Converters } = require('../../..');
+const { BaseConverter } = Converters;
 
-module.exports = class GeographicCoordinatesConverter extends Converters.BaseConverter {
+module.exports = class GeographicCoordinatesConverter extends BaseConverter {
+
+  constructor() {
+    super({ debug: Debug('yadda:examples:GeographicCoordinatesConverter') });
+  }
+
   async convert(state, latitude, longitude) {
-    debug(`Converting [${latitude}, ${longitude}]`);
+    this._debug(`Converting [${latitude}, ${longitude}]`);
     return { latitude: Number(latitude), longitude: Number(longitude) };
   }
 };

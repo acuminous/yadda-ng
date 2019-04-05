@@ -1,5 +1,7 @@
 # yadda-ng
 
+1. Ignore step returns (breaking examples)
+1. Look at whether initial state cant create a feature without being passed specification
 1. Specification Parser
   - Example tables
 1. Injectable / Configurable competition
@@ -13,6 +15,13 @@
   - Annotations (pending)
     - The MochaPlugin uses annotations too.
     - Possible solution - pass the language into the annotations and add a language identifier to get and has functions, e.g. getAnnotation('timeout', 'en')
+    - Needs to be extensible (e.g. mocha plugin has timeouts - need to be able to extend localisation)
+    - BaseLanguage only generalises steps
+    - Proper model for language
+      - generalise(text, language)
+      - localise(text, language)
+      - define(term, translations)
+    - Must tolerate partially complete languages (fallback to English)
   - Directives (language) - Language cannot be localised (because by implication the language has not yet been set)
 1. Dedupe scenario and feature
 1. Add filename to specification parser for better error messages
