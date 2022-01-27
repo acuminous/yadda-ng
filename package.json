@@ -12,7 +12,7 @@
   },
   "author": "Stephen Cresswell",
   "engines": {
-    "node": ">=8"
+    "node": ">=12"
   },
   "license": "ISC",
   "devDependencies": {
