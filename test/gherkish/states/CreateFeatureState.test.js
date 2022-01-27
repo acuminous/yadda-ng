@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq, throws } = require('assert');
 const { Gherkish } = require('../../..');
 const { SpecificationParser, Specification, StateMachine, States, Languages } = Gherkish;
 const { CreateFeatureState } = States;
@@ -24,14 +24,14 @@ describe('CreateFeatureState', () => {
   describe('Annotation Events', () => {
     it('should not cause transition', () => {
       handle('@foo=bar');
-      expect(machine.state).toBe('CreateFeatureState');
+      eq(machine.state, 'CreateFeatureState');
     });
   });
 
   describe('Background Events', () => {
     it('should transition to CreateBackgroundState on background event', () => {
       handle('Background: foo');
-      expect(machine.state).toBe('CreateBackgroundState');
+      eq(machine.state, 'CreateBackgroundState');
     });
 
     it('should capture backgrounds with annotations', () => {
@@ -40,25 +40,25 @@ describe('CreateFeatureState', () => {
       handle('Background: First background');
 
       const exported = specification.serialise();
-      expect(exported.background.annotations.length).toBe(2);
-      expect(exported.background.annotations[0].name).toBe('one');
-      expect(exported.background.annotations[0].value).toBe('1');
-      expect(exported.background.annotations[1].name).toBe('two');
-      expect(exported.background.annotations[1].value).toBe('2');
+      eq(exported.background.annotations.length, 2);
+      eq(exported.background.annotations[0].name, 'one');
+      eq(exported.background.annotations[0].value, '1');
+      eq(exported.background.annotations[1].name, 'two');
+      eq(exported.background.annotations[1].value, '2');
     });
   });
 
   describe('Blank Line Events', () => {
     it('should not cause transition', () => {
       handle('');
-      expect(machine.state).toBe('CreateFeatureState');
+      eq(machine.state, 'CreateFeatureState');
     });
   });
 
   describe('DocString Indent Start Events', () => {
     it('should error on DocStringIndentStart event', () => {
       session.indentation = 0;
-      expect(() => handle('   Some text')).toThrow("'   Some text' was unexpected in state: CreateFeatureState on line 1");
+      throws(() => handle('   Some text'), { message: "'   Some text' was unexpected in state: CreateFeatureState on line 1'" });
     });
   });
 
@@ -66,60 +66,60 @@ describe('CreateFeatureState', () => {
     it('should error on DocStringIndentStop event', () => {
       session.docString = { indentation: 3 };
       session.indentation = 0;
-      expect(() => handle('Some text')).toThrow("'Some text' was unexpected in state: CreateFeatureState on line 1");
+      throws(() => handle('Some text'), { message: "'Some text' was unexpected in state: CreateFeatureState on line 1'" });
     });
   });
 
   describe('DocString Token Start Events', () => {
     it('should error on DocStringTokenStart event', () => {
-      expect(() => handle('---')).toThrow("'---' was unexpected in state: CreateFeatureState on line 1");
+      throws(() => handle('---'), { message: "'---' was unexpected in state: CreateFeatureState on line 1'" });
     });
   });
 
   describe('DocString Token Stop Events', () => {
     it('should error on DocStringTokenStop event', () => {
       session.docString = { token: '---' };
-      expect(() => handle('---')).toThrow("'---' was unexpected in state: CreateFeatureState on line 1");
+      throws(() => handle('---'), { message: "'---' was unexpected in state: CreateFeatureState on line 1'" });
     });
   });
 
   describe('End Events', () => {
     it('should error', () => {
-      expect(() => handle('\u0000')).toThrow('Premature end of specification in state: CreateFeatureState on line 1');
+      throws(() => handle('\u0000'), { message: 'Premature end of specification in state: CreateFeatureState on line 1' });
     });
   });
 
   describe('Feature Events', () => {
     it('should error', () => {
-      expect(() => handle('Feature: foo')).toThrow("'Feature: foo' was unexpected in state: CreateFeatureState on line 1");
+      throws(() => handle('Feature: foo'), { message: "'Feature: foo' was unexpected in state: CreateFeatureState on line 1'" });
     });
   });
 
   describe('Language Events', () => {
     it('should error', () => {
-      expect(() => handle('# Language: English')).toThrow("'# Language: English' was unexpected in state: CreateFeatureState on line 1");
+      throws(() => handle('# Language: English'), { message: "'# Language: English' was unexpected in state: CreateFeatureState on line 1'" });
     });
   });
 
   describe('Multi Line Comment Events', () => {
     it('should transition to ConsumeMultiLineCommentState', () => {
       handle('###');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
   describe('Scenario Events', () => {
     it('should transition to CreateScenarioState on scenario event', () => {
       handle('Scenario: First scenario');
-      expect(machine.state).toBe('CreateScenarioState');
+      eq(machine.state, 'CreateScenarioState');
     });
 
     it('should capture scenarios', () => {
       handle('Scenario: First scenario');
 
       const exported = specification.serialise();
-      expect(exported.scenarios.length).toBe(1);
-      expect(exported.scenarios[0].title).toBe('First scenario');
+      eq(exported.scenarios.length, 1);
+      eq(exported.scenarios[0].title, 'First scenario');
     });
 
     it('should capture scenarios with annotations', () => {
@@ -128,26 +128,26 @@ describe('CreateFeatureState', () => {
       handle('Scenario: First scenario');
 
       const exported = specification.serialise();
-      expect(exported.scenarios.length).toBe(1);
-      expect(exported.scenarios[0].annotations.length).toBe(2);
-      expect(exported.scenarios[0].annotations[0].name).toBe('one');
-      expect(exported.scenarios[0].annotations[0].value).toBe('1');
-      expect(exported.scenarios[0].annotations[1].name).toBe('two');
-      expect(exported.scenarios[0].annotations[1].value).toBe('2');
+      eq(exported.scenarios.length, 1);
+      eq(exported.scenarios[0].annotations.length, 2);
+      eq(exported.scenarios[0].annotations[0].name, 'one');
+      eq(exported.scenarios[0].annotations[0].value, '1');
+      eq(exported.scenarios[0].annotations[1].name, 'two');
+      eq(exported.scenarios[0].annotations[1].value, '2');
     });
   });
 
   describe('Single Line Comment Events', () => {
     it('should not cause transition', () => {
       handle('# Some comment');
-      expect(machine.state).toBe('CreateFeatureState');
+      eq(machine.state, 'CreateFeatureState');
     });
   });
 
   describe('Text Events', () => {
     it('should not cause transition', () => {
       handle('Some text');
-      expect(machine.state).toBe('CreateFeatureState');
+      eq(machine.state, 'CreateFeatureState');
     });
 
     it('should capture description', () => {
@@ -155,7 +155,7 @@ describe('CreateFeatureState', () => {
       handle('Some more text');
 
       const exported = specification.serialise();
-      expect(exported.description).toBe('Some text\nSome more text');
+      eq(exported.description, 'Some text\nSome more text');
     });
   });
 

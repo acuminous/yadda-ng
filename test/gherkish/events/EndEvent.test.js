@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { Events, Languages } = Gherkish;
 const { EndEvent } = Events;
@@ -23,20 +23,20 @@ describe('EndEvent', () => {
 
   it('should recognise end of specification', () => {
     const event = new EndEvent();
-    expect(event.handle({ line: '\u0000' }, session, state)).toBe(true);
+    eq(event.handle({ line: '\u0000' }, session, state), true);
 
-    expect(event.handle({ line: ' \u0000' }, session, state)).toBe(false);
-    expect(event.handle({ line: '\u0000 ' }, session, state)).toBe(false);
+    eq(event.handle({ line: ' \u0000' }, session, state), false);
+    eq(event.handle({ line: '\u0000 ' }, session, state), false);
   });
 
   it('should handle end of specification', () => {
     const event = new EndEvent();
 
     event.handle({ line: '\u0000' }, session, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('EndEvent');
-    expect(state.events[0].source.line).toBe('\u0000');
-    expect(state.events[0].data).toEqual({});
+    eq(state.events[0].name, 'EndEvent');
+    eq(state.events[0].source.line, '\u0000');
+    deq(state.events[0].data, {});
   });
 });

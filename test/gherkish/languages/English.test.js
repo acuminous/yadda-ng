@@ -1,26 +1,26 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { English } = Gherkish.Languages;
 
 describe('English', () => {
   it('should generalise text', () => {
-    expect(new English().generalise('Given A')).toBe('A');
-    expect(new English().generalise('When A')).toBe('A');
-    expect(new English().generalise('Then A')).toBe('A');
+    eq(new English().generalise('Given A'), 'A');
+    eq(new English().generalise('When A'), 'A');
+    eq(new English().generalise('Then A'), 'A');
   });
 
   it('should answer to name', () => {
-    expect(new English().answersToName('English')).toBe(true);
-    expect(new English().answersToName('english')).toBe(true);
-    expect(new English().answersToName('other')).toBe(false);
+    eq(new English().answersToName('English'), true);
+    eq(new English().answersToName('english'), true);
+    eq(new English().answersToName('other'), false);
   });
 
   it('should have answer to code', () => {
-    expect(new English().answersToCode('en')).toBe(true);
-    expect(new English().answersToCode('EN')).toBe(true);
-    expect(new English().answersToCode(null)).toBe(false);
-    expect(new English().answersToCode(undefined)).toBe(false);
-    expect(new English().answersToCode('')).toBe(false);
-    expect(new English().answersToCode('other')).toBe(false);
+    eq(new English().answersToCode('en'), true);
+    eq(new English().answersToCode('EN'), true);
+    eq(new English().answersToCode(null), false);
+    eq(new English().answersToCode(undefined), false);
+    eq(new English().answersToCode(''), false);
+    eq(new English().answersToCode('other'), false);
   });
 });

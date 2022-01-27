@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq, throws } = require('assert');
 const os = require('os');
 const { Gherkish } = require('../../..');
 const { SpecificationParser, Specification, StateMachine, States, Languages } = Gherkish;
@@ -28,14 +28,14 @@ describe('CreateScenarioStepDocStringState', () => {
     it('should not cause transition', () => {
       session.docString = { token: '---' };
       handle('');
-      expect(machine.state).toBe('CreateScenarioStepDocStringState');
+      eq(machine.state, 'CreateScenarioStepDocStringState');
     });
   });
 
   describe('DocString Indent Start Events', () => {
     it('should error on DocStringIndentStart event', () => {
       session.indentation = 0;
-      expect(() => handle('   Some text')).toThrow("'   Some text' was unexpected in state: CreateScenarioStepDocStringState on line 1");
+      throws(() => handle('   Some text'), { message: "'   Some text' was unexpected in state: CreateScenarioStepDocStringState on line 1'" });
     });
   });
 
@@ -44,13 +44,13 @@ describe('CreateScenarioStepDocStringState', () => {
       session.docString = { indentation: 3 };
       session.indentation = 0;
       handle('Some text');
-      expect(machine.state).toBe('AfterScenarioStepState');
+      eq(machine.state, 'AfterScenarioStepState');
     });
   });
 
   describe('DocString Token Start Events', () => {
     it('should error on DocStringTokenStart event', () => {
-      expect(() => handle('---')).toThrow("'---' was unexpected in state: CreateScenarioStepDocStringState on line 1");
+      throws(() => handle('---'), { message: "'---' was unexpected in state: CreateScenarioStepDocStringState on line 1'" });
     });
   });
 
@@ -58,13 +58,13 @@ describe('CreateScenarioStepDocStringState', () => {
     it('should transition to new AfterScenarioStepDocStringState on DocStringTokenStop event', () => {
       session.docString = { token: '---' };
       handle('---');
-      expect(machine.state).toBe('AfterScenarioStepDocStringState');
+      eq(machine.state, 'AfterScenarioStepDocStringState');
     });
   });
 
   describe('End Events', () => {
     it('should transition to final on end event', () => {
-      expect(() => handle('\u0000')).toThrow('Premature end of specification in state: CreateScenarioStepDocStringState on line 1');
+      throws(() => handle('\u0000'), { message: 'Premature end of specification in state: CreateScenarioStepDocStringState on line 1' });
     });
   });
 
@@ -72,7 +72,7 @@ describe('CreateScenarioStepDocStringState', () => {
     it('should not cause transition', () => {
       session.docString = { token: '---' };
       handle('Some text');
-      expect(machine.state).toBe('CreateScenarioStepDocStringState');
+      eq(machine.state, 'CreateScenarioStepDocStringState');
     });
 
     it('should capture docstrings', () => {
@@ -81,7 +81,7 @@ describe('CreateScenarioStepDocStringState', () => {
       handle('Some more text');
 
       const exported = specification.serialise();
-      expect(exported.scenarios[0].steps[0].docString).toBe(['Some text', 'Some more text'].join(os.EOL));
+      eq(exported.scenarios[0].steps[0].docString, ['Some text', 'Some more text'].join(os.EOL));
     });
   });
 

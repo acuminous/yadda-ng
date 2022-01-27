@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 
 const { Steps, Macro, Library, Pattern, Signature, Functions, State } = require('../..');
 const { RunnableStep } = Steps;
@@ -13,32 +13,36 @@ describe('RunnableStep', () => {
 
   it('should run a runnable step', async () => {
     const step = new RunnableStep({ text: 'Given A', macro });
-    await expect(step.run(new State())).resolves.toEqual({ status: 'run' });
+    const result = await step.run(new State());
+    deq(result, { status: 'run' });
   });
 
   it('should not run a pending step', async () => {
     const step = new RunnableStep({ text: 'Given A', macro: pendingMacro });
-    await expect(step.run(new State())).resolves.toEqual({ status: 'pending' });
+    const result = await step.run(new State());
+    deq(result, { status: 'pending' });
   });
 
   it('should not run an aborted step', async () => {
     const step = new RunnableStep({ text: 'Given A', macro }).abort();
-    expect(step.isAborted()).toBe(true);
-    await expect(step.run(new State())).resolves.toEqual({ status: 'aborted' });
+    eq(step.isAborted(), true);
+    const result = await step.run(new State());
+    deq(result, { status: 'aborted' });
   });
 
   it('should be pending the macro is without a function', async () => {
     const step = new RunnableStep({ text: 'Given A', macro });
-    expect(step.isPending()).toBe(false);
+    eq(step.isPending(), false);
   });
 
   it('should not be pending the macro has a function', async () => {
     const step = new RunnableStep({ text: 'Given A', macro: pendingMacro });
-    expect(step.isPending()).toBe(true);
+    eq(step.isPending(), true);
   });
 
   it('should honour return status', async () => {
     const step = new RunnableStep({ text: 'Given A', macro: programaticallyPendingMacro });
-    await expect(step.run(new State())).resolves.toEqual({ status: 'pending' });
+    const result = await step.run(new State());
+    deq(result, { status: 'pending' });
   });
 });

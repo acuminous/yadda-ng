@@ -1,18 +1,18 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq, rejects } = require('assert');
 
 const { Converters } = require('../..');
 
 describe('BooleanConverter', () => {
   it('should convert a string to a boolean', async () => {
-    expect(new Converters.BooleanConverter().convert({}, 'true')).resolves.toBe(true);
-    expect(new Converters.BooleanConverter().convert({}, 'True')).resolves.toBe(true);
-    expect(new Converters.BooleanConverter().convert({}, 'TRUE')).resolves.toBe(true);
-    expect(new Converters.BooleanConverter().convert({}, 'false')).resolves.toBe(false);
-    expect(new Converters.BooleanConverter().convert({}, 'False')).resolves.toBe(false);
-    expect(new Converters.BooleanConverter().convert({}, 'FALSE')).resolves.toBe(false);
+    eq(await new Converters.BooleanConverter().convert({}, 'true'), true);
+    eq(await new Converters.BooleanConverter().convert({}, 'True'), true);
+    eq(await new Converters.BooleanConverter().convert({}, 'TRUE'), true);
+    eq(await new Converters.BooleanConverter().convert({}, 'false'), false);
+    eq(await new Converters.BooleanConverter().convert({}, 'False'), false);
+    eq(await new Converters.BooleanConverter().convert({}, 'FALSE'), false);
   });
 
   it('should report unparsable booleans', async () => {
-    expect(new Converters.BooleanConverter().convert({}, 'foo')).rejects.toThrow('Cannot convert value [foo] to a boolean');
+    await rejects(new Converters.BooleanConverter().convert({}, 'foo'), { message: 'Cannot convert value [foo] to a boolean' });
   });
 });

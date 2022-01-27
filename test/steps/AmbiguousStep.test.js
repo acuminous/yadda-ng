@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 
 const { Steps, Macro, Pattern, Library, Signature, State } = require('../..');
 const { AmbiguousStep } = Steps;
@@ -10,8 +10,8 @@ describe('AmbiguousStep', () => {
     const macro = new Macro({ signature, fn: () => {} });
     const step = new AmbiguousStep({ text: 'Given A', contenders: [macro] });
     const outcome = await step.run(new State());
-    expect(outcome.status).toBe('ambiguous');
-    expect(outcome.contenders).toEqual([macro]);
+    eq(outcome.status, 'ambiguous');
+    deq(outcome.contenders, [macro]);
   });
 
   it('should not abort', async () => {
@@ -21,13 +21,13 @@ describe('AmbiguousStep', () => {
     const step = new AmbiguousStep({ text: 'Given A', contenders: [macro] });
     const outcome = await step.abort().run(new State());
 
-    expect(step.isAborted()).toBe(false);
-    expect(outcome.status).toBe('ambiguous');
-    expect(outcome.contenders).toEqual([macro]);
+    eq(step.isAborted(), false);
+    eq(outcome.status, 'ambiguous');
+    deq(outcome.contenders, [macro]);
   });
 
   it('should not be pending', () => {
-    expect(new AmbiguousStep({ text: 'Given A', contenders: [] }).isPending()).toBe(false);
+    eq(new AmbiguousStep({ text: 'Given A', contenders: [] }).isPending(), false);
   });
 
   it('should delete current library from state', async () => {
@@ -35,6 +35,6 @@ describe('AmbiguousStep', () => {
     const state = new State();
     state.set('currentLibrary', 'A');
     await step.run(state);
-    expect(state.currentLibrary).toBe(undefined);
+    eq(state.currentLibrary, undefined);
   });
 });

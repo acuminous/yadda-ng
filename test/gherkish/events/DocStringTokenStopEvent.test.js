@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { Events, Languages } = Gherkish;
 const { DocStringTokenStopEvent } = Events;
@@ -26,11 +26,11 @@ describe('DocStringTokenStopEvent', () => {
     session.docString = { token: '---', indentation: 6 };
 
     event.handle({ line: '   ---   ' }, session, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('DocStringTokenStopEvent');
-    expect(state.events[0].source.line).toBe('   ---   ');
-    expect(session.docString).toBe(undefined);
+    eq(state.events[0].name, 'DocStringTokenStopEvent');
+    eq(state.events[0].source.line, '   ---   ');
+    eq(session.docString, undefined);
   });
 
   it('should handle """ DocStrings', () => {
@@ -38,22 +38,22 @@ describe('DocStringTokenStopEvent', () => {
     session.docString = { token: '"""', indentation: 6 };
 
     event.handle({ line: '   """   ' }, session, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('DocStringTokenStopEvent');
-    expect(state.events[0].source.line).toBe('   """   ');
-    expect(session.docString).toBe(undefined);
+    eq(state.events[0].name, 'DocStringTokenStopEvent');
+    eq(state.events[0].source.line, '   """   ');
+    eq(session.docString, undefined);
   });
 
   it('should do nothing when not handling a DocString', () => {
     const event = new DocStringTokenStopEvent();
-    expect(event.handle({ line: '   """   ' }, session, state)).toBe(false);
+    eq(event.handle({ line: '   """   ' }, session, state), false);
   });
 
   it('should do nothing when already handling an indented DocString', () => {
     const event = new DocStringTokenStopEvent();
     session.docString = {};
 
-    expect(event.handle({ line: '   """   ' }, session, state)).toBe(false);
+    eq(event.handle({ line: '   """   ' }, session, state), false);
   });
 });

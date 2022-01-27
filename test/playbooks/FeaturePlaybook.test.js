@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 
 const { Playbooks, Feature, Scenario, Steps, Librarian, Library } = require('../..');
 const { FeaturePlaybook } = Playbooks;
@@ -17,22 +17,22 @@ describe('Feature Playbook', () => {
     const playbook = new FeaturePlaybook({ features: [feature1, feature2] });
 
     const report = await playbook.run();
-    expect(report.summary.run).toBe(4);
-    expect(report.summary.pending).toBe(4);
+    eq(report.summary.run, 4);
+    eq(report.summary.pending, 4);
 
-    expect(report.steps.length).toBe(8);
-    expect(report.steps[0].feature).toBe(feature1.title);
-    expect(report.steps[4].feature).toBe(feature2.title);
+    eq(report.steps.length, 8);
+    eq(report.steps[0].feature, feature1.title);
+    eq(report.steps[4].feature, feature2.title);
 
-    expect(report.steps[0].scenario).toBe(scenario1.title);
-    expect(report.steps[2].scenario).toBe(scenario2.title);
-    expect(report.steps[4].scenario).toBe(scenario1.title);
-    expect(report.steps[7].scenario).toBe(scenario2.title);
+    eq(report.steps[0].scenario, scenario1.title);
+    eq(report.steps[2].scenario, scenario2.title);
+    eq(report.steps[4].scenario, scenario1.title);
+    eq(report.steps[7].scenario, scenario2.title);
 
-    expect(report.steps[0].step).toBe(step1.text);
-    expect(report.steps[0].status).toBe('run');
-    expect(report.steps[1].step).toBe(step2.text);
-    expect(report.steps[1].status).toBe('pending');
+    eq(report.steps[0].step, step1.text);
+    eq(report.steps[0].status, 'run');
+    eq(report.steps[1].step, step2.text);
+    eq(report.steps[1].status, 'pending');
   });
 
   it('should prefer steps from current library', async () => {
@@ -55,8 +55,8 @@ describe('Feature Playbook', () => {
     const playbook = new FeaturePlaybook({ features: [feature] });
 
     const report = await playbook.run();
-    expect(report.summary.run).toBe(2);
-    expect(run).toBe(true);
+    eq(report.summary.run, 2);
+    eq(run, true);
   });
 
   it('should prefer steps from current library even when the previous test is pending', async () => {
@@ -77,9 +77,9 @@ describe('Feature Playbook', () => {
     const playbook = new FeaturePlaybook({ features: [feature] });
 
     const report = await playbook.run();
-    expect(report.summary.pending).toBe(1);
-    expect(report.summary.run).toBe(1);
-    expect(run).toBe(true);
+    eq(report.summary.pending, 1);
+    eq(report.summary.run, 1);
+    eq(run, true);
   });
 
   it('should report undefined steps', async () => {
@@ -91,10 +91,10 @@ describe('Feature Playbook', () => {
     const playbook = new FeaturePlaybook({ features: [feature] });
 
     const report = await playbook.run();
-    expect(report.steps.length).toBe(1);
-    expect(report.steps[0].step).toBe(step.text);
-    expect(report.steps[0].status).toBe('undefined');
-    expect(report.steps[0].suggestion).toBe(".define('generalised', (state) => { // your code here })");
+    eq(report.steps.length, 1);
+    eq(report.steps[0].step, step.text);
+    eq(report.steps[0].status, 'undefined');
+    eq(report.steps[0].suggestion, ".define('generalised', (state) => { // your code here })");
   });
 
   it('should report ambiguous steps', async () => {
@@ -106,10 +106,10 @@ describe('Feature Playbook', () => {
     const playbook = new FeaturePlaybook({ features: [feature] });
 
     const report = await playbook.run();
-    expect(report.steps.length).toBe(1);
-    expect(report.steps[0].step).toBe(step.text);
-    expect(report.steps[0].status).toBe('ambiguous');
-    expect(report.steps[0].contenders.length).toBe(2);
+    eq(report.steps.length, 1);
+    eq(report.steps[0].step, step.text);
+    eq(report.steps[0].status, 'ambiguous');
+    eq(report.steps[0].contenders.length, 2);
   });
 
   it('should report step errors', async () => {
@@ -123,10 +123,10 @@ describe('Feature Playbook', () => {
     const playbook = new FeaturePlaybook({ features: [feature] });
 
     const report = await playbook.run();
-    expect(report.steps.length).toBe(1);
-    expect(report.steps[0].step).toBe(step.text);
-    expect(report.steps[0].status).toBe('error');
-    expect(report.steps[0].error.message).toBe('oh noes!');
+    eq(report.steps.length, 1);
+    eq(report.steps[0].step, step.text);
+    eq(report.steps[0].status, 'error');
+    eq(report.steps[0].error.message, 'oh noes!');
   });
 
   it('should time step execution', async () => {
@@ -138,7 +138,7 @@ describe('Feature Playbook', () => {
     const playbook = new FeaturePlaybook({ features: [feature] });
 
     const report = await playbook.run();
-    expect(report.steps.length).toBe(1);
-    expect(report.steps[0].duration).toBeGreaterThan(200);
+    eq(report.steps.length, 1);
+    eq(report.steps[0].duration > 200, true);
   });
 });

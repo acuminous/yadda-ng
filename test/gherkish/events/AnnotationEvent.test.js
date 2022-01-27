@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { Events, Languages } = Gherkish;
 const { AnnotationEvent } = Events;
@@ -23,35 +23,35 @@ describe('AnnotationEvent', () => {
 
   it('should recognise annotations', () => {
     const event = new AnnotationEvent();
-    expect(event.handle({ line: '@skip' }, session, state)).toBe(true);
-    expect(event.handle({ line: '@name=value ' }, session, state)).toBe(true);
-    expect(event.handle({ line: ' @skip ' }, session, state)).toBe(true);
-    expect(event.handle({ line: ' @name = value ' }, session, state)).toBe(true);
+    eq(event.handle({ line: '@skip' }, session, state), true);
+    eq(event.handle({ line: '@name=value ' }, session, state), true);
+    eq(event.handle({ line: ' @skip ' }, session, state), true);
+    eq(event.handle({ line: ' @name = value ' }, session, state), true);
 
-    expect(event.handle({ line: 'skip' }, session, state)).toBe(false);
-    expect(event.handle({ line: 'name=value' }, session, state)).toBe(false);
-    expect(event.handle({ line: 'email@example.com' }, session, state)).toBe(false);
+    eq(event.handle({ line: 'skip' }, session, state), false);
+    eq(event.handle({ line: 'name=value' }, session, state), false);
+    eq(event.handle({ line: 'email@example.com' }, session, state), false);
   });
 
   it('should handle simple annotations', () => {
     const event = new AnnotationEvent();
     event.handle({ line: '@skip' }, session, state);
 
-    expect(state.events.length).toBe(1);
-    expect(state.events[0].name).toBe('AnnotationEvent');
-    expect(state.events[0].source.line).toBe('@skip');
-    expect(state.events[0].data.name).toBe('skip');
-    expect(state.events[0].data.value).toBe(true);
+    eq(state.events.length, 1);
+    eq(state.events[0].name, 'AnnotationEvent');
+    eq(state.events[0].source.line, '@skip');
+    eq(state.events[0].data.name, 'skip');
+    eq(state.events[0].data.value, true);
   });
 
   it('should handle name/value annotations', () => {
     const event = new AnnotationEvent();
     event.handle({ line: '@foo=bar' }, session, state);
 
-    expect(state.events.length).toBe(1);
-    expect(state.events[0].name).toBe('AnnotationEvent');
-    expect(state.events[0].source.line).toBe('@foo=bar');
-    expect(state.events[0].data.name).toBe('foo');
-    expect(state.events[0].data.value).toBe('bar');
+    eq(state.events.length, 1);
+    eq(state.events[0].name, 'AnnotationEvent');
+    eq(state.events[0].source.line, '@foo=bar');
+    eq(state.events[0].data.name, 'foo');
+    eq(state.events[0].data.value, 'bar');
   });
 });

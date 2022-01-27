@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq, throws } = require('assert');
 const os = require('os');
 const { Gherkish } = require('../..');
 const { SpecificationParser, Languages, StateMachine, States, Events } = Gherkish;
@@ -29,22 +29,22 @@ describe('Specification Parser', () => {
 
     const document = new SpecificationParser().parse(text);
 
-    expect(document.description).toBe('Some free form text');
-    expect(document.annotations[0].name).toBe('skip');
-    expect(document.annotations[0].value).toBe(true);
-    expect(document.title).toBe('Some feature');
-    expect(document.background.annotations[0].name).toBe('timeout');
-    expect(document.background.annotations[0].value).toBe('1000');
-    expect(document.background.title).toBe('The background');
-    expect(document.background.steps[0].text).toBe('First background step');
-    expect(document.scenarios[0].annotations[0].name).toBe('browser');
-    expect(document.scenarios[0].annotations[0].value).toBe('Firefox');
-    expect(document.scenarios[0].title).toBe('First scenario');
-    expect(document.scenarios[0].steps[0].text).toBe('First step');
-    expect(document.scenarios[0].steps[1].text).toBe('Second step');
-    expect(document.scenarios[1].title).toBe('Second scenario');
-    expect(document.scenarios[1].steps[0].text).toBe('Third step');
-    expect(document.scenarios[1].steps[1].text).toBe('Fourth step');
+    eq(document.description, 'Some free form text');
+    eq(document.annotations[0].name, 'skip');
+    eq(document.annotations[0].value, true);
+    eq(document.title, 'Some feature');
+    eq(document.background.annotations[0].name, 'timeout');
+    eq(document.background.annotations[0].value, '1000');
+    eq(document.background.title, 'The background');
+    eq(document.background.steps[0].text, 'First background step');
+    eq(document.scenarios[0].annotations[0].name, 'browser');
+    eq(document.scenarios[0].annotations[0].value, 'Firefox');
+    eq(document.scenarios[0].title, 'First scenario');
+    eq(document.scenarios[0].steps[0].text, 'First step');
+    eq(document.scenarios[0].steps[1].text, 'Second step');
+    eq(document.scenarios[1].title, 'Second scenario');
+    eq(document.scenarios[1].steps[0].text, 'Third step');
+    eq(document.scenarios[1].steps[1].text, 'Fourth step');
   });
 
   it('should parse specifications in the language defined in the specficiation', () => {
@@ -76,33 +76,33 @@ describe('Specification Parser', () => {
 
     const document = new SpecificationParser().parse(text);
 
-    expect(document.description).toBe('Pieces of eight');
-    expect(document.annotations[0].name).toBe('skip');
-    expect(document.annotations[0].value).toBe(true);
-    expect(document.title).toBe('Some feature');
-    expect(document.background.annotations[0].name).toBe('timeout');
-    expect(document.background.annotations[0].value).toBe('1000');
-    expect(document.background.title).toBe('A long time ago');
-    expect(document.background.steps[0].text).toBe('Giveth first background step');
-    expect(document.background.steps[0].generalised).toBe('first background step');
-    expect(document.background.steps[1].text).toBe('Background steps can still be free form');
-    expect(document.background.steps[1].generalised).toBe('Background steps can still be free form');
-    expect(document.scenarios[0].annotations[0].name).toBe('browser');
-    expect(document.scenarios[0].annotations[0].value).toBe('Firefox');
-    expect(document.scenarios[0].title).toBe('First scenario');
-    expect(document.scenarios[0].steps[0].text).toBe('Giveth first step');
-    expect(document.scenarios[0].steps[1].text).toBe('Whence second step');
-    expect(document.scenarios[1].title).toBe('Second scenario');
-    expect(document.scenarios[1].steps[0].text).toBe('Thence third step');
-    expect(document.scenarios[1].steps[1].text).toBe('And fourth step');
-    expect(document.scenarios[2].title).toBe('Third scenario');
-    expect(document.scenarios[2].steps[0].text).toBe('Steps can still be free form');
+    eq(document.description, 'Pieces of eight');
+    eq(document.annotations[0].name, 'skip');
+    eq(document.annotations[0].value, true);
+    eq(document.title, 'Some feature');
+    eq(document.background.annotations[0].name, 'timeout');
+    eq(document.background.annotations[0].value, '1000');
+    eq(document.background.title, 'A long time ago');
+    eq(document.background.steps[0].text, 'Giveth first background step');
+    eq(document.background.steps[0].generalised, 'first background step');
+    eq(document.background.steps[1].text, 'Background steps can still be free form');
+    eq(document.background.steps[1].generalised, 'Background steps can still be free form');
+    eq(document.scenarios[0].annotations[0].name, 'browser');
+    eq(document.scenarios[0].annotations[0].value, 'Firefox');
+    eq(document.scenarios[0].title, 'First scenario');
+    eq(document.scenarios[0].steps[0].text, 'Giveth first step');
+    eq(document.scenarios[0].steps[1].text, 'Whence second step');
+    eq(document.scenarios[1].title, 'Second scenario');
+    eq(document.scenarios[1].steps[0].text, 'Thence third step');
+    eq(document.scenarios[1].steps[1].text, 'And fourth step');
+    eq(document.scenarios[2].title, 'Third scenario');
+    eq(document.scenarios[2].steps[0].text, 'Steps can still be free form');
   });
 
   it('should report missing languages', () => {
     const text = ['#language: Missing', 'Feature: Some feature'].join(os.EOL);
 
-    expect(() => new SpecificationParser().parse(text)).toThrow('Language: Missing was not found');
+    throws(() => new SpecificationParser().parse(text), { message: 'Language: Missing was not found' });
   });
 
   it('should parse specifications in the specified language', () => {
@@ -129,23 +129,23 @@ describe('Specification Parser', () => {
     const language = new Languages.Pirate();
     const document = new SpecificationParser().parse(text, { language });
 
-    expect(document.description).toBe('Pieces of eight');
-    expect(document.annotations[0].name).toBe('skip');
-    expect(document.annotations[0].value).toBe(true);
-    expect(document.title).toBe('Some feature');
-    expect(document.background.annotations[0].name).toBe('timeout');
-    expect(document.background.annotations[0].value).toBe('1000');
-    expect(document.background.title).toBe('A long time ago');
-    expect(document.background.steps[0].text).toBe('Giveth first background step');
-    expect(document.background.steps[0].generalised).toBe('first background step');
-    expect(document.scenarios[0].annotations[0].name).toBe('browser');
-    expect(document.scenarios[0].annotations[0].value).toBe('Firefox');
-    expect(document.scenarios[0].title).toBe('First scenario');
-    expect(document.scenarios[0].steps[0].text).toBe('Giveth first step');
-    expect(document.scenarios[0].steps[1].text).toBe('Whence second step');
-    expect(document.scenarios[1].title).toBe('Second scenario');
-    expect(document.scenarios[1].steps[0].text).toBe('Thence third step');
-    expect(document.scenarios[1].steps[1].text).toBe('And fourth step');
+    eq(document.description, 'Pieces of eight');
+    eq(document.annotations[0].name, 'skip');
+    eq(document.annotations[0].value, true);
+    eq(document.title, 'Some feature');
+    eq(document.background.annotations[0].name, 'timeout');
+    eq(document.background.annotations[0].value, '1000');
+    eq(document.background.title, 'A long time ago');
+    eq(document.background.steps[0].text, 'Giveth first background step');
+    eq(document.background.steps[0].generalised, 'first background step');
+    eq(document.scenarios[0].annotations[0].name, 'browser');
+    eq(document.scenarios[0].annotations[0].value, 'Firefox');
+    eq(document.scenarios[0].title, 'First scenario');
+    eq(document.scenarios[0].steps[0].text, 'Giveth first step');
+    eq(document.scenarios[0].steps[1].text, 'Whence second step');
+    eq(document.scenarios[1].title, 'Second scenario');
+    eq(document.scenarios[1].steps[0].text, 'Thence third step');
+    eq(document.scenarios[1].steps[1].text, 'And fourth step');
   });
 
   it('should be multi use', () => {
@@ -173,8 +173,8 @@ describe('Specification Parser', () => {
     const result1 = new SpecificationParser().parse(text1);
     const result2 = new SpecificationParser().parse(text2);
 
-    expect(result1.title).toBe('Some feature');
-    expect(result2.title).toBe('Another feature');
+    eq(result1.title, 'Some feature');
+    eq(result2.title, 'Another feature');
   });
 
   it('should support DocStrings', () => {
@@ -207,16 +207,16 @@ describe('Specification Parser', () => {
 
     const document = new SpecificationParser().parse(text);
 
-    expect(document.background.steps.length).toBe(2);
-    expect(document.background.steps[0].text).toBe('First background step');
-    expect(document.background.steps[0].docString).toBe(['DocString 1', '   DocString 2', 'DocString 3   '].join(os.EOL));
-    expect(document.background.steps[1].text).toBe('Second background step');
+    eq(document.background.steps.length, 2);
+    eq(document.background.steps[0].text, 'First background step');
+    eq(document.background.steps[0].docString, ['DocString 1', '   DocString 2', 'DocString 3   '].join(os.EOL));
+    eq(document.background.steps[1].text, 'Second background step');
 
-    expect(document.scenarios.length).toBe(1);
-    expect(document.scenarios[0].steps.length).toBe(2);
-    expect(document.scenarios[0].steps[0].text).toBe('First step');
-    expect(document.scenarios[0].steps[0].docString).toBe(['DocString 1', '   DocString 2', 'DocString 3   '].join(os.EOL));
-    expect(document.scenarios[0].steps[1].text).toBe('Second step');
+    eq(document.scenarios.length, 1);
+    eq(document.scenarios[0].steps.length, 2);
+    eq(document.scenarios[0].steps[0].text, 'First step');
+    eq(document.scenarios[0].steps[0].docString, ['DocString 1', '   DocString 2', 'DocString 3   '].join(os.EOL));
+    eq(document.scenarios[0].steps[1].text, 'Second step');
   });
 
   it('should not allow multiple DocStrings in background steps', () => {
@@ -240,7 +240,7 @@ describe('Specification Parser', () => {
       '     First step',
     ].join(os.EOL);
 
-    expect(() => new SpecificationParser().parse(text)).toThrow("'         ---' was unexpected in state: AfterBackgroundStepDocStringState on line 11");
+    throws(() => new SpecificationParser().parse(text), { message: "'         ---' was unexpected in state: AfterBackgroundStepDocStringState on line 11'" });
   });
 
   it('should not allow multiple DocStrings in scenario steps', () => {
@@ -248,7 +248,7 @@ describe('Specification Parser', () => {
       os.EOL
     );
 
-    expect(() => new SpecificationParser().parse(text)).toThrow("'         ---' was unexpected in state: AfterScenarioStepDocStringState on line 11'");
+    throws(() => new SpecificationParser().parse(text), { message: "'         ---' was unexpected in state: AfterScenarioStepDocStringState on line 11'" });
   });
 
   it('should support indented DocStrings', () => {
@@ -279,16 +279,16 @@ describe('Specification Parser', () => {
 
     const document = new SpecificationParser().parse(text);
 
-    expect(document.background.steps.length).toBe(2);
-    expect(document.background.steps[0].text).toBe('First background step');
-    expect(document.background.steps[0].docString).toBe(['DocString 1', '   DocString 2', 'DocString 3   '].join(os.EOL));
-    expect(document.background.steps[1].text).toBe('Second background step');
+    eq(document.background.steps.length, 2);
+    eq(document.background.steps[0].text, 'First background step');
+    eq(document.background.steps[0].docString, ['DocString 1', '   DocString 2', 'DocString 3   '].join(os.EOL));
+    eq(document.background.steps[1].text, 'Second background step');
 
-    expect(document.scenarios.length).toBe(1);
-    expect(document.scenarios[0].steps.length).toBe(2);
-    expect(document.scenarios[0].steps[0].text).toBe('First step');
-    expect(document.scenarios[0].steps[0].docString).toBe(['DocString 1', '   DocString 2', 'DocString 3   '].join(os.EOL));
-    expect(document.scenarios[0].steps[1].text).toBe('Second step');
+    eq(document.scenarios.length, 1);
+    eq(document.scenarios[0].steps.length, 2);
+    eq(document.scenarios[0].steps[0].text, 'First step');
+    eq(document.scenarios[0].steps[0].docString, ['DocString 1', '   DocString 2', 'DocString 3   '].join(os.EOL));
+    eq(document.scenarios[0].steps[1].text, 'Second step');
   });
 
   it('should not parse steps that are in DocStrings', () => {
@@ -322,323 +322,323 @@ describe('Specification Parser', () => {
     const language = new Languages.English();
     const document = new SpecificationParser().parse(text, { language });
 
-    expect(document.background.steps.length).toBe(2);
-    expect(document.background.steps[0].generalised).toBe('a background step');
-    expect(document.background.steps[0].docString).toBe(['Given a DocString', 'Given another DocString', '                       '].join(os.EOL));
-    expect(document.background.steps[1].generalised).toBe('another background step');
+    eq(document.background.steps.length, 2);
+    eq(document.background.steps[0].generalised, 'a background step');
+    eq(document.background.steps[0].docString, ['Given a DocString', 'Given another DocString', '                       '].join(os.EOL));
+    eq(document.background.steps[1].generalised, 'another background step');
 
-    expect(document.scenarios.length).toBe(1);
-    expect(document.scenarios[0].steps.length).toBe(2);
-    expect(document.scenarios[0].steps[0].generalised).toBe('a step');
-    expect(document.scenarios[0].steps[0].docString).toBe(['Given a DocString', 'Given another DocString', '                       '].join(os.EOL));
-    expect(document.scenarios[0].steps[1].generalised).toBe('another step');
+    eq(document.scenarios.length, 1);
+    eq(document.scenarios[0].steps.length, 2);
+    eq(document.scenarios[0].steps[0].generalised, 'a step');
+    eq(document.scenarios[0].steps[0].docString, ['Given a DocString', 'Given another DocString', '                       '].join(os.EOL));
+    eq(document.scenarios[0].steps[1].generalised, 'another step');
   });
 
   describe('Annotations', () => {
     it('should emit simple annotation events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('AnnotationEvent');
-        expect(event.source.line).toBe('@skip');
-        expect(event.source.number).toBe(1);
-        expect(event.data.name).toBe('skip');
-        expect(event.data.value).toBe(true);
+        eq(event.name, 'AnnotationEvent');
+        eq(event.source.line, '@skip');
+        eq(event.source.number, 1);
+        eq(event.data.name, 'skip');
+        eq(event.data.value, true);
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('@skip', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should trim simple annotation names', () => {
       const state = new StubState((event) => {
-        expect(event.source.line).toBe('@skip   ');
-        expect(event.data.name).toBe('skip');
+        eq(event.source.line, '@skip   ');
+        eq(event.data.name, 'skip');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('@skip   ', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should emit name value annotation events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('AnnotationEvent');
-        expect(event.source.line).toBe('@browser=firefox');
-        expect(event.source.number).toBe(1);
-        expect(event.data.name).toBe('browser');
-        expect(event.data.value).toBe('firefox');
+        eq(event.name, 'AnnotationEvent');
+        eq(event.source.line, '@browser=firefox');
+        eq(event.source.number, 1);
+        eq(event.data.name, 'browser');
+        eq(event.data.value, 'firefox');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('@browser=firefox', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should trim name value annotations', () => {
       const state = new StubState((event) => {
-        expect(event.source.line).toBe(' @browser = firefox ');
-        expect(event.data.name).toBe('browser');
-        expect(event.data.value).toBe('firefox');
+        eq(event.source.line, ' @browser = firefox ');
+        eq(event.data.name, 'browser');
+        eq(event.data.value, 'firefox');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse(' @browser = firefox ', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
   });
 
   describe('Features', () => {
     it('should emit feature events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('FeatureEvent');
-        expect(event.source.line).toBe('Feature: Some feature');
-        expect(event.source.number).toBe(1);
-        expect(event.data.title).toBe('Some feature');
+        eq(event.name, 'FeatureEvent');
+        eq(event.source.line, 'Feature: Some feature');
+        eq(event.source.number, 1);
+        eq(event.data.title, 'Some feature');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('Feature: Some feature', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should trim feature titles', () => {
       const state = new StubState((event) => {
-        expect(event.source.line).toBe('Feature:   Some feature   ');
-        expect(event.data.title).toBe('Some feature');
+        eq(event.source.line, 'Feature:   Some feature   ');
+        eq(event.data.title, 'Some feature');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('Feature:   Some feature   ', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should localise feature keyword', () => {
       const state = new StubState((event) => {
-        expect(event.source.line).toBe('Feature:   Some feature   ');
-        expect(event.data.title).toBe('Some feature');
+        eq(event.source.line, 'Feature:   Some feature   ');
+        eq(event.data.title, 'Some feature');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('Feature:   Some feature   ', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
   });
 
   describe('Scenarios', () => {
     it('should emit scenario events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('ScenarioEvent');
-        expect(event.source.line).toBe('Scenario: Some scenario');
-        expect(event.source.number).toBe(1);
-        expect(event.data.title).toBe('Some scenario');
+        eq(event.name, 'ScenarioEvent');
+        eq(event.source.line, 'Scenario: Some scenario');
+        eq(event.source.number, 1);
+        eq(event.data.title, 'Some scenario');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('Scenario: Some scenario', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should trim scenario titles', () => {
       const state = new StubState((event) => {
-        expect(event.source.line).toBe('Scenario:   Some scenario   ');
-        expect(event.data.title).toBe('Some scenario');
+        eq(event.source.line, 'Scenario:   Some scenario   ');
+        eq(event.data.title, 'Some scenario');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('Scenario:   Some scenario   ', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
   });
 
   describe('Backgrounds', () => {
     it('should emit background events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('BackgroundEvent');
-        expect(event.source.line).toBe('Background: Some background');
-        expect(event.source.number).toBe(1);
-        expect(event.data.title).toBe('Some background');
+        eq(event.name, 'BackgroundEvent');
+        eq(event.source.line, 'Background: Some background');
+        eq(event.source.number, 1);
+        eq(event.data.title, 'Some background');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('Background: Some background', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should trim background titles', () => {
       const state = new StubState((event) => {
-        expect(event.source.line).toBe('Background:   Some background   ');
-        expect(event.data.title).toBe('Some background');
+        eq(event.source.line, 'Background:   Some background   ');
+        eq(event.data.title, 'Some background');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('Background:   Some background   ', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
   });
 
   describe('Blank lines', () => {
     it('should emit blank line events (1)', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('BlankLineEvent');
-        expect(event.source.line).toBe('');
-        expect(event.source.number).toBe(1);
+        eq(event.name, 'BlankLineEvent');
+        eq(event.source.line, '');
+        eq(event.source.number, 1);
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should emit blank line events (2)', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('BlankLineEvent');
-        expect(event.source.line).toBe('  ');
-        expect(event.source.number).toBe(1);
+        eq(event.name, 'BlankLineEvent');
+        eq(event.source.line, '  ');
+        eq(event.source.number, 1);
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('  ', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
   });
 
   describe('Step', () => {
     it('should emit step events when matching localised steps', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('StepEvent');
-        expect(event.source.line).toBe('Given some step');
-        expect(event.source.number).toBe(1);
-        expect(event.data.text).toBe('Given some step');
-        expect(event.data.generalised).toBe('some step');
+        eq(event.name, 'StepEvent');
+        eq(event.source.line, 'Given some step');
+        eq(event.source.number, 1);
+        eq(event.data.text, 'Given some step');
+        eq(event.data.generalised, 'some step');
       });
 
       const machine = new StateMachine({ state });
       const language = new Languages.English();
       new SpecificationParser().parse('Given some step', { machine, language });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should trim localised steps', () => {
       const state = new StubState((event) => {
-        expect(event.data.text).toBe('Given some step');
-        expect(event.data.generalised).toBe('some step');
+        eq(event.data.text, 'Given some step');
+        eq(event.data.generalised, 'some step');
       });
 
       const machine = new StateMachine({ state });
       const language = new Languages.English();
       new SpecificationParser().parse('   Given some step  ', { machine, language });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should emit step events when matching unlocalised text', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('StepEvent');
-        expect(event.source.line).toBe('Some step');
-        expect(event.source.number).toBe(1);
-        expect(event.data.text).toBe('Some step');
-        expect(event.data.generalised).toBe('Some step');
+        eq(event.name, 'StepEvent');
+        eq(event.source.line, 'Some step');
+        eq(event.source.number, 1);
+        eq(event.data.text, 'Some step');
+        eq(event.data.generalised, 'Some step');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('Some step', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should trim unlocalised steps', () => {
       const state = new StubState((event) => {
-        expect(event.data.text).toBe('Some step');
-        expect(event.data.generalised).toBe('Some step');
+        eq(event.data.text, 'Some step');
+        eq(event.data.generalised, 'Some step');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('   Some step  ', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
   });
 
   describe('Text', () => {
     it('should trim text', () => {
       const state = new StubState((event) => {
-        expect(event.data.text).toBe('Some text');
+        eq(event.data.text, 'Some text');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('   Some text  ', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
   });
 
   describe('Single line comments', () => {
     it('should emit single line comment events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('SingleLineCommentEvent');
-        expect(event.source.line).toBe('#Some comment');
-        expect(event.source.number).toBe(1);
-        expect(event.data.text).toBe('Some comment');
+        eq(event.name, 'SingleLineCommentEvent');
+        eq(event.source.line, '#Some comment');
+        eq(event.source.number, 1);
+        eq(event.data.text, 'Some comment');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('#Some comment', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should trim single line comments', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('SingleLineCommentEvent');
-        expect(event.source.line).toBe('  #   Some comment   ');
-        expect(event.data.text).toBe('Some comment');
+        eq(event.name, 'SingleLineCommentEvent');
+        eq(event.source.line, '  #   Some comment   ');
+        eq(event.data.text, 'Some comment');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('  #   Some comment   ', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
   });
 
   describe('Multi line comments', () => {
     it('should emit multi line comment events', () => {
       const state = new StubState((event) => {
-        expect(event.name).toBe('MultiLineCommentEvent');
-        expect(event.source.line).toBe('###Some comment');
-        expect(event.data.text).toBe('Some comment');
+        eq(event.name, 'MultiLineCommentEvent');
+        eq(event.source.line, '###Some comment');
+        eq(event.data.text, 'Some comment');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('###Some comment', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
 
     it('should trim multi line comments', () => {
       const state = new StubState((event) => {
-        expect(event.source.line).toBe('  ####   Some comment   ');
-        expect(event.data.text).toBe('Some comment');
+        eq(event.source.line, '  ####   Some comment   ');
+        eq(event.data.text, 'Some comment');
       });
 
       const machine = new StateMachine({ state });
       new SpecificationParser().parse('  ####   Some comment   ', { machine });
 
-      expect(state.count).toBe(1);
+      eq(state.count, 1);
     });
   });
 

@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { Events, Languages } = Gherkish;
 const { TextEvent } = Events;
@@ -23,29 +23,29 @@ describe('TextEvent', () => {
 
   it('should recognise text', () => {
     const event = new TextEvent();
-    expect(event.handle({ line: 'Some text' }, session, state)).toBe(true);
-    expect(event.handle({ line: ' Some text ' }, session, state)).toBe(true);
+    eq(event.handle({ line: 'Some text' }, session, state), true);
+    eq(event.handle({ line: ' Some text ' }, session, state), true);
   });
 
   it('should recognise localised text', () => {
     const event = new TextEvent();
     const session = { language: Languages.utils.get('English') };
-    expect(event.handle({ line: 'Given some text' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'When some text' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'Then some text' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'And some text' }, session, state)).toBe(true);
-    expect(event.handle({ line: '  Given some text  ' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'Some text' }, session, state)).toBe(true);
+    eq(event.handle({ line: 'Given some text' }, session, state), true);
+    eq(event.handle({ line: 'When some text' }, session, state), true);
+    eq(event.handle({ line: 'Then some text' }, session, state), true);
+    eq(event.handle({ line: 'And some text' }, session, state), true);
+    eq(event.handle({ line: '  Given some text  ' }, session, state), true);
+    eq(event.handle({ line: 'Some text' }, session, state), true);
   });
 
   it('should handle text', () => {
     const event = new TextEvent();
 
     event.handle({ line: '  Some text  ' }, { ...session, indentation: 0 }, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('TextEvent');
-    expect(state.events[0].source.line).toBe('  Some text  ');
-    expect(state.events[0].data.text).toBe('  Some text  ');
+    eq(state.events[0].name, 'TextEvent');
+    eq(state.events[0].source.line, '  Some text  ');
+    eq(state.events[0].data.text, '  Some text  ');
   });
 });

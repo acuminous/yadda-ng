@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 
 const { Librarian, Library, Annotations, Steps, State } = require('../..');
 const { DynamicStep } = Steps;
@@ -7,11 +7,11 @@ describe('DynamicStep', () => {
   it('should create undefined steps', async () => {
     const librarian = new Librarian({ libraries: [] });
     const step = new DynamicStep({ librarian, annotations: new Annotations(), text: 'foo', generalised: 'bar' });
-    expect(step.isPending()).toBe(false);
+    eq(step.isPending(), false);
 
     const outcome = await step.run(new State());
-    expect(outcome.status).toBe('undefined');
-    expect(outcome.suggestion).toBe(".define('bar', (state) => { // your code here })");
+    eq(outcome.status, 'undefined');
+    eq(outcome.suggestion, ".define('bar', (state) => { // your code here })");
   });
 
   it('should disregard pending annotations', async () => {
@@ -20,10 +20,10 @@ describe('DynamicStep', () => {
     const annotations = new Annotations().add('pending');
 
     const step = new DynamicStep({ librarian, annotations, text: 'foo', generalised: 'foo' });
-    expect(step.isPending()).toBe(false);
+    eq(step.isPending(), false);
 
     const outcome = await step.run(new State());
-    expect(outcome.status).toBe('pending');
+    eq(outcome.status, 'pending');
   });
 
   it('should create asynchronous steps', async () => {
@@ -38,22 +38,22 @@ describe('DynamicStep', () => {
     });
 
     const step = new DynamicStep({ librarian, annotations: new Annotations(), text: 'foo', generalised: 'foo' });
-    expect(step.isPending()).toBe(false);
+    eq(step.isPending(), false);
 
     const outcome = await step.run(new State());
-    expect(run).toBe(true);
-    expect(outcome.status).toBe('run');
+    eq(run, true);
+    eq(outcome.status, 'run');
   });
 
   it('should create ambiguous steps', async () => {
     const librarian = new Librarian({ libraries: [new Library({ name: 'A' }).define('foo'), new Library({ name: 'B' }).define('foo')] });
 
     const step = new DynamicStep({ librarian, annotations: new Annotations(), text: 'foo', generalised: 'foo' });
-    expect(step.isPending()).toBe(false);
+    eq(step.isPending(), false);
 
     const outcome = await step.run(new State());
-    expect(outcome.status).toBe('ambiguous');
-    expect(outcome.contenders.length).toBe(2);
+    eq(outcome.status, 'ambiguous');
+    eq(outcome.contenders.length, 2);
   });
 
   it('should prefer the compatible steps from the previous winners library', async () => {
@@ -79,7 +79,7 @@ describe('DynamicStep', () => {
     const state = new State();
     state.set('currentLibrary', 'B');
     const outcome = await step.run(state);
-    expect(run).toBe(true);
-    expect(outcome.status).toBe('run');
+    eq(run, true);
+    eq(outcome.status, 'run');
   });
 });

@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { Events, Languages } = Gherkish;
 const { DocStringEvent } = Events;
@@ -28,16 +28,16 @@ describe('DocStringEvent', () => {
 
   it('should recognise DocStrings', () => {
     const event = new DocStringEvent();
-    expect(event.handle({ line: 'Some text' }, session, state)).toBe(true);
-    expect(event.handle({ line: ' some text ' }, session, state)).toBe(true);
+    eq(event.handle({ line: 'Some text' }, session, state), true);
+    eq(event.handle({ line: ' some text ' }, session, state), true);
   });
 
   it('should handle DocStrings', () => {
     const event = new DocStringEvent();
     event.handle({ line: '   Some text   ', indentation: 3 }, session, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('DocStringEvent');
-    expect(state.events[0].source.line).toBe('   Some text   ');
+    eq(state.events[0].name, 'DocStringEvent');
+    eq(state.events[0].source.line, '   Some text   ');
   });
 });

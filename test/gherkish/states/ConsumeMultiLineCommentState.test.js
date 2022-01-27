@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq, throws } = require('assert');
 const { Gherkish } = require('../../..');
 const { Specification, StateMachine, States, Languages } = Gherkish;
 const { ConsumeMultiLineCommentState } = States;
@@ -23,21 +23,21 @@ describe('ConsumeMultiLineCommentState', () => {
   describe('Annotation Events', () => {
     it('should not cause transition', () => {
       handle('@foo = bar');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
   describe('Background Events', () => {
     it('should not cause transition', () => {
       handle('Background: foo');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
   describe('Blank Line Events', () => {
     it('should not cause transition', () => {
       handle('');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
@@ -45,7 +45,7 @@ describe('ConsumeMultiLineCommentState', () => {
     it('should not cause transition', () => {
       session.indentation = 0;
       handle('   Some text');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
@@ -54,14 +54,14 @@ describe('ConsumeMultiLineCommentState', () => {
       session.docString = { indentation: 3 };
       session.indentation = 0;
       handle('Some text');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
   describe('DocString Token Start Events', () => {
     it('should not cause transition', () => {
       handle('---');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
@@ -69,62 +69,62 @@ describe('ConsumeMultiLineCommentState', () => {
     it('should not cause transition', () => {
       session.docString = { token: '---' };
       handle('---');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
   describe('End Events', () => {
     it('should error', () => {
-      expect(() => handle('\u0000')).toThrow('Premature end of specification in state: ConsumeMultiLineCommentState on line 1');
+      throws(() => handle('\u0000'), { message: 'Premature end of specification in state: ConsumeMultiLineCommentState on line 1' });
     });
   });
 
   describe('Feature Events', () => {
     it('should not cause transition', () => {
       handle('Feature: foo');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
   describe('Language Events', () => {
     it('should not cause transition', () => {
       handle('# Language: English');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
   describe('Multi Line Comment Events', () => {
     it('should transition to previous state', () => {
       handle('###');
-      expect(machine.state).toBe('CreateFeatureState');
+      eq(machine.state, 'CreateFeatureState');
     });
   });
 
   describe('Scenario Events', () => {
     it('should not cause transition', () => {
       handle('Scenario: foo');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
   describe('Single Line Comment Events', () => {
     it('should not cause transition', () => {
       handle('# Single comment');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
   describe('Step Events', () => {
     it('should not cause transition', () => {
       handle('Given some text');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
   describe('Text Events', () => {
     it('should not cause transition', () => {
       handle('Some text');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 

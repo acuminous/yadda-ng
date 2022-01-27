@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { Events, Languages } = Gherkish;
 const { DocStringTokenStartEvent } = Events;
@@ -23,59 +23,59 @@ describe('DocStringTokenStartEvent', () => {
 
   it('should recognise token DocStrings', () => {
     const event = new DocStringTokenStartEvent();
-    expect(event.handle({ line: '---' }, session, state)).toBe(true);
+    eq(event.handle({ line: '---' }, session, state), true);
     delete session.docString;
-    expect(event.handle({ line: ' --- ' }, session, state)).toBe(true);
+    eq(event.handle({ line: ' --- ' }, session, state), true);
     delete session.docString;
-    expect(event.handle({ line: ' ------ ' }, session, state)).toBe(true);
+    eq(event.handle({ line: ' ------ ' }, session, state), true);
     delete session.docString;
-    expect(event.handle({ line: '"""' }, session, state)).toBe(true);
+    eq(event.handle({ line: '"""' }, session, state), true);
     delete session.docString;
-    expect(event.handle({ line: ' """ ' }, session, state)).toBe(true);
+    eq(event.handle({ line: ' """ ' }, session, state), true);
     delete session.docString;
-    expect(event.handle({ line: ' """""" ' }, session, state)).toBe(true);
+    eq(event.handle({ line: ' """""" ' }, session, state), true);
     delete session.docString;
 
-    expect(event.handle({ line: '-' }, session, state)).toBe(false);
+    eq(event.handle({ line: '-' }, session, state), false);
     delete session.docString;
-    expect(event.handle({ line: '--' }, session, state)).toBe(false);
+    eq(event.handle({ line: '--' }, session, state), false);
     delete session.docString;
-    expect(event.handle({ line: '--- not a doc string' }, session, state)).toBe(false);
+    eq(event.handle({ line: '--- not a doc string' }, session, state), false);
     delete session.docString;
-    expect(event.handle({ line: '"' }, session, state)).toBe(false);
+    eq(event.handle({ line: '"' }, session, state), false);
     delete session.docString;
-    expect(event.handle({ line: '""' }, session, state)).toBe(false);
+    eq(event.handle({ line: '""' }, session, state), false);
     delete session.docString;
-    expect(event.handle({ line: '""" not a doc string' }, session, state)).toBe(false);
+    eq(event.handle({ line: '""" not a doc string' }, session, state), false);
     delete session.docString;
   });
 
   it('should not recognise token DocStrings when already handling a DocString', () => {
     session.docString = {};
     const event = new DocStringTokenStartEvent();
-    expect(event.handle({ line: '---' }, session, state)).toBe(false);
-    expect(event.handle({ line: '"""' }, session, state)).toBe(false);
+    eq(event.handle({ line: '---' }, session, state), false);
+    eq(event.handle({ line: '"""' }, session, state), false);
   });
 
   it('should handle --- DocStrings', () => {
     const event = new DocStringTokenStartEvent();
 
     event.handle({ line: '   """   ', indentation: 3 }, session, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('DocStringTokenStartEvent');
-    expect(state.events[0].source.line).toBe('   """   ');
-    expect(session.docString.token).toBe('"""');
+    eq(state.events[0].name, 'DocStringTokenStartEvent');
+    eq(state.events[0].source.line, '   """   ');
+    eq(session.docString.token, '"""');
   });
 
   it('should handle """ DocStrings', () => {
     const event = new DocStringTokenStartEvent();
 
     event.handle({ line: '   """   ', indentation: 3 }, session, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('DocStringTokenStartEvent');
-    expect(state.events[0].source.line).toBe('   """   ');
-    expect(session.docString.token).toBe('"""');
+    eq(state.events[0].name, 'DocStringTokenStartEvent');
+    eq(state.events[0].source.line, '   """   ');
+    eq(session.docString.token, '"""');
   });
 });

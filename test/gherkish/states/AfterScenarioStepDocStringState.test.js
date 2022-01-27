@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq, throws } = require('assert');
 const { Gherkish } = require('../../..');
 const { SpecificationParser, Specification, StateMachine, States, Languages } = Gherkish;
 const { AfterScenarioStepDocStringState } = States;
@@ -25,27 +25,27 @@ describe('AfterScenarioStepDocStringState', () => {
   describe('Annotation Events', () => {
     it('should not cause transition', () => {
       handle('@foo=bar');
-      expect(machine.state).toBe('AfterScenarioStepDocStringState');
+      eq(machine.state, 'AfterScenarioStepDocStringState');
     });
   });
 
   describe('Background Events', () => {
     it('should error', () => {
-      expect(() => handle('Background: Meh')).toThrow("'Background: Meh' was unexpected in state: AfterScenarioStepDocStringState on line 1");
+      throws(() => handle('Background: Meh'), { message: "'Background: Meh' was unexpected in state: AfterScenarioStepDocStringState on line 1'" });
     });
   });
 
   describe('Blank Line Events', () => {
     it('should not cause transition', () => {
       handle('');
-      expect(machine.state).toBe('AfterScenarioStepDocStringState');
+      eq(machine.state, 'AfterScenarioStepDocStringState');
     });
   });
 
   describe('DocString Indent Start Events', () => {
     it('should error on DocStringIndentStart event', () => {
       session.indentation = 0;
-      expect(() => handle('   Some text')).toThrow("'   Some text' was unexpected in state: AfterScenarioStepDocStringState on line 1");
+      throws(() => handle('   Some text'), { message: "'   Some text' was unexpected in state: AfterScenarioStepDocStringState on line 1'" });
     });
   });
 
@@ -53,68 +53,68 @@ describe('AfterScenarioStepDocStringState', () => {
     it('should error on DocStringIndentStop event', () => {
       session.docString = { indentation: 3 };
       session.indentation = 0;
-      expect(() => handle('Some text')).toThrow("'Some text' was unexpected in state: AfterScenarioStepDocStringState on line 1");
+      throws(() => handle('Some text'), { message: "'Some text' was unexpected in state: AfterScenarioStepDocStringState on line 1'" });
     });
   });
 
   describe('DocString Token Start Events', () => {
     it('should error on DocStringTokenStart event', () => {
-      expect(() => handle('---')).toThrow("'---' was unexpected in state: AfterScenarioStepDocStringState on line 1");
+      throws(() => handle('---'), { message: "'---' was unexpected in state: AfterScenarioStepDocStringState on line 1'" });
     });
   });
 
   describe('DocString Token Stop Events', () => {
     it('should error on DocStringTokenStop event', () => {
       session.docString = { token: '---' };
-      expect(() => handle('---')).toThrow("'---' was unexpected in state: AfterScenarioStepDocStringState on line 1");
+      throws(() => handle('---'), { message: "'---' was unexpected in state: AfterScenarioStepDocStringState on line 1'" });
     });
   });
 
   describe('Feature Events', () => {
     it('should error on feature event', () => {
-      expect(() => handle('Feature: foo')).toThrow("'Feature: foo' was unexpected in state: AfterScenarioStepDocStringState on line 1");
+      throws(() => handle('Feature: foo'), { message: "'Feature: foo' was unexpected in state: AfterScenarioStepDocStringState on line 1'" });
     });
   });
 
   describe('End Events', () => {
     it('should transition to final on end event', () => {
       handle('\u0000');
-      expect(machine.state).toBe('FinalState');
+      eq(machine.state, 'FinalState');
     });
   });
 
   describe('Feature Events', () => {
     it('should error', () => {
-      expect(() => handle('Feature: Meh')).toThrow("'Feature: Meh' was unexpected in state: AfterScenarioStepDocStringState on line 1");
+      throws(() => handle('Feature: Meh'), { message: "'Feature: Meh' was unexpected in state: AfterScenarioStepDocStringState on line 1'" });
     });
   });
 
   describe('Multi Line Comment Events', () => {
     it('should transition to ConsumeMultiLineCommentState', () => {
       handle('###');
-      expect(machine.state).toBe('ConsumeMultiLineCommentState');
+      eq(machine.state, 'ConsumeMultiLineCommentState');
     });
   });
 
   describe('Language Events', () => {
     it('should error', () => {
-      expect(() => handle('# Language: English')).toThrow("'# Language: English' was unexpected in state: AfterScenarioStepDocStringState on line 1");
+      throws(() => handle('# Language: English'), { message: "'# Language: English' was unexpected in state: AfterScenarioStepDocStringState on line 1'" });
     });
   });
 
   describe('Scenario Events', () => {
     it('should transition to CreateScenarioState on scenario event', () => {
       handle('Scenario: foo');
-      expect(machine.state).toBe('CreateScenarioState');
+      eq(machine.state, 'CreateScenarioState');
     });
 
     it('should capture scenarios', () => {
       handle('Scenario: Second scenario');
 
       const exported = specification.serialise();
-      expect(exported.scenarios.length).toBe(2);
-      expect(exported.scenarios[0].title).toBe('First scenario');
-      expect(exported.scenarios[1].title).toBe('Second scenario');
+      eq(exported.scenarios.length, 2);
+      eq(exported.scenarios[0].title, 'First scenario');
+      eq(exported.scenarios[1].title, 'Second scenario');
     });
 
     it('should capture scenarios with annotations', () => {
@@ -123,36 +123,36 @@ describe('AfterScenarioStepDocStringState', () => {
       handle('Scenario: Second scenario');
 
       const exported = specification.serialise();
-      expect(exported.scenarios.length).toBe(2);
-      expect(exported.scenarios[1].annotations.length).toBe(2);
-      expect(exported.scenarios[1].annotations[0].name).toBe('one');
-      expect(exported.scenarios[1].annotations[0].value).toBe('1');
-      expect(exported.scenarios[1].annotations[1].name).toBe('two');
-      expect(exported.scenarios[1].annotations[1].value).toBe('2');
+      eq(exported.scenarios.length, 2);
+      eq(exported.scenarios[1].annotations.length, 2);
+      eq(exported.scenarios[1].annotations[0].name, 'one');
+      eq(exported.scenarios[1].annotations[0].value, '1');
+      eq(exported.scenarios[1].annotations[1].name, 'two');
+      eq(exported.scenarios[1].annotations[1].value, '2');
     });
   });
 
   describe('Single Line Comment Events', () => {
     it('should not cause transition', () => {
       handle('#');
-      expect(machine.state).toBe('AfterScenarioStepDocStringState');
+      eq(machine.state, 'AfterScenarioStepDocStringState');
     });
   });
 
   describe('Step Events', () => {
     it('should transition to AfterScenarioStepState on step event', () => {
       handle('Second step');
-      expect(machine.state).toBe('AfterScenarioStepState');
+      eq(machine.state, 'AfterScenarioStepState');
     });
 
     it('should capture step', () => {
       handle('Second step');
 
       const exported = specification.serialise();
-      expect(exported.scenarios[0].steps.length).toBe(2);
-      expect(exported.scenarios[0].steps[0].text).toBe('First step');
-      expect(exported.scenarios[0].steps[1].text).toBe('Second step');
-      expect(exported.scenarios[0].steps[1].generalised).toBe('Second step');
+      eq(exported.scenarios[0].steps.length, 2);
+      eq(exported.scenarios[0].steps[0].text, 'First step');
+      eq(exported.scenarios[0].steps[1].text, 'Second step');
+      eq(exported.scenarios[0].steps[1].generalised, 'Second step');
     });
 
     it('should capture steps with annotations', () => {
@@ -161,11 +161,11 @@ describe('AfterScenarioStepDocStringState', () => {
       handle('Bah');
 
       const exported = specification.serialise();
-      expect(exported.scenarios[0].steps[1].annotations.length).toBe(2);
-      expect(exported.scenarios[0].steps[1].annotations[0].name).toBe('one');
-      expect(exported.scenarios[0].steps[1].annotations[0].value).toBe('1');
-      expect(exported.scenarios[0].steps[1].annotations[1].name).toBe('two');
-      expect(exported.scenarios[0].steps[1].annotations[1].value).toBe('2');
+      eq(exported.scenarios[0].steps[1].annotations.length, 2);
+      eq(exported.scenarios[0].steps[1].annotations[0].name, 'one');
+      eq(exported.scenarios[0].steps[1].annotations[0].value, '1');
+      eq(exported.scenarios[0].steps[1].annotations[1].name, 'two');
+      eq(exported.scenarios[0].steps[1].annotations[1].value, '2');
     });
   });
 

@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { Events, Languages } = Gherkish;
 const { MultiLineCommentEvent } = Events;
@@ -23,22 +23,22 @@ describe('MultiLineCommentEvent', () => {
 
   it('should recognise multi line comments', () => {
     const event = new MultiLineCommentEvent();
-    expect(event.handle({ line: '### Some comment' }, session, state)).toBe(true);
-    expect(event.handle({ line: ' ### Some comment' }, session, state)).toBe(true);
-    expect(event.handle({ line: '###' }, session, state)).toBe(true);
-    expect(event.handle({ line: '#### Some comment' }, session, state)).toBe(true);
+    eq(event.handle({ line: '### Some comment' }, session, state), true);
+    eq(event.handle({ line: ' ### Some comment' }, session, state), true);
+    eq(event.handle({ line: '###' }, session, state), true);
+    eq(event.handle({ line: '#### Some comment' }, session, state), true);
 
-    expect(event.handle({ line: '## No commment' }, session, state)).toBe(false);
+    eq(event.handle({ line: '## No commment' }, session, state), false);
   });
 
   it('should handle multi line comments', () => {
     const event = new MultiLineCommentEvent();
 
     event.handle({ line: '### Some comment ' }, session, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('MultiLineCommentEvent');
-    expect(state.events[0].source.line).toBe('### Some comment ');
-    expect(state.events[0].data.text).toBe('Some comment');
+    eq(state.events[0].name, 'MultiLineCommentEvent');
+    eq(state.events[0].source.line, '### Some comment ');
+    eq(state.events[0].data.text, 'Some comment');
   });
 });

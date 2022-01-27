@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { Events, Languages } = Gherkish;
 const { ScenarioEvent } = Events;
@@ -23,24 +23,24 @@ describe('ScenarioEvent', () => {
 
   it('should recognise scenarios', () => {
     const event = new ScenarioEvent();
-    expect(event.handle({ line: 'scenario: Some scenario' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'Scenario: Some scenario' }, session, state)).toBe(true);
-    expect(event.handle({ line: '  Scenario  : Some scenario  ' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'Scenario  :' }, session, state)).toBe(true);
+    eq(event.handle({ line: 'scenario: Some scenario' }, session, state), true);
+    eq(event.handle({ line: 'Scenario: Some scenario' }, session, state), true);
+    eq(event.handle({ line: '  Scenario  : Some scenario  ' }, session, state), true);
+    eq(event.handle({ line: 'Scenario  :' }, session, state), true);
 
-    expect(event.handle({ line: 'Scenario' }, session, state)).toBe(false);
+    eq(event.handle({ line: 'Scenario' }, session, state), false);
   });
 
   it('should recognise localised scenarios', () => {
     const event = new ScenarioEvent();
     const session = { language: Languages.utils.get('Pirate') };
 
-    expect(event.handle({ line: 'sortie: Some scenario' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'Sortie: Some scenario' }, session, state)).toBe(true);
-    expect(event.handle({ line: '  Sortie  : Some scenario  ' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'Sortie  :' }, session, state)).toBe(true);
+    eq(event.handle({ line: 'sortie: Some scenario' }, session, state), true);
+    eq(event.handle({ line: 'Sortie: Some scenario' }, session, state), true);
+    eq(event.handle({ line: '  Sortie  : Some scenario  ' }, session, state), true);
+    eq(event.handle({ line: 'Sortie  :' }, session, state), true);
 
-    expect(event.handle({ line: 'Scenario' }, session, state)).toBe(false);
+    eq(event.handle({ line: 'Scenario' }, session, state), false);
   });
 
   it('should handle scenarios', () => {
@@ -49,10 +49,10 @@ describe('ScenarioEvent', () => {
     const state = new StubState();
 
     event.handle({ line: 'Scenario:  Some scenario ' }, session, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('ScenarioEvent');
-    expect(state.events[0].source.line).toBe('Scenario:  Some scenario ');
-    expect(state.events[0].data.title).toBe('Some scenario');
+    eq(state.events[0].name, 'ScenarioEvent');
+    eq(state.events[0].source.line, 'Scenario:  Some scenario ');
+    eq(state.events[0].data.title, 'Some scenario');
   });
 });

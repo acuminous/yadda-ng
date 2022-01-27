@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { Events, Languages } = Gherkish;
 const { StepEvent } = Events;
@@ -23,26 +23,26 @@ describe('StepEvent', () => {
 
   it('should recognise steps', () => {
     const event = new StepEvent();
-    expect(event.handle({ line: 'Some step' }, session, state)).toBe(true);
-    expect(event.handle({ line: ' Some step ' }, session, state)).toBe(true);
+    eq(event.handle({ line: 'Some step' }, session, state), true);
+    eq(event.handle({ line: ' Some step ' }, session, state), true);
   });
 
   it('should recognise localised steps', () => {
     const event = new StepEvent();
     const session = { language: Languages.utils.get('English') };
 
-    expect(event.handle({ line: 'Given some step' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'When some step' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'Then some step' }, session, state)).toBe(true);
-    expect(event.handle({ line: 'And some step' }, session, state)).toBe(true);
-    expect(event.handle({ line: '  Given some step  ' }, session, state)).toBe(true);
+    eq(event.handle({ line: 'Given some step' }, session, state), true);
+    eq(event.handle({ line: 'When some step' }, session, state), true);
+    eq(event.handle({ line: 'Then some step' }, session, state), true);
+    eq(event.handle({ line: 'And some step' }, session, state), true);
+    eq(event.handle({ line: '  Given some step  ' }, session, state), true);
   });
 
   it('should recognise unlocalised steps', () => {
     const event = new StepEvent();
 
-    expect(event.handle({ line: 'Some text' }, session, state)).toBe(true);
-    expect(event.handle({ line: ' Some text ' }, session, state)).toBe(true);
+    eq(event.handle({ line: 'Some text' }, session, state), true);
+    eq(event.handle({ line: ' Some text ' }, session, state), true);
   });
 
   it('should handle localised steps', () => {
@@ -50,22 +50,22 @@ describe('StepEvent', () => {
     const session = { language: Languages.utils.get('English') };
 
     event.handle({ line: ' Given some step  ' }, session, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('StepEvent');
-    expect(state.events[0].source.line).toBe(' Given some step  ');
-    expect(state.events[0].data.text).toBe('Given some step');
-    expect(state.events[0].data.generalised).toBe('some step');
+    eq(state.events[0].name, 'StepEvent');
+    eq(state.events[0].source.line, ' Given some step  ');
+    eq(state.events[0].data.text, 'Given some step');
+    eq(state.events[0].data.generalised, 'some step');
   });
 
   it('should handle unlocalised steps', () => {
     const event = new StepEvent();
 
     event.handle({ line: '  Some step  ' }, session, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('StepEvent');
-    expect(state.events[0].source.line).toBe('  Some step  ');
-    expect(state.events[0].data.text).toBe('Some step');
+    eq(state.events[0].name, 'StepEvent');
+    eq(state.events[0].source.line, '  Some step  ');
+    eq(state.events[0].data.text, 'Some step');
   });
 });

@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { Events, Languages } = Gherkish;
 const { BlankLineEvent } = Events;
@@ -23,20 +23,20 @@ describe('BlankLineEvent', () => {
 
   it('should recognise blank lines', () => {
     const event = new BlankLineEvent();
-    expect(event.handle({ line: '' }, session, state)).toBe(true);
-    expect(event.handle({ line: '   ' }, session, state)).toBe(true);
+    eq(event.handle({ line: '' }, session, state), true);
+    eq(event.handle({ line: '   ' }, session, state), true);
 
-    expect(event.handle({ line: 'Not Blank' }, session, state)).toBe(false);
+    eq(event.handle({ line: 'Not Blank' }, session, state), false);
   });
 
   it('should handle blank lines', () => {
     const event = new BlankLineEvent();
 
     event.handle({ line: '' }, session, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('BlankLineEvent');
-    expect(state.events[0].source.line).toBe('');
-    expect(state.events[0].data).toEqual({});
+    eq(state.events[0].name, 'BlankLineEvent');
+    eq(state.events[0].source.line, '');
+    deq(state.events[0].data, {});
   });
 });

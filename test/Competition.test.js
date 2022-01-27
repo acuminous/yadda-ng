@@ -1,12 +1,12 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 
 const { Competition, Macro, Pattern, Library, Signature, State } = require('..');
 
 describe('Competition', () => {
   it('should record no winner and no contenders when there are no candidates', () => {
     const ranked = new Competition().rank(new State(), []);
-    expect(ranked.winner).toBe(undefined);
-    expect(ranked.contenders).toBe(undefined);
+    eq(ranked.winner, undefined);
+    eq(ranked.contenders, undefined);
   });
 
   it('should record winner and no contenders when there is only one candidate', () => {
@@ -16,8 +16,8 @@ describe('Competition', () => {
     const macro = new Macro({ signature });
 
     const ranked = competition.rank(new State(), [macro]);
-    expect(ranked.winner).toBe(macro);
-    expect(ranked.contenders).toBe(undefined);
+    eq(ranked.winner, macro);
+    eq(ranked.contenders, undefined);
   });
 
   it('should record contenders when there is no clear winner', () => {
@@ -34,9 +34,9 @@ describe('Competition', () => {
     const macro3 = new Macro({ signature: signature3 });
 
     const ranked = competition.rank(new State(), [macro1, macro2, macro3]);
-    expect(ranked.winner).toBe(undefined);
-    expect(ranked.contenders.length).toBe(3);
-    expect(ranked.contenders).toEqual([macro1, macro2, macro3]);
+    eq(ranked.winner, undefined);
+    eq(ranked.contenders.length, 3);
+    deq(ranked.contenders, [macro1, macro2, macro3]);
   });
 
   it("should prefer macro from previous winner's library", () => {
@@ -55,7 +55,7 @@ describe('Competition', () => {
     const state = new State();
     state.set('currentLibrary', 'B');
     const ranked = competition.rank(state, [macro1, macro2, macro3]);
-    expect(ranked.winner).toBe(macro3);
-    expect(ranked.contenders).toBe(undefined);
+    eq(ranked.winner, macro3);
+    eq(ranked.contenders, undefined);
   });
 });

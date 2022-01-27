@@ -1,24 +1,24 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { Pirate } = Gherkish.Languages;
 
 describe('Pirate', () => {
   it('should generalise text', () => {
-    expect(new Pirate().generalise('Giveth A')).toBe('A');
-    expect(new Pirate().generalise('Whence A')).toBe('A');
-    expect(new Pirate().generalise('Thence A')).toBe('A');
+    eq(new Pirate().generalise('Giveth A'), 'A');
+    eq(new Pirate().generalise('Whence A'), 'A');
+    eq(new Pirate().generalise('Thence A'), 'A');
   });
 
   it('should answer to name', () => {
-    expect(new Pirate().answersToName('Pirate')).toBe(true);
-    expect(new Pirate().answersToName('pirate')).toBe(true);
-    expect(new Pirate().answersToName('other')).toBe(false);
+    eq(new Pirate().answersToName('Pirate'), true);
+    eq(new Pirate().answersToName('pirate'), true);
+    eq(new Pirate().answersToName('other'), false);
   });
 
   it("should have no code (they're more guidelines really)", () => {
-    expect(new Pirate().answersToCode(null)).toBe(false);
-    expect(new Pirate().answersToCode(undefined)).toBe(false);
-    expect(new Pirate().answersToCode('')).toBe(false);
-    expect(new Pirate().answersToCode('other')).toBe(false);
+    eq(new Pirate().answersToCode(null), false);
+    eq(new Pirate().answersToCode(undefined), false);
+    eq(new Pirate().answersToCode(''), false);
+    eq(new Pirate().answersToCode('other'), false);
   });
 });

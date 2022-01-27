@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq, throws } = require('assert');
 
 const { Librarian, Library } = require('..');
 
@@ -8,9 +8,9 @@ describe('Librarian', () => {
 
     const step = { text: 'bar', generalised: 'bar' };
     const macros = librarian.getCompatibleMacros(step);
-    expect(macros.length).toBe(2);
-    expect(macros[0].supports(step)).toBe(true);
-    expect(macros[1].supports(step)).toBe(true);
+    eq(macros.length, 2);
+    eq(macros[0].supports(step), true);
+    eq(macros[1].supports(step), true);
   });
 
   it('should select libraries', () => {
@@ -18,8 +18,8 @@ describe('Librarian', () => {
 
     const step = { text: 'bar', generalised: 'bar' };
     const macros = librarian.getCompatibleMacros(step);
-    expect(macros.length).toBe(1);
-    expect(macros[0].supports(step)).toBe(true);
+    eq(macros.length, 1);
+    eq(macros[0].supports(step), true);
   });
 
   it('should dedupe libraries', () => {
@@ -27,14 +27,17 @@ describe('Librarian', () => {
 
     const step = { text: 'foo', generalised: 'foo' };
     const macros = librarian.getCompatibleMacros(step);
-    expect(macros.length).toBe(1);
-    expect(macros[0].supports(step)).toBe(true);
+    eq(macros.length, 1);
+    eq(macros[0].supports(step), true);
   });
 
   it('should error when a named library is not found', () => {
-    expect(() => {
-      new Librarian({ libraries: [] }).select(['A']);
-    }).toThrow('Library: A was not found');
+    throws(
+      () => {
+        new Librarian({ libraries: [] }).select(['A']);
+      },
+      { message: 'Library: A was not found' }
+    );
   });
 
   it('should not select when passed no library names', () => {
@@ -42,7 +45,7 @@ describe('Librarian', () => {
 
     const step = { text: 'bar', generalised: 'bar' };
     const macros = librarian.getCompatibleMacros(step);
-    expect(macros.length).toBe(2);
+    eq(macros.length, 2);
   });
 
   it('should not select when passed an empty list', () => {
@@ -50,6 +53,6 @@ describe('Librarian', () => {
 
     const step = { text: 'bar', generalised: 'bar' };
     const macros = librarian.getCompatibleMacros(step);
-    expect(macros.length).toBe(2);
+    eq(macros.length, 2);
   });
 });

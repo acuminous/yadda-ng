@@ -1,4 +1,4 @@
-const expect = require('expect');
+const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 const { Gherkish } = require('../../..');
 const { Events, Languages } = Gherkish;
 const { LanguageEvent } = Events;
@@ -23,22 +23,22 @@ describe('LanguageEvent', () => {
 
   it('should recognise languages', () => {
     const event = new LanguageEvent();
-    expect(event.handle({ line: '#Language:Pirate' }, session, state)).toBe(true);
-    expect(event.handle({ line: '#Language : Pirate' }, session, state)).toBe(true);
-    expect(event.handle({ line: '# Language : Pirate ' }, session, state)).toBe(true);
-    expect(event.handle({ line: '#language:Pirate' }, session, state)).toBe(true);
+    eq(event.handle({ line: '#Language:Pirate' }, session, state), true);
+    eq(event.handle({ line: '#Language : Pirate' }, session, state), true);
+    eq(event.handle({ line: '# Language : Pirate ' }, session, state), true);
+    eq(event.handle({ line: '#language:Pirate' }, session, state), true);
 
-    expect(event.handle({ line: 'Language' }, session, state)).toBe(false);
+    eq(event.handle({ line: 'Language' }, session, state), false);
   });
 
   it('should handle languages', () => {
     const event = new LanguageEvent();
 
     event.handle({ line: '#Language : Pirate ' }, session, state);
-    expect(state.events.length).toBe(1);
+    eq(state.events.length, 1);
 
-    expect(state.events[0].name).toBe('LanguageEvent');
-    expect(state.events[0].source.line).toBe('#Language : Pirate ');
-    expect(state.events[0].data.name).toBe('Pirate');
+    eq(state.events[0].name, 'LanguageEvent');
+    eq(state.events[0].source.line, '#Language : Pirate ');
+    eq(state.events[0].data.name, 'Pirate');
   });
 });
