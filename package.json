@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "nyc --reporter text-summary mocha 'test/*.test.js' 'test/**/*.test.js'",
+    "test": "zunit",
     "coverage": "nyc report --reporter lcov",
     "complexity": "es6-plato -r -d ./complexity lib",
     "precommit": "npm run lint && npm run test"
@@ -21,8 +21,8 @@
     "eslint-config-imperative-es6": "^2.1.0",
     "expect": "^24.7.1",
     "husky": "^1.3.1",
-    "mocha": "^6.0.2",
-    "nyc": "^13.3.0"
+    "nyc": "^13.3.0",
+    "zunit": "^3.2.1"
   },
   "dependencies": {
     "debug": "^4.1.0"
@@ -31,5 +31,8 @@
     "example": "examples",
     "lib": "lib",
     "test": "test"
+  },
+  "zUnit": {
+    "pollute": true
   }
 }
