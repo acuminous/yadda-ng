@@ -16,7 +16,7 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "es6-plato": "^1.1.6",
+    "es6-plato": "^1.2.3",
     "eslint": "^5.16.0",
     "eslint-config-imperative-es6": "^2.1.0",
     "expect": "^24.7.1",
