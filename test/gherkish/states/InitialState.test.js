@@ -4,7 +4,6 @@ const { SpecificationParser, Specification, StateMachine, States, Languages } = 
 const { InitialState } = States;
 
 describe('InitialState', () => {
-
   let specification;
   let machine;
   let state;
@@ -22,7 +21,6 @@ describe('InitialState', () => {
   });
 
   describe('Annotation Events', () => {
-
     it('should not cause transition', () => {
       handle('@foo=bar');
       expect(machine.state).toBe('InitialState');
@@ -30,62 +28,53 @@ describe('InitialState', () => {
   });
 
   describe('Background Events', () => {
-
     it('should error', () => {
-      expect(() => handle('Background: foo')).toThrow('\'Background: foo\' was unexpected in state: InitialState on line 1');
+      expect(() => handle('Background: foo')).toThrow("'Background: foo' was unexpected in state: InitialState on line 1");
     });
   });
 
   describe('Blank Line Events', () => {
-
     it('should not cause transition', () => {
       handle('');
       expect(machine.state).toBe('InitialState');
     });
   });
 
-
   describe('DocString Indent Start Events', () => {
-
     it('should error on DocStringIndentStart event', () => {
       session.indentation = 0;
-      expect(() => handle('   Some text')).toThrow('\'   Some text\' was unexpected in state: InitialState on line 1');
+      expect(() => handle('   Some text')).toThrow("'   Some text' was unexpected in state: InitialState on line 1");
     });
   });
 
   describe('DocString Indent Stop Events', () => {
-
     it('should error on DocStringIndentStop event', () => {
       session.docString = { indentation: 3 };
       session.indentation = 0;
-      expect(() => handle('Some text')).toThrow('\'Some text\' was unexpected in state: InitialState on line 1');
+      expect(() => handle('Some text')).toThrow("'Some text' was unexpected in state: InitialState on line 1");
     });
   });
 
   describe('DocString Token Start Events', () => {
-
     it('should error on DocStringTokenStart event', () => {
-      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: InitialState on line 1');
+      expect(() => handle('---')).toThrow("'---' was unexpected in state: InitialState on line 1");
     });
   });
 
   describe('DocString Token Stop Events', () => {
-
     it('should error on DocStringTokenStop event', () => {
       session.docString = { token: '---' };
-      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: InitialState on line 1');
+      expect(() => handle('---')).toThrow("'---' was unexpected in state: InitialState on line 1");
     });
   });
 
   describe('End Events', () => {
-
     it('should error', () => {
       expect(() => handle('\u0000')).toThrow('Premature end of specification in state: InitialState on line 1');
     });
   });
 
   describe('Feature Events', () => {
-
     it('should transition to CreateFeatureState', () => {
       handle('Feature: foo');
       expect(machine.state).toBe('CreateFeatureState');
@@ -113,7 +102,6 @@ describe('InitialState', () => {
   });
 
   describe('Language Events', () => {
-
     it('should not cause transition', () => {
       handle('# Language: English');
       expect(machine.state).toBe('InitialState');
@@ -126,7 +114,6 @@ describe('InitialState', () => {
   });
 
   describe('Multi Line Comment Events', () => {
-
     it('should transition to ConsumeMultiLineCommentState', () => {
       handle('###');
       expect(machine.state).toBe('ConsumeMultiLineCommentState');
@@ -134,14 +121,12 @@ describe('InitialState', () => {
   });
 
   describe('Scenario Events', () => {
-
     it('should error', () => {
-      expect(() => handle('Scenario: foo')).toThrow('\'Scenario: foo\' was unexpected in state: InitialState on line 1');
+      expect(() => handle('Scenario: foo')).toThrow("'Scenario: foo' was unexpected in state: InitialState on line 1");
     });
   });
 
   describe('Single Line Comment Events', () => {
-
     it('should not cause transition', () => {
       handle('# foo');
       expect(machine.state).toBe('InitialState');
@@ -149,13 +134,12 @@ describe('InitialState', () => {
   });
 
   describe('Text Events', () => {
-
     it('should error', () => {
-      expect(() => handle('Some text')).toThrow('\'Some text\' was unexpected in state: InitialState on line 1');
+      expect(() => handle('Some text')).toThrow("'Some text' was unexpected in state: InitialState on line 1");
     });
   });
 
-  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line) ) {
+  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line)) {
     state.handle({ line, number, indentation }, session);
   }
 });

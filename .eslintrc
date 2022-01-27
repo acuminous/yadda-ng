@@ -1,16 +1,11 @@
 {
-  "extends": "imperative-es6",
-  "plugins": [
-  ],
+  "extends": "prettier",
+  "plugins": ["prettier"],
   "parserOptions": {
     "ecmaVersion": 2018
   },
   "env": {
-    "mocha": true,
+    "node": true
   },
-  "rules": {
-    "semi": [2, "always"],
-    "comma-dangle": [2, "only-multiline"],
-    "no-unused-expressions": ["error", {"allowTernary": true}]
-  }
+  "rules": {}
 }

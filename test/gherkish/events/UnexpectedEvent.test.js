@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { UnexpectedEvent } = Events;
 
 describe('UnexpectedEvent', () => {
-
   let session;
   let state;
 
@@ -37,5 +36,4 @@ describe('UnexpectedEvent', () => {
     expect(state.events[0].source.line).toBe('anything');
     expect(state.events[0].data).toEqual({});
   });
-
 });

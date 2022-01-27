@@ -1,6 +1,5 @@
 // All functions use setTimeout and promises to simulate asynchronous operations
 module.exports = class Wall {
-
   constructor(height) {
     this._height = height;
     this._bottles = [];
@@ -49,5 +48,4 @@ module.exports = class Wall {
       }, 100);
     });
   }
-
 };

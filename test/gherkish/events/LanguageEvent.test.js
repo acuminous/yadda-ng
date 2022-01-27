@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { LanguageEvent } = Events;
 
 describe('LanguageEvent', () => {
-
   let session;
   let state;
 
@@ -42,5 +41,4 @@ describe('LanguageEvent', () => {
     expect(state.events[0].source.line).toBe('#Language : Pirate ');
     expect(state.events[0].data.name).toBe('Pirate');
   });
-
 });

@@ -3,9 +3,7 @@ const expect = require('expect');
 const { State } = require('..');
 
 describe('State', () => {
-
   describe('Get', () => {
-
     it('should return undefined when getting something that does not exist in the default scope', () => {
       expect(new State().get('foo')).toBe(undefined);
     });
@@ -47,14 +45,12 @@ describe('State', () => {
   });
 
   describe('Set', () => {
-
     it('should error when the specified scope does not exist', () => {
       expect(() => new State().set('foo', 1, 'missing')).toThrow('Invalid scope: missing');
     });
   });
 
   describe('Remove', () => {
-
     it('should remove the specified item from the default scope', () => {
       const state = new State();
       state.set('foo', 1);
@@ -77,7 +73,6 @@ describe('State', () => {
   });
 
   describe('Clear', () => {
-
     it('should remove all items from all scopes', () => {
       const state = new State();
       state.set('foo', 1, State.SCENARIO_SCOPE);
@@ -105,7 +100,5 @@ describe('State', () => {
     it('should error when the specified scope does not exist', () => {
       expect(() => new State().clear(State.SCENARIO_SCOPE, 'missing')).toThrow('Invalid scope: missing');
     });
-
   });
-
 });

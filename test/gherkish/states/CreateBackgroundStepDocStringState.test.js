@@ -5,7 +5,6 @@ const { SpecificationParser, Specification, StateMachine, States, Languages } = 
 const { CreateBackgroundStepDocStringState } = States;
 
 describe('CreateBackgroundStepDocStringState', () => {
-
   let specification;
   let machine;
   let state;
@@ -26,7 +25,6 @@ describe('CreateBackgroundStepDocStringState', () => {
   });
 
   describe('Blank Line Events', () => {
-
     it('should not cause transition', () => {
       session.docString = { token: '---' };
       handle('');
@@ -35,15 +33,13 @@ describe('CreateBackgroundStepDocStringState', () => {
   });
 
   describe('DocString Indent Start Events', () => {
-
     it('should error on DocStringIndentStart event', () => {
       session.indentation = 0;
-      expect(() => handle('   Some text')).toThrow('\'   Some text\' was unexpected in state: CreateBackgroundStepDocStringState on line 1');
+      expect(() => handle('   Some text')).toThrow("'   Some text' was unexpected in state: CreateBackgroundStepDocStringState on line 1");
     });
   });
 
   describe('DocString Indent Stop Events', () => {
-
     it('should transition to new AfterBackgroundStepDocStringState on DocStringIndentEnd event', () => {
       session.docString = { indentation: 3 };
       session.indentation = 0;
@@ -53,14 +49,12 @@ describe('CreateBackgroundStepDocStringState', () => {
   });
 
   describe('DocString Token Start Events', () => {
-
     it('should error on DocStringTokenStart event', () => {
-      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: CreateBackgroundStepDocStringState on line 1');
+      expect(() => handle('---')).toThrow("'---' was unexpected in state: CreateBackgroundStepDocStringState on line 1");
     });
   });
 
   describe('DocString Token Stop Events', () => {
-
     it('should transition to new AfterBackgroundStepDocStringState on DocStringTokenStop event', () => {
       session.docString = { token: '---' };
       handle('---');
@@ -69,14 +63,12 @@ describe('CreateBackgroundStepDocStringState', () => {
   });
 
   describe('End Events', () => {
-
     it('should transition to final on end event', () => {
       expect(() => handle('\u0000')).toThrow('Premature end of specification in state: CreateBackgroundStepDocStringState on line 1');
     });
   });
 
   describe('DocString Events', () => {
-
     it('should not cause transition', () => {
       session.docString = { token: '---' };
       handle('Some text');
@@ -89,14 +81,11 @@ describe('CreateBackgroundStepDocStringState', () => {
       handle('Some more text');
 
       const exported = specification.serialise();
-      expect(exported.background.steps[0].docString).toBe([
-        'Some text',
-        'Some more text',
-      ].join(os.EOL));
+      expect(exported.background.steps[0].docString).toBe(['Some text', 'Some more text'].join(os.EOL));
     });
   });
 
-  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line) ) {
+  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line)) {
     state.handle({ line, number, indentation }, session);
   }
 });

@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { DocStringEvent } = Events;
 
 describe('DocStringEvent', () => {
-
   let session;
   let state;
 
@@ -12,8 +11,8 @@ describe('DocStringEvent', () => {
     session = {
       language: Languages.utils.getDefault(),
       docString: {
-        indentation: 3
-      }
+        indentation: 3,
+      },
     };
     state = new StubState();
   });

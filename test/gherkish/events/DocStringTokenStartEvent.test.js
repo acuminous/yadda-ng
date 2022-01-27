@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { DocStringTokenStartEvent } = Events;
 
 describe('DocStringTokenStartEvent', () => {
-
   let session;
   let state;
 
@@ -79,5 +78,4 @@ describe('DocStringTokenStartEvent', () => {
     expect(state.events[0].source.line).toBe('   """   ');
     expect(session.docString.token).toBe('"""');
   });
-
 });

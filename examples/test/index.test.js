@@ -5,11 +5,6 @@ const { simpleLibrary, convertersLibrary, duplicateLibrary1, duplicateLibrary2 }
 
 Gherkish.Languages.utils.setDefault('English');
 
-const features = compileFeatures({ libraries: [
-  simpleLibrary,
-  convertersLibrary,
-  duplicateLibrary1,
-  duplicateLibrary2,
-] });
+const features = compileFeatures({ libraries: [simpleLibrary, convertersLibrary, duplicateLibrary1, duplicateLibrary2] });
 
 new MochaPlaybook({ features }).run();

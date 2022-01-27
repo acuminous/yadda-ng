@@ -3,7 +3,6 @@ const { Gherkish } = require('../../..');
 const { English } = Gherkish.Languages;
 
 describe('English', () => {
-
   it('should generalise text', () => {
     expect(new English().generalise('Given A')).toBe('A');
     expect(new English().generalise('When A')).toBe('A');

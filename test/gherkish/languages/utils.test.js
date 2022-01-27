@@ -11,13 +11,12 @@ class Esperanto extends BaseLanguage {
         feature: [],
         scenario: [],
         background: [],
-      }
+      },
     });
   }
 }
 
 describe('utils', () => {
-
   afterEach(() => {
     utils.setDefault('none');
   });
@@ -66,5 +65,4 @@ describe('utils', () => {
     expect(utils.find('Rimmer').name).toBe('Rimmer');
     expect(utils.getDefault().name).toBe('None');
   });
-
 });

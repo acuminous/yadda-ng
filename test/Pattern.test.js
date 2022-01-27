@@ -3,7 +3,6 @@ const expect = require('expect');
 const { Pattern } = require('..');
 
 describe('Pattern', () => {
-
   it('should indicate when it supports some text', () => {
     expect(new Pattern(/foo/).supports('foo')).toBe(true);
     expect(new Pattern(/foo/).supports('bar')).toBe(false);
@@ -28,5 +27,4 @@ describe('Pattern', () => {
     expect(new Pattern(/(?:(.*)|(.*))/).countMatchingGroups()).toBe(2);
     expect(new Pattern(/(.*)|(.*)/).countMatchingGroups()).toBe(2);
   });
-
 });

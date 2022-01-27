@@ -3,9 +3,7 @@ const { Gherkish } = require('../../..');
 const { SpecificationParser, Specification, StateMachine, States, Languages } = Gherkish;
 const { AfterBackgroundStepDocStringState } = States;
 
-
 describe('AfterBackgroundStepDocStringState', () => {
-
   let specification;
   let machine;
   let state;
@@ -26,7 +24,6 @@ describe('AfterBackgroundStepDocStringState', () => {
   });
 
   describe('Annotation Events', () => {
-
     it('should not cause transition', () => {
       handle('@foo=bar');
       expect(machine.state).toBe('AfterBackgroundStepDocStringState');
@@ -34,14 +31,12 @@ describe('AfterBackgroundStepDocStringState', () => {
   });
 
   describe('Background Events', () => {
-
     it('should error', () => {
-      expect(() => handle('Background: foo')).toThrow('\'Background: foo\' was unexpected in state: AfterBackgroundStepDocStringState on line 1');
+      expect(() => handle('Background: foo')).toThrow("'Background: foo' was unexpected in state: AfterBackgroundStepDocStringState on line 1");
     });
   });
 
   describe('Blank Line Events', () => {
-
     it('should not cause transition', () => {
       handle('');
       expect(machine.state).toBe('AfterBackgroundStepDocStringState');
@@ -49,53 +44,46 @@ describe('AfterBackgroundStepDocStringState', () => {
   });
 
   describe('DocString Indent Start Events', () => {
-
     it('should error on DocStringIndentStart event', () => {
       session.indentation = 0;
-      expect(() => handle('   Some text')).toThrow('\'   Some text\' was unexpected in state: AfterBackgroundStepDocStringState on line 1');
+      expect(() => handle('   Some text')).toThrow("'   Some text' was unexpected in state: AfterBackgroundStepDocStringState on line 1");
     });
   });
 
   describe('DocString Indent Stop Events', () => {
-
     it('should error on DocStringIndentStop event', () => {
       session.docString = { indentation: 3 };
       session.indentation = 0;
-      expect(() => handle('Some text')).toThrow('\'Some text\' was unexpected in state: AfterBackgroundStepDocStringState on line 1');
+      expect(() => handle('Some text')).toThrow("'Some text' was unexpected in state: AfterBackgroundStepDocStringState on line 1");
     });
   });
 
   describe('DocString Token Start Events', () => {
-
     it('should error on DocStringTokenStart event', () => {
-      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: AfterBackgroundStepDocStringState on line 1');
+      expect(() => handle('---')).toThrow("'---' was unexpected in state: AfterBackgroundStepDocStringState on line 1");
     });
   });
 
   describe('DocString Token Stop Events', () => {
-
     it('should error on DocStringTokenStop event', () => {
       session.docString = { token: '---' };
-      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: AfterBackgroundStepDocStringState on line 1');
+      expect(() => handle('---')).toThrow("'---' was unexpected in state: AfterBackgroundStepDocStringState on line 1");
     });
   });
 
   describe('End Events', () => {
-
     it('should transition to final on end event', () => {
       expect(() => handle('\u0000')).toThrow('Premature end of specification in state: AfterBackgroundStepDocStringState on line 1');
     });
   });
 
   describe('Feature Events', () => {
-
     it('should error on feature event', () => {
-      expect(() => handle('Feature: foo')).toThrow('\'Feature: foo\' was unexpected in state: AfterBackgroundStepDocStringState on line 1');
+      expect(() => handle('Feature: foo')).toThrow("'Feature: foo' was unexpected in state: AfterBackgroundStepDocStringState on line 1");
     });
   });
 
   describe('Multi Line Comment Events', () => {
-
     it('should transition to ConsumeMultiLineCommentState', () => {
       handle('###');
       expect(machine.state).toBe('ConsumeMultiLineCommentState');
@@ -103,14 +91,12 @@ describe('AfterBackgroundStepDocStringState', () => {
   });
 
   describe('Language Events', () => {
-
     it('should error', () => {
-      expect(() => handle('# Language: English')).toThrow('\'# Language: English\' was unexpected in state: AfterBackgroundStepDocStringState on line 1');
+      expect(() => handle('# Language: English')).toThrow("'# Language: English' was unexpected in state: AfterBackgroundStepDocStringState on line 1");
     });
   });
 
   describe('Scenario Events', () => {
-
     it('should transition to CreateScenarioState on scenario event', () => {
       handle('Scenario: foo');
       expect(machine.state).toBe('CreateScenarioState');
@@ -140,7 +126,6 @@ describe('AfterBackgroundStepDocStringState', () => {
   });
 
   describe('Single Line Comment Events', () => {
-
     it('should not cause transition', () => {
       handle('# foo');
       expect(machine.state).toBe('AfterBackgroundStepDocStringState');
@@ -148,7 +133,6 @@ describe('AfterBackgroundStepDocStringState', () => {
   });
 
   describe('Step Events', () => {
-
     it('should transition to new AfterBackgroundStepState on step event', () => {
       handle('Given some text');
       expect(machine.state).toBe('AfterBackgroundStepState');
@@ -167,7 +151,6 @@ describe('AfterBackgroundStepDocStringState', () => {
       handle('@two = 2');
       handle('Given some text');
 
-
       const exported = specification.serialise();
       expect(exported.background.steps[1].annotations.length).toBe(2);
       expect(exported.background.steps[1].annotations[0].name).toBe('one');
@@ -177,7 +160,7 @@ describe('AfterBackgroundStepDocStringState', () => {
     });
   });
 
-  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line) ) {
+  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line)) {
     state.handle({ line, number, indentation }, session);
   }
 });

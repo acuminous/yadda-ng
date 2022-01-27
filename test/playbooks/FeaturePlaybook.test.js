@@ -5,19 +5,16 @@ const { FeaturePlaybook } = Playbooks;
 const { DynamicStep } = Steps;
 
 describe('Feature Playbook', () => {
-
   it('should run features', async () => {
-    const library = new Library()
-      .define('one', () => {})
-      .define('two');
-    const librarian = new Librarian({ libraries: [ library ] });
+    const library = new Library().define('one', () => {}).define('two');
+    const librarian = new Librarian({ libraries: [library] });
     const step1 = new DynamicStep({ librarian, text: 'one', generalised: 'one' });
     const step2 = new DynamicStep({ librarian, text: 'two', generalised: 'two' });
-    const scenario1 = new Scenario({ title: 'Scenario A', steps: [ step1, step2 ] });
-    const scenario2 = new Scenario({ title: 'Scenario B', steps: [ step1, step2 ] });
-    const feature1 = new Feature({ title: 'Feature A', scenarios: [ scenario1, scenario2 ] });
-    const feature2 = new Feature({ title: 'Feature B', scenarios: [ scenario1, scenario2 ] });
-    const playbook = new FeaturePlaybook({ features: [ feature1, feature2 ]});
+    const scenario1 = new Scenario({ title: 'Scenario A', steps: [step1, step2] });
+    const scenario2 = new Scenario({ title: 'Scenario B', steps: [step1, step2] });
+    const feature1 = new Feature({ title: 'Feature A', scenarios: [scenario1, scenario2] });
+    const feature2 = new Feature({ title: 'Feature B', scenarios: [scenario1, scenario2] });
+    const playbook = new FeaturePlaybook({ features: [feature1, feature2] });
 
     const report = await playbook.run();
     expect(report.summary.run).toBe(4);
@@ -43,16 +40,19 @@ describe('Feature Playbook', () => {
 
     const library1 = new Library({ name: 'A' })
       .define('one', () => {})
-      .define('two', () => { run = true; });
-      const library2 = new Library({ name: 'B' })
-        .define(/TWO/i, () => { throw new Error('Wrong Step'); });
+      .define('two', () => {
+        run = true;
+      });
+    const library2 = new Library({ name: 'B' }).define(/TWO/i, () => {
+      throw new Error('Wrong Step');
+    });
 
-    const librarian = new Librarian({ libraries: [ library1, library2 ] });
+    const librarian = new Librarian({ libraries: [library1, library2] });
     const step1 = new DynamicStep({ librarian, text: 'one', generalised: 'one' });
     const step2 = new DynamicStep({ librarian, text: 'two', generalised: 'two' });
-    const scenario = new Scenario({ title: 'Scenario A', steps: [ step1, step2 ] });
-    const feature = new Feature({ title: 'Feature A', scenarios: [ scenario ] });
-    const playbook = new FeaturePlaybook({ features: [ feature ]});
+    const scenario = new Scenario({ title: 'Scenario A', steps: [step1, step2] });
+    const feature = new Feature({ title: 'Feature A', scenarios: [scenario] });
+    const playbook = new FeaturePlaybook({ features: [feature] });
 
     const report = await playbook.run();
     expect(report.summary.run).toBe(2);
@@ -62,18 +62,19 @@ describe('Feature Playbook', () => {
   it('should prefer steps from current library even when the previous test is pending', async () => {
     let run = false;
 
-    const library1 = new Library()
-      .define('one')
-      .define('two', () => { run = true; });
-      const library2 = new Library()
-        .define(/TWO/i, () => { throw new Error('Wrong Step'); });
+    const library1 = new Library().define('one').define('two', () => {
+      run = true;
+    });
+    const library2 = new Library().define(/TWO/i, () => {
+      throw new Error('Wrong Step');
+    });
 
-    const librarian = new Librarian({ libraries: [ library1, library2 ] });
+    const librarian = new Librarian({ libraries: [library1, library2] });
     const step1 = new DynamicStep({ librarian, text: 'one', generalised: 'one' });
     const step2 = new DynamicStep({ librarian, text: 'two', generalised: 'two' });
-    const scenario = new Scenario({ title: 'Scenario A', steps: [ step1, step2 ] });
-    const feature = new Feature({ title: 'Feature A', scenarios: [ scenario ] });
-    const playbook = new FeaturePlaybook({ features: [ feature ]});
+    const scenario = new Scenario({ title: 'Scenario A', steps: [step1, step2] });
+    const feature = new Feature({ title: 'Feature A', scenarios: [scenario] });
+    const playbook = new FeaturePlaybook({ features: [feature] });
 
     const report = await playbook.run();
     expect(report.summary.pending).toBe(1);
@@ -83,28 +84,26 @@ describe('Feature Playbook', () => {
 
   it('should report undefined steps', async () => {
     const library = new Library();
-    const librarian = new Librarian({ libraries: [ library ] });
+    const librarian = new Librarian({ libraries: [library] });
     const step = new DynamicStep({ librarian, text: 'one', generalised: 'generalised' });
-    const scenario = new Scenario({ title: 'Scenario A', steps: [ step ] });
-    const feature = new Feature({ title: 'Feature A', scenarios: [ scenario ] });
-    const playbook = new FeaturePlaybook({ features: [ feature ]});
+    const scenario = new Scenario({ title: 'Scenario A', steps: [step] });
+    const feature = new Feature({ title: 'Feature A', scenarios: [scenario] });
+    const playbook = new FeaturePlaybook({ features: [feature] });
 
     const report = await playbook.run();
     expect(report.steps.length).toBe(1);
     expect(report.steps[0].step).toBe(step.text);
     expect(report.steps[0].status).toBe('undefined');
-    expect(report.steps[0].suggestion).toBe('.define(\'generalised\', (state) => { // your code here })');
+    expect(report.steps[0].suggestion).toBe(".define('generalised', (state) => { // your code here })");
   });
 
   it('should report ambiguous steps', async () => {
-    const library = new Library()
-      .define(/\w+/, () => {})
-      .define(/\w*/, () => {});
-    const librarian = new Librarian({ libraries: [ library ] });
+    const library = new Library().define(/\w+/, () => {}).define(/\w*/, () => {});
+    const librarian = new Librarian({ libraries: [library] });
     const step = new DynamicStep({ librarian, text: 'one', generalised: 'one' });
-    const scenario = new Scenario({ title: 'Scenario A', steps: [ step ] });
-    const feature = new Feature({ title: 'Feature A', scenarios: [ scenario ] });
-    const playbook = new FeaturePlaybook({ features: [ feature ]});
+    const scenario = new Scenario({ title: 'Scenario A', steps: [step] });
+    const feature = new Feature({ title: 'Feature A', scenarios: [scenario] });
+    const playbook = new FeaturePlaybook({ features: [feature] });
 
     const report = await playbook.run();
     expect(report.steps.length).toBe(1);
@@ -114,13 +113,14 @@ describe('Feature Playbook', () => {
   });
 
   it('should report step errors', async () => {
-    const library = new Library()
-      .define('one', () => { throw new Error('oh noes!'); });
-    const librarian = new Librarian({ libraries: [ library ] });
+    const library = new Library().define('one', () => {
+      throw new Error('oh noes!');
+    });
+    const librarian = new Librarian({ libraries: [library] });
     const step = new DynamicStep({ librarian, text: 'one', generalised: 'one' });
-    const scenario = new Scenario({ title: 'Scenario A', steps: [ step ] });
-    const feature = new Feature({ title: 'Feature A', scenarios: [ scenario ] });
-    const playbook = new FeaturePlaybook({ features: [ feature ]});
+    const scenario = new Scenario({ title: 'Scenario A', steps: [step] });
+    const feature = new Feature({ title: 'Feature A', scenarios: [scenario] });
+    const playbook = new FeaturePlaybook({ features: [feature] });
 
     const report = await playbook.run();
     expect(report.steps.length).toBe(1);
@@ -130,13 +130,12 @@ describe('Feature Playbook', () => {
   });
 
   it('should time step execution', async () => {
-    const library = new Library()
-      .define('one', async () => new Promise((resolve) => setTimeout(resolve, 201)));
-    const librarian = new Librarian({ libraries: [ library ] });
+    const library = new Library().define('one', async () => new Promise((resolve) => setTimeout(resolve, 201)));
+    const librarian = new Librarian({ libraries: [library] });
     const step = new DynamicStep({ librarian, text: 'one', generalised: 'one' });
-    const scenario = new Scenario({ title: 'Scenario A', steps: [ step ] });
-    const feature = new Feature({ title: 'Feature A', scenarios: [ scenario ] });
-    const playbook = new FeaturePlaybook({ features: [ feature ]});
+    const scenario = new Scenario({ title: 'Scenario A', steps: [step] });
+    const feature = new Feature({ title: 'Feature A', scenarios: [scenario] });
+    const playbook = new FeaturePlaybook({ features: [feature] });
 
     const report = await playbook.run();
     expect(report.steps.length).toBe(1);

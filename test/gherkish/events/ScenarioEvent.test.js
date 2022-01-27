@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { ScenarioEvent } = Events;
 
 describe('ScenarioEvent', () => {
-
   let session;
   let state;
 
@@ -32,7 +31,6 @@ describe('ScenarioEvent', () => {
     expect(event.handle({ line: 'Scenario' }, session, state)).toBe(false);
   });
 
-
   it('should recognise localised scenarios', () => {
     const event = new ScenarioEvent();
     const session = { language: Languages.utils.get('Pirate') };
@@ -57,5 +55,4 @@ describe('ScenarioEvent', () => {
     expect(state.events[0].source.line).toBe('Scenario:  Some scenario ');
     expect(state.events[0].data.title).toBe('Some scenario');
   });
-
 });

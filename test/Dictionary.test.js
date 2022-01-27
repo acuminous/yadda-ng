@@ -3,9 +3,7 @@ const { Dictionary, Converters } = require('..');
 const { UpperCaseConverter, LowerCaseConverter, PassThroughConverter } = Converters;
 
 describe('Dictionary', () => {
-
   describe('Combination', () => {
-
     it('should combine multiple dictionaries', () => {
       const dictionary1 = new Dictionary().define('term1');
       const dictionary2 = new Dictionary().define('term2');
@@ -25,10 +23,8 @@ describe('Dictionary', () => {
   });
 
   describe('Term Expansion', () => {
-
     it('should expand templates without terms to a fully matching pattern', () => {
-      const dictionary = new Dictionary()
-        .define('no terms here', /.*/);
+      const dictionary = new Dictionary().define('no terms here', /.*/);
       expect(dictionary.expand('no terms here').regexp.source).toBe('^no terms here$');
     });
 
@@ -57,19 +53,14 @@ describe('Dictionary', () => {
     });
 
     it('should subsitute simple terms', () => {
-      const dictionary = new Dictionary()
-        .define('num', /(\d+)/)
-        .define('word', /(\w+)/);
+      const dictionary = new Dictionary().define('num', /(\d+)/).define('word', /(\w+)/);
       expect(dictionary.expand('$num').regexp.source).toBe('^(\\d+)$');
       expect(dictionary.expand('$num $term $num').regexp.source).toBe('^(\\d+) (.+) (\\d+)$');
       expect(dictionary.expand('$num meh $term meh $word').regexp.source).toBe('^(\\d+) meh (.+) meh (\\w+)$');
     });
 
     it('should subsitute complex terms', () => {
-      const dictionary = new Dictionary()
-        .define('address', '$number, $street')
-        .define('number', /(\d+)/)
-        .define('street', /(\w+)/);
+      const dictionary = new Dictionary().define('address', '$number, $street').define('number', /(\d+)/).define('street', /(\w+)/);
       expect(dictionary.expand('$address').regexp.source).toBe('^(\\d+), (\\w+)$');
     });
 
@@ -81,7 +72,6 @@ describe('Dictionary', () => {
   });
 
   describe('Converters', () => {
-
     it('should default term converters', () => {
       const dictionary = new Dictionary().define('term', /(.*)/);
       const { converters } = dictionary.expand('$term $term');
@@ -91,7 +81,7 @@ describe('Dictionary', () => {
     });
 
     it('should use the specified term converters', () => {
-      const dictionary = new Dictionary().define('term', /(.*) (.*)/, [ new UpperCaseConverter(), new LowerCaseConverter() ] );
+      const dictionary = new Dictionary().define('term', /(.*) (.*)/, [new UpperCaseConverter(), new LowerCaseConverter()]);
       const { converters } = dictionary.expand('$term $term');
       expect(converters.length).toBe(4);
       expect(converters[0].convert({}, 'a')).resolves.toEqual('A');
@@ -101,7 +91,7 @@ describe('Dictionary', () => {
     });
 
     it('should allow singular term converters', () => {
-      const dictionary = new Dictionary().define('term', /(.*)/, new UpperCaseConverter() );
+      const dictionary = new Dictionary().define('term', /(.*)/, new UpperCaseConverter());
       const { converters } = dictionary.expand('$term');
       expect(converters.length).toBe(1);
       expect(converters[0].convert({}, 'a')).resolves.toEqual('A');
@@ -109,12 +99,12 @@ describe('Dictionary', () => {
 
     it('should raise an error when an expandable term is defined with too few converter arguments', () => {
       expect(() => new Dictionary().define('$term', /(.*)/, [])).toThrow('Pattern [(.*)] for term [$term] has 1 matching group, but only a total of 0 converter arguments were specified');
-      expect(() => new Dictionary().define('$term', /(.*) (.*) (.*)/, [ new PassThroughConverter({ demand: 2 }) ])).toThrow('Pattern [(.*) (.*) (.*)] for term [$term] has 3 matching groups, but only a total of 2 converter arguments were specified');
+      expect(() => new Dictionary().define('$term', /(.*) (.*) (.*)/, [new PassThroughConverter({ demand: 2 })])).toThrow('Pattern [(.*) (.*) (.*)] for term [$term] has 3 matching groups, but only a total of 2 converter arguments were specified');
     });
 
     it('should raise an error when an expandable term is defined with many few converter arguments', () => {
-      expect(() => new Dictionary().define('$term', /(.*)/, [ new PassThroughConverter(), new PassThroughConverter() ])).toThrow('Pattern [(.*)] for term [$term] has only 1 matching group, but a total of 2 converter arguments were specified');
-      expect(() => new Dictionary().define('$term', /(.*)/, [ new PassThroughConverter({ demand: 2 }) ])).toThrow('Pattern [(.*)] for term [$term] has only 1 matching group, but a total of 2 converter arguments were specified');
+      expect(() => new Dictionary().define('$term', /(.*)/, [new PassThroughConverter(), new PassThroughConverter()])).toThrow('Pattern [(.*)] for term [$term] has only 1 matching group, but a total of 2 converter arguments were specified');
+      expect(() => new Dictionary().define('$term', /(.*)/, [new PassThroughConverter({ demand: 2 })])).toThrow('Pattern [(.*)] for term [$term] has only 1 matching group, but a total of 2 converter arguments were specified');
     });
   });
 
@@ -146,7 +136,6 @@ describe('Dictionary', () => {
   });
 
   describe('Error Handling', () => {
-
     it('should report prefixes that are not single, non word characters', () => {
       expect(() => new Dictionary({ prefix: 'x' })).toThrow('Prefix [x] must be a single, non word character');
       expect(() => new Dictionary({ prefix: '$$' })).toThrow('Prefix [$$] must be a single, non word character');
@@ -164,14 +153,11 @@ describe('Dictionary', () => {
 
     it('should report invalid patterns', () => {
       expect(() => new Dictionary().expand('(')).toThrow('Error expanding template [(]: Invalid regular expression: /^($/: Unterminated group');
-      expect(() => new Dictionary().expand('\\\\$term')).toThrow('Error expanding template [\\\\$term]: Invalid regular expression: /^\\(.+)$/: Unmatched \')\'');
+      expect(() => new Dictionary().expand('\\\\$term')).toThrow("Error expanding template [\\\\$term]: Invalid regular expression: /^\\(.+)$/: Unmatched ')'");
     });
 
     it('should report cyclic definitions', () => {
-      const dictionary = new Dictionary()
-        .define('a', '$a')
-        .define('b', '$c')
-        .define('c', '$b');
+      const dictionary = new Dictionary().define('a', '$a').define('b', '$c').define('c', '$b');
       expect(() => dictionary.expand('$a')).toThrow('Cyclic definition for term [a]');
       expect(() => dictionary.expand('$b')).toThrow('Indirect cyclic definition for term [b], with resolution history [b, c]');
     });

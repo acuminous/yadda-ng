@@ -1,4 +1,3 @@
-
 const expect = require('expect');
 const os = require('os');
 const { Gherkish } = require('../..');
@@ -7,7 +6,6 @@ const { BaseState } = States;
 const { AnnotationEvent, BackgroundEvent, BlankLineEvent, DocStringTokenStartEvent, EndEvent, FeatureEvent, LanguageEvent, MultiLineCommentEvent, ScenarioEvent, SingleLineCommentEvent, StepEvent, TextEvent } = Events;
 
 describe('Specification Parser', () => {
-
   it('should parse specifications using the default language (none)', () => {
     const text = [
       '@skip',
@@ -102,11 +100,7 @@ describe('Specification Parser', () => {
   });
 
   it('should report missing languages', () => {
-    const text = [
-      '#language: Missing',
-      'Feature: Some feature',
-    ].join(os.EOL);
-
+    const text = ['#language: Missing', 'Feature: Some feature'].join(os.EOL);
 
     expect(() => new SpecificationParser().parse(text)).toThrow('Language: Missing was not found');
   });
@@ -215,21 +209,13 @@ describe('Specification Parser', () => {
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].text).toBe('First background step');
-    expect(document.background.steps[0].docString).toBe([
-      'DocString 1',
-      '   DocString 2',
-      'DocString 3   '
-    ].join(os.EOL));
+    expect(document.background.steps[0].docString).toBe(['DocString 1', '   DocString 2', 'DocString 3   '].join(os.EOL));
     expect(document.background.steps[1].text).toBe('Second background step');
 
     expect(document.scenarios.length).toBe(1);
     expect(document.scenarios[0].steps.length).toBe(2);
     expect(document.scenarios[0].steps[0].text).toBe('First step');
-    expect(document.scenarios[0].steps[0].docString).toBe([
-      'DocString 1',
-      '   DocString 2',
-      'DocString 3   ',
-    ].join(os.EOL));
+    expect(document.scenarios[0].steps[0].docString).toBe(['DocString 1', '   DocString 2', 'DocString 3   '].join(os.EOL));
     expect(document.scenarios[0].steps[1].text).toBe('Second step');
   });
 
@@ -257,24 +243,10 @@ describe('Specification Parser', () => {
     expect(() => new SpecificationParser().parse(text)).toThrow("'         ---' was unexpected in state: AfterBackgroundStepDocStringState on line 11");
   });
 
-
   it('should not allow multiple DocStrings in scenario steps', () => {
-    const text = [
-      '@skip',
-      'Feature: Some feature',
-      '',
-      '   Scenario: First scenario',
-      '      First step',
-      '         ---',
-      '         DocString 1',
-      '            DocString 2',
-      '         DocString 3   ',
-      '         ---',
-      '         ---',
-      '         Should error',
-      '         ---',
-      '     Second step',
-    ].join(os.EOL);
+    const text = ['@skip', 'Feature: Some feature', '', '   Scenario: First scenario', '      First step', '         ---', '         DocString 1', '            DocString 2', '         DocString 3   ', '         ---', '         ---', '         Should error', '         ---', '     Second step'].join(
+      os.EOL
+    );
 
     expect(() => new SpecificationParser().parse(text)).toThrow("'         ---' was unexpected in state: AfterScenarioStepDocStringState on line 11'");
   });
@@ -309,21 +281,13 @@ describe('Specification Parser', () => {
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].text).toBe('First background step');
-    expect(document.background.steps[0].docString).toBe([
-      'DocString 1',
-      '   DocString 2',
-      'DocString 3   ',
-    ].join(os.EOL));
+    expect(document.background.steps[0].docString).toBe(['DocString 1', '   DocString 2', 'DocString 3   '].join(os.EOL));
     expect(document.background.steps[1].text).toBe('Second background step');
 
     expect(document.scenarios.length).toBe(1);
     expect(document.scenarios[0].steps.length).toBe(2);
     expect(document.scenarios[0].steps[0].text).toBe('First step');
-    expect(document.scenarios[0].steps[0].docString).toBe([
-      'DocString 1',
-      '   DocString 2',
-      'DocString 3   '
-    ].join(os.EOL));
+    expect(document.scenarios[0].steps[0].docString).toBe(['DocString 1', '   DocString 2', 'DocString 3   '].join(os.EOL));
     expect(document.scenarios[0].steps[1].text).toBe('Second step');
   });
 
@@ -360,26 +324,17 @@ describe('Specification Parser', () => {
 
     expect(document.background.steps.length).toBe(2);
     expect(document.background.steps[0].generalised).toBe('a background step');
-    expect(document.background.steps[0].docString).toBe([
-      'Given a DocString',
-      'Given another DocString',
-      '                       '
-    ].join(os.EOL));
+    expect(document.background.steps[0].docString).toBe(['Given a DocString', 'Given another DocString', '                       '].join(os.EOL));
     expect(document.background.steps[1].generalised).toBe('another background step');
 
     expect(document.scenarios.length).toBe(1);
     expect(document.scenarios[0].steps.length).toBe(2);
     expect(document.scenarios[0].steps[0].generalised).toBe('a step');
-    expect(document.scenarios[0].steps[0].docString).toBe([
-      'Given a DocString',
-      'Given another DocString',
-      '                       ',
-    ].join(os.EOL));
+    expect(document.scenarios[0].steps[0].docString).toBe(['Given a DocString', 'Given another DocString', '                       '].join(os.EOL));
     expect(document.scenarios[0].steps[1].generalised).toBe('another step');
   });
 
   describe('Annotations', () => {
-
     it('should emit simple annotation events', () => {
       const state = new StubState((event) => {
         expect(event.name).toBe('AnnotationEvent');
@@ -437,7 +392,6 @@ describe('Specification Parser', () => {
   });
 
   describe('Features', () => {
-
     it('should emit feature events', () => {
       const state = new StubState((event) => {
         expect(event.name).toBe('FeatureEvent');
@@ -465,7 +419,6 @@ describe('Specification Parser', () => {
     });
 
     it('should localise feature keyword', () => {
-
       const state = new StubState((event) => {
         expect(event.source.line).toBe('Feature:   Some feature   ');
         expect(event.data.title).toBe('Some feature');
@@ -479,7 +432,6 @@ describe('Specification Parser', () => {
   });
 
   describe('Scenarios', () => {
-
     it('should emit scenario events', () => {
       const state = new StubState((event) => {
         expect(event.name).toBe('ScenarioEvent');
@@ -508,7 +460,6 @@ describe('Specification Parser', () => {
   });
 
   describe('Backgrounds', () => {
-
     it('should emit background events', () => {
       const state = new StubState((event) => {
         expect(event.name).toBe('BackgroundEvent');
@@ -537,7 +488,6 @@ describe('Specification Parser', () => {
   });
 
   describe('Blank lines', () => {
-
     it('should emit blank line events (1)', () => {
       const state = new StubState((event) => {
         expect(event.name).toBe('BlankLineEvent');
@@ -566,7 +516,6 @@ describe('Specification Parser', () => {
   });
 
   describe('Step', () => {
-
     it('should emit step events when matching localised steps', () => {
       const state = new StubState((event) => {
         expect(event.name).toBe('StepEvent');
@@ -625,7 +574,6 @@ describe('Specification Parser', () => {
   });
 
   describe('Text', () => {
-
     it('should trim text', () => {
       const state = new StubState((event) => {
         expect(event.data.text).toBe('Some text');
@@ -639,7 +587,6 @@ describe('Specification Parser', () => {
   });
 
   describe('Single line comments', () => {
-
     it('should emit single line comment events', () => {
       const state = new StubState((event) => {
         expect(event.name).toBe('SingleLineCommentEvent');
@@ -669,7 +616,6 @@ describe('Specification Parser', () => {
   });
 
   describe('Multi line comments', () => {
-
     it('should emit multi line comment events', () => {
       const state = new StubState((event) => {
         expect(event.name).toBe('MultiLineCommentEvent');
@@ -698,7 +644,7 @@ describe('Specification Parser', () => {
 
   class StubState extends BaseState {
     constructor(assertions) {
-      super({ events: [ EndEvent, DocStringTokenStartEvent, LanguageEvent, MultiLineCommentEvent, SingleLineCommentEvent, AnnotationEvent, FeatureEvent, BackgroundEvent, ScenarioEvent, BlankLineEvent, StepEvent, TextEvent ] });
+      super({ events: [EndEvent, DocStringTokenStartEvent, LanguageEvent, MultiLineCommentEvent, SingleLineCommentEvent, AnnotationEvent, FeatureEvent, BackgroundEvent, ScenarioEvent, BlankLineEvent, StepEvent, TextEvent] });
       this.count = 0;
       this.assertions = assertions;
     }
@@ -744,5 +690,4 @@ describe('Specification Parser', () => {
       return this;
     }
   }
-
 });

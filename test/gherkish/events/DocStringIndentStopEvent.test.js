@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { DocStringIndentStopEvent } = Events;
 
 describe('DocStringIndentStopEvent', () => {
-
   let session;
   let state;
 
@@ -51,5 +50,4 @@ describe('DocStringIndentStopEvent', () => {
     const event = new DocStringIndentStopEvent();
     expect(event.handle({ line: '   some text   ', indentation: 3 }, session, state)).toBe(false);
   });
-
 });

@@ -15,7 +15,7 @@ describe('Pirate', () => {
     expect(new Pirate().answersToName('other')).toBe(false);
   });
 
-  it('should have no code (they\'re more guidelines really)', () => {
+  it("should have no code (they're more guidelines really)", () => {
     expect(new Pirate().answersToCode(null)).toBe(false);
     expect(new Pirate().answersToCode(undefined)).toBe(false);
     expect(new Pirate().answersToCode('')).toBe(false);

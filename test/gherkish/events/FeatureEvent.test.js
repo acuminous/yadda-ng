@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { FeatureEvent } = Events;
 
 describe('FeatureEvent', () => {
-
   let session;
   let state;
 
@@ -54,5 +53,4 @@ describe('FeatureEvent', () => {
     expect(state.events[0].source.line).toBe('Feature:  Some feature ');
     expect(state.events[0].data.title).toBe('Some feature');
   });
-
 });

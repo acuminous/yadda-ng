@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { AnnotationEvent } = Events;
 
 describe('AnnotationEvent', () => {
-
   let session;
   let state;
 

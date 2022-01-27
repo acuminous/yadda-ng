@@ -2,7 +2,7 @@ const { Library } = require('../../..');
 const { commonDictionary } = require('../dictionaries');
 const assert = require('assert');
 
-module.exports = new Library({ name: 'Converters Library', dictionaries: [ commonDictionary ] })
+module.exports = new Library({ name: 'Converters Library', dictionaries: [commonDictionary] })
   .define('something is $boolean', (state, argument) => {
     state.set('argument', argument);
   })

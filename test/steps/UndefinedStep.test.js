@@ -4,12 +4,11 @@ const { Annotations, Steps, State } = require('../..');
 const { UndefinedStep } = Steps;
 
 describe('UndefinedStep', () => {
-
   it('should run step', async () => {
     const step = new UndefinedStep({ text: 'Given A', generalised: 'A' });
     const outcome = await step.run(new State());
     expect(outcome.status).toBe('undefined');
-    expect(outcome.suggestion).toBe('.define(\'A\', (state) => { // your code here })');
+    expect(outcome.suggestion).toBe(".define('A', (state) => { // your code here })");
   });
 
   it('should not abort', async () => {
@@ -18,7 +17,7 @@ describe('UndefinedStep', () => {
 
     expect(step.isAborted()).toBe(false);
     expect(outcome.status).toBe('undefined');
-    expect(outcome.suggestion).toBe('.define(\'A\', (state) => { // your code here })');
+    expect(outcome.suggestion).toBe(".define('A', (state) => { // your code here })");
   });
 
   it('should advise when pending', async () => {
@@ -50,5 +49,4 @@ describe('UndefinedStep', () => {
     await step.run(state);
     expect(state.get('currentLibrary')).toBe('A');
   });
-
 });

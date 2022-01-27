@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { EndEvent } = Events;
 
 describe('EndEvent', () => {
-
   let session;
   let state;
 
@@ -40,5 +39,4 @@ describe('EndEvent', () => {
     expect(state.events[0].source.line).toBe('\u0000');
     expect(state.events[0].data).toEqual({});
   });
-
 });

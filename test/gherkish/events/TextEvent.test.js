@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { TextEvent } = Events;
 
 describe('TextEvent', () => {
-
   let session;
   let state;
 

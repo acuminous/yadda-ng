@@ -3,7 +3,6 @@ const expect = require('expect');
 const { Annotations } = require('..');
 
 describe('Annotations', () => {
-
   it('should advise when an annotation is missing', () => {
     expect(new Annotations().has('missing')).toBe(false);
   });
@@ -33,5 +32,4 @@ describe('Annotations', () => {
     expect(annotations.get('Bob').value).toEqual(1);
     expect(annotations.get('Jim').value).toEqual(2);
   });
-
 });

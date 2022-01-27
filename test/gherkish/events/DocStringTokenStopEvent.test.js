@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { DocStringTokenStopEvent } = Events;
 
 describe('DocStringTokenStopEvent', () => {
-
   let session;
   let state;
 
@@ -57,5 +56,4 @@ describe('DocStringTokenStopEvent', () => {
 
     expect(event.handle({ line: '   """   ' }, session, state)).toBe(false);
   });
-
 });

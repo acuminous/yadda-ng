@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { MultiLineCommentEvent } = Events;
 
 describe('MultiLineCommentEvent', () => {
-
   let session;
   let state;
 
@@ -42,5 +41,4 @@ describe('MultiLineCommentEvent', () => {
     expect(state.events[0].source.line).toBe('### Some comment ');
     expect(state.events[0].data.text).toBe('Some comment');
   });
-
 });

@@ -3,7 +3,6 @@ const { Converters } = require('../../..');
 const { BaseConverter } = Converters;
 
 module.exports = class GeographicCoordinatesConverter extends BaseConverter {
-
   constructor() {
     super({ debug: Debug('yadda:examples:GeographicCoordinatesConverter') });
   }

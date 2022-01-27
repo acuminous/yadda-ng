@@ -3,7 +3,6 @@ const expect = require('expect');
 const { Converters } = require('../..');
 
 describe('MultiConverter', () => {
-
   it('should combine multiple converters', async () => {
     const converter1 = new Converters.LowerCaseConverter();
     const converter2 = new Converters.UpperCaseConverter();
@@ -20,5 +19,4 @@ describe('MultiConverter', () => {
     const multiConverter = new Converters.MultiConverter({ converters: [converter1, converter2] });
     expect(multiConverter.demand).toBe(2);
   });
-
 });

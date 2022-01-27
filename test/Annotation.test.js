@@ -3,7 +3,6 @@ const expect = require('expect');
 const { Annotation } = require('..');
 
 describe('Annotation', () => {
-
   it('should initilise with single values', () => {
     expect(new Annotation({ name: 'Bob', value: [1] }).values).toEqual([1]);
   });
@@ -12,15 +11,15 @@ describe('Annotation', () => {
     expect(new Annotation({ name: 'Bob', value: [1, 2] }).values).toEqual([1, 2]);
   });
 
-  it('should answer to it\'s own name', () => {
+  it("should answer to it's own name", () => {
     expect(new Annotation({ name: 'Bob' }).answersTo('Bob')).toBe(true);
   });
 
-  it('should answer to it\'s own name with a different case', () => {
+  it("should answer to it's own name with a different case", () => {
     expect(new Annotation({ name: 'bob' }).answersTo('Bob')).toBe(true);
   });
 
-  it('should not answer to another\'s name', () => {
+  it("should not answer to another's name", () => {
     expect(new Annotation({ name: 'Bob' }).answersTo('Jim')).toBe(false);
   });
 
@@ -77,5 +76,4 @@ describe('Annotation', () => {
   it('should error when asked to access multiple values singularly', () => {
     expect(() => new Annotation({ name: 'Bob', value: [1, 2] }).value).toThrow(/Annotation \[Bob\] has multiple values and cannot be accessed in a singular way/);
   });
-
 });

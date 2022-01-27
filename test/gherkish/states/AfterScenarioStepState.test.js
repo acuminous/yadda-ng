@@ -4,7 +4,6 @@ const { SpecificationParser, Specification, StateMachine, States, Languages } = 
 const { AfterScenarioStepState } = States;
 
 describe('AfterScenarioStepState', () => {
-
   let specification;
   let machine;
   let state;
@@ -25,7 +24,6 @@ describe('AfterScenarioStepState', () => {
   });
 
   describe('Annotation Events', () => {
-
     it('should not cause transition', () => {
       handle('@foo=bar');
       expect(machine.state).toBe('AfterScenarioStepState');
@@ -33,14 +31,12 @@ describe('AfterScenarioStepState', () => {
   });
 
   describe('Background Events', () => {
-
     it('should error', () => {
-      expect(() => handle('Background: Meh')).toThrow('\'Background: Meh\' was unexpected in state: AfterScenarioStepState on line 1');
+      expect(() => handle('Background: Meh')).toThrow("'Background: Meh' was unexpected in state: AfterScenarioStepState on line 1");
     });
   });
 
   describe('Blank Line Events', () => {
-
     it('should not cause transition', () => {
       handle('');
       expect(machine.state).toBe('AfterScenarioStepState');
@@ -48,7 +44,6 @@ describe('AfterScenarioStepState', () => {
   });
 
   describe('DocString Indent Start Events', () => {
-
     it('should transition to new CreateScenarioStepDocStringState on DocStringIndentStart event', () => {
       session.indentation = 0;
       handle('   Some text');
@@ -65,16 +60,14 @@ describe('AfterScenarioStepState', () => {
   });
 
   describe('DocString Indent Stop Events', () => {
-
     it('should error on DocStringIndentStop event', () => {
       session.docString = { indentation: 3 };
       session.indentation = 0;
-      expect(() => handle('Some text')).toThrow('\'Some text\' was unexpected in state: AfterScenarioStepState on line 1');
+      expect(() => handle('Some text')).toThrow("'Some text' was unexpected in state: AfterScenarioStepState on line 1");
     });
   });
 
   describe('DocString Token Start Events', () => {
-
     it('should transition to new CreateScenarioStepDocStringState on DocStringTokenStart event', () => {
       handle('---');
       expect(machine.state).toBe('CreateScenarioStepDocStringState');
@@ -82,15 +75,13 @@ describe('AfterScenarioStepState', () => {
   });
 
   describe('DocString Token Stop Events', () => {
-
     it('should error on DocStringTokenStop event', () => {
       session.docString = { token: '---' };
-      expect(() => handle('---')).toThrow('\'---\' was unexpected in state: AfterScenarioStepState on line 1');
+      expect(() => handle('---')).toThrow("'---' was unexpected in state: AfterScenarioStepState on line 1");
     });
   });
 
   describe('End Events', () => {
-
     it('should transition to final on end event', () => {
       handle('\u0000');
       expect(machine.state).toBe('FinalState');
@@ -98,14 +89,12 @@ describe('AfterScenarioStepState', () => {
   });
 
   describe('Feature Events', () => {
-
     it('should error', () => {
-      expect(() => handle('Feature: Meh')).toThrow('\'Feature: Meh\' was unexpected in state: AfterScenarioStepState on line 1');
+      expect(() => handle('Feature: Meh')).toThrow("'Feature: Meh' was unexpected in state: AfterScenarioStepState on line 1");
     });
   });
 
   describe('Multi Line Comment Events', () => {
-
     it('should transition to ConsumeMultiLineCommentState', () => {
       handle('###');
       expect(machine.state).toBe('ConsumeMultiLineCommentState');
@@ -113,14 +102,12 @@ describe('AfterScenarioStepState', () => {
   });
 
   describe('Language Events', () => {
-
     it('should error', () => {
-      expect(() => handle('# Language: English')).toThrow('\'# Language: English\' was unexpected in state: AfterScenarioStepState on line 1');
+      expect(() => handle('# Language: English')).toThrow("'# Language: English' was unexpected in state: AfterScenarioStepState on line 1");
     });
   });
 
   describe('Scenario Events', () => {
-
     it('should transition to CreateScenarioState on scenario event', () => {
       handle('Scenario: foo');
       expect(machine.state).toBe('CreateScenarioState');
@@ -151,7 +138,6 @@ describe('AfterScenarioStepState', () => {
   });
 
   describe('Single Line Comment Events', () => {
-
     it('should not cause transition', () => {
       handle('#');
       expect(machine.state).toBe('AfterScenarioStepState');
@@ -159,7 +145,6 @@ describe('AfterScenarioStepState', () => {
   });
 
   describe('Step Events', () => {
-
     it('should transition to AfterScenarioStepState on step event', () => {
       handle('Second step');
       expect(machine.state).toBe('AfterScenarioStepState');
@@ -189,8 +174,7 @@ describe('AfterScenarioStepState', () => {
     });
   });
 
-  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line) ) {
+  function handle(line, number = 1, indentation = SpecificationParser.getIndentation(line)) {
     state.handle({ line, number, indentation }, session);
   }
-
 });

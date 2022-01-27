@@ -4,7 +4,6 @@ const { Events, Languages } = Gherkish;
 const { BlankLineEvent } = Events;
 
 describe('BlankLineEvent', () => {
-
   let session;
   let state;
 
@@ -40,5 +39,4 @@ describe('BlankLineEvent', () => {
     expect(state.events[0].source.line).toBe('');
     expect(state.events[0].data).toEqual({});
   });
-
 });
