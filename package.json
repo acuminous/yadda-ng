@@ -7,7 +7,6 @@
     "lint": "eslint .",
     "test": "zunit",
     "coverage": "nyc --report html --reporter lcov --reporter text-summary zUnit",
-    "complexity": "es6-plato -r -d ./complexity lib",
     "precommit": "npm run lint && npm run test",
     "prepare": "husky install"
   },
@@ -17,7 +16,6 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "es6-plato": "^1.2.3",
     "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
