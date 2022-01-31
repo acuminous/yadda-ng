@@ -3,10 +3,11 @@ const Script = require('./lib/Script');
 const Playbooks = require('./lib/playbooks');
 const Annotation = require('./lib/Annotation');
 const Annotations = require('./lib/Annotations');
+const Section = require('./lib/Section');
 const Feature = require('./lib/Feature');
 const Scenario = require('./lib/Scenario');
 const Steps = require('./lib/steps');
-const Librarian = require('./lib/Librarian');
+const Libraries = require('./lib/Libraries');
 const Library = require('./lib/Library');
 const Dictionary = require('./lib/Dictionary');
 const Term = require('./lib/Term');
@@ -26,10 +27,11 @@ module.exports = {
   Playbooks,
   Annotations,
   Annotation,
+  Section,
   Feature,
   Scenario,
   Steps,
-  Librarian,
+  Libraries,
   Library,
   Dictionary,
   Term,

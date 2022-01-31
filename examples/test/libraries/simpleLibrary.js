@@ -7,11 +7,15 @@ module.exports = new Library({ name: 'Simple Library', dictionaries: [commonDict
   .define('an $height empty wall', (state, height) => {
     state.set('wall', new Wall(height));
   })
-  .define('$number $colour bottles are standing on the wall', (state, number, colour) => {
-    return Promise.all(new Array(number).fill().map(() => state.get('wall').add(new Bottle({ colour }))));
+  .define('$number $colour bottles are standing on the wall', async (state, number, colour) => {
+    const wall = state.get('wall');
+    await Promise.all(new Array(number).fill().map(() => wall.add(new Bottle({ colour }))));
+    return wall;
   })
-  .define(['$number $colour bottle accidentally falls', '$number $colour bottles accidentally fall'], (state, number, colour) => {
-    return Promise.all(new Array(number).fill().map(() => state.get('wall').remove()));
+  .define(['$number $colour bottle accidentally falls', '$number $colour bottles accidentally fall'], async (state, number, colour) => {
+    const wall = state.get('wall');
+    await Promise.all(new Array(number).fill().map(() => wall.remove()));
+    return wall;
   })
   .define('there are $number $colour bottles standing on the wall', async (state, number, colour) => {
     const wall = state.get('wall');

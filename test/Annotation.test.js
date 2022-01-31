@@ -37,24 +37,24 @@ describe('Annotation', () => {
   });
 
   it('should yield boolean value', () => {
-    eq(new Annotation({ name: 'Bob', value: true }).boolean, true);
-    eq(new Annotation({ name: 'Bob', value: 'tRuE' }).boolean, true);
-    eq(new Annotation({ name: 'Bob', value: 'untrue' }).boolean, false);
-    eq(new Annotation({ name: 'Bob', value: false }).boolean, false);
-    eq(new Annotation({ name: 'Bob', value: 'fAlsE' }).boolean, false);
+    eq(new Annotation({ name: 'Bob', value: true }).booleanValue, true);
+    eq(new Annotation({ name: 'Bob', value: 'tRuE' }).booleanValue, true);
+    eq(new Annotation({ name: 'Bob', value: 'untrue' }).booleanValue, false);
+    eq(new Annotation({ name: 'Bob', value: false }).booleanValue, false);
+    eq(new Annotation({ name: 'Bob', value: 'fAlsE' }).booleanValue, false);
   });
 
   it('should yield numeric value', () => {
-    eq(new Annotation({ name: 'Bob', value: '100' }).number, 100);
+    eq(new Annotation({ name: 'Bob', value: '100' }).numberValue, 100);
   });
 
   it('should yield string value', () => {
-    eq(new Annotation({ name: 'Bob', value: 100 }).string, '100');
+    eq(new Annotation({ name: 'Bob', value: 100 }).stringValue, '100');
   });
 
   it('should yield date value', () => {
     const value = new Date();
-    eq(new Annotation({ name: 'Bob', value: value.toISOString() }).date.time, value.time);
+    eq(new Annotation({ name: 'Bob', value: value.toISOString() }).dateValue.time, value.time);
   });
 
   it('should yield values', () => {

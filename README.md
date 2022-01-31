@@ -5,6 +5,7 @@
 1. Specification Parser
 
 - Example tables
+- Rules
 
 1. Injectable / Configurable competition
 1. Term should use arity class
@@ -12,6 +13,10 @@
 1. Term errors should be better when 0 matching groups: Error: Pattern [$number, $number] for term [coordinates] has only 0 matching groups, but a total of 2 converter arguments were specified
 1. Make argument validation injectable
 1. Localisation
+1. Use event emitter for for mocha hooks
+
+1. Remove Playbook, Feature, Scenario unused filter, map, etc functions
+1. Extend Playbook, Feature and Scenario from Collection (or similar)
 
 - Other languages
 - All specification parser regexes
@@ -24,7 +29,6 @@
     - generalise(text, language)
     - localise(text, language)
     - define(term, translations)
-  - Must tolerate partially complete languages (fallback to English)
 - Directives (language) - Language cannot be localised (because by implication the language has not yet been set)
 
 1. Dedupe scenario and feature

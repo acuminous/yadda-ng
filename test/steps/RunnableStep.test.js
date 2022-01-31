@@ -9,7 +9,14 @@ describe('RunnableStep', () => {
   const signature = new Signature({ library, pattern: new Pattern(/.*/) });
   const macro = new Macro({ signature, fn: new AsyncFunction({ fn: () => {} }) });
   const pendingMacro = new Macro({ signature, fn: new PendingFunction() });
-  const programaticallyPendingMacro = new Macro({ signature, fn: new AsyncFunction({ fn: () => ({ status: 'pending' }) }) });
+  const programaticallyPendingMacro = new Macro({
+    signature,
+    fn: new AsyncFunction({
+      fn: () => {
+        // TODO inject the step and programmatically call abort
+      },
+    }),
+  });
 
   it('should run a runnable step', async () => {
     const step = new RunnableStep({ text: 'Given A', macro });
@@ -40,9 +47,13 @@ describe('RunnableStep', () => {
     eq(step.isPending(), true);
   });
 
-  it('should honour return status', async () => {
-    const step = new RunnableStep({ text: 'Given A', macro: programaticallyPendingMacro });
-    const result = await step.run(new State());
-    deq(result, { status: 'pending' });
-  });
+  it(
+    'should support programatically aborted steps',
+    async () => {
+      const step = new RunnableStep({ text: 'Given A', macro: programaticallyPendingMacro });
+      const result = await step.run(new State());
+      deq(result, { status: 'pending' });
+    },
+    { skip: true, reason: 'Need to inject step into function' }
+  );
 });

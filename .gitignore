@@ -1,4 +1,4 @@
-/node_modules
+node_modules
 /coverage
 /complexity
 .DS_Store
