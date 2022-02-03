@@ -30,33 +30,33 @@ describe('Dictionary', () => {
 
     it('should expand undefined terms to a wild card pattern', () => {
       const dictionary = new Dictionary();
-      eq(dictionary.expand('$term').regexp.source, '^(.+)$');
+      eq(dictionary.expand('$term').regexp.source, '^(\\S+)$');
     });
 
     it('should expand multiple terms', () => {
       const dictionary = new Dictionary();
-      eq(dictionary.expand('$term1 $term2 $term3').regexp.source, '^(.+) (.+) (.+)$');
-      eq(dictionary.expand('$term1 meh $term2 meh $term3').regexp.source, '^(.+) meh (.+) meh (.+)$');
+      eq(dictionary.expand('$term1 $term2 $term3').regexp.source, '^(\\S+) (\\S+) (\\S+)$');
+      eq(dictionary.expand('$term1 meh $term2 meh $term3').regexp.source, '^(\\S+) meh (\\S+) meh (\\S+)$');
     });
 
     it('should expand the same term multiple times', () => {
       const dictionary = new Dictionary();
-      eq(dictionary.expand('$term $term $term').regexp.source, '^(.+) (.+) (.+)$');
-      eq(dictionary.expand('$term meh $term meh $term').regexp.source, '^(.+) meh (.+) meh (.+)$');
+      eq(dictionary.expand('$term $term $term').regexp.source, '^(\\S+) (\\S+) (\\S+)$');
+      eq(dictionary.expand('$term meh $term meh $term').regexp.source, '^(\\S+) meh (\\S+) meh (\\S+)$');
     });
 
     it('should ignore an isolated term prefix', () => {
       const dictionary = new Dictionary();
       eq(dictionary.expand('$').regexp.source, '^$$');
       eq(dictionary.expand('meh $ meh $ meh').regexp.source, '^meh $ meh $ meh$');
-      eq(dictionary.expand('$ $term').regexp.source, '^$ (.+)$');
+      eq(dictionary.expand('$ $term').regexp.source, '^$ (\\S+)$');
     });
 
     it('should subsitute simple terms', () => {
       const dictionary = new Dictionary().define('num', /(\d+)/).define('word', /(\w+)/);
       eq(dictionary.expand('$num').regexp.source, '^(\\d+)$');
-      eq(dictionary.expand('$num $term $num').regexp.source, '^(\\d+) (.+) (\\d+)$');
-      eq(dictionary.expand('$num meh $term meh $word').regexp.source, '^(\\d+) meh (.+) meh (\\w+)$');
+      eq(dictionary.expand('$num $term $num').regexp.source, '^(\\d+) (\\S+) (\\d+)$');
+      eq(dictionary.expand('$num meh $term meh $word').regexp.source, '^(\\d+) meh (\\S+) meh (\\w+)$');
     });
 
     it('should subsitute complex terms', () => {
@@ -66,7 +66,7 @@ describe('Dictionary', () => {
 
     it('should support custom prefix', () => {
       const dictionary = new Dictionary({ prefix: ':' });
-      eq(dictionary.expand(':term').regexp.source, '^(.+)$');
+      eq(dictionary.expand(':term').regexp.source, '^(\\S+)$');
       eq(dictionary.expand('\\:term').regexp.source, '^:term$');
     });
   });
@@ -124,7 +124,7 @@ describe('Dictionary', () => {
       const dictionary = new Dictionary();
       eq(dictionary.expand('\\\\').regexp.source, '^\\$');
       eq(dictionary.expand('\\\\\\').regexp.source, '^\\\\$');
-      eq(dictionary.expand('\\\\\\\\$term').regexp.source, '^\\\\(.+)$');
+      eq(dictionary.expand('\\\\\\\\$term').regexp.source, '^\\\\(\\S+)$');
     });
 
     it('should maintain delimiter for non special characters', () => {
@@ -157,7 +157,7 @@ describe('Dictionary', () => {
 
     it('should report invalid patterns', () => {
       throws(() => new Dictionary().expand('('), { message: 'Error expanding template [(]: Invalid regular expression: /^($/: Unterminated group' });
-      throws(() => new Dictionary().expand('\\\\$term'), { message: "Error expanding template [\\\\$term]: Invalid regular expression: /^\\(.+)$/: Unmatched ')'" });
+      throws(() => new Dictionary().expand('\\\\$term'), { message: "Error expanding template [\\\\$term]: Invalid regular expression: /^\\(\\S+)$/: Unmatched ')'" });
     });
 
     it('should report cyclic definitions', () => {

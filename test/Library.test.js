@@ -228,7 +228,7 @@ describe('Library', () => {
   });
 
   it('should report duplicate step definitions defined by templates', async () => {
-    throws(() => new Library({ name: 'test' }).define('$foo step').define('$bar step'), { message: 'Signature [/^(.+) step$/] derived from template [$bar step] defined in library [test] is a duplicate of signature [/^(.+) step$/] derived from template [$foo step] defined in library [test]' });
+    throws(() => new Library({ name: 'test' }).define('$foo step').define('$bar step'), { message: 'Signature [/^(\\S+) step$/] derived from template [$bar step] defined in library [test] is a duplicate of signature [/^(\\S+) step$/] derived from template [$foo step] defined in library [test]' });
   });
 
   it('should report duplicate step definitions defined by regular expressions', async () => {

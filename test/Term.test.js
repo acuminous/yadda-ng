@@ -23,7 +23,7 @@ describe('Term', () => {
 
   it('should default to a single wildcard term with passthrough converter', () => {
     const term = new Term({ expression: 'term' });
-    eq(term.definition, '(.+)');
+    eq(term.definition, '(\\S+)');
   });
 
   it('should report too many converter arguments', () => {
