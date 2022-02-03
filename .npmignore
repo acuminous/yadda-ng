@@ -1,6 +1,7 @@
 /node_modules
 /coverage
 /complexity
+/docs
 .DS_Store
 .nyc_output
 npm-debug.log*
