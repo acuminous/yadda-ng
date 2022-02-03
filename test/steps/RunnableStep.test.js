@@ -1,7 +1,7 @@
 const { strictEqual: eq, deepStrictEqual: deq } = require('assert');
 
 const { Steps, Macro, Library, Pattern, Signature, Functions, State } = require('../..');
-const { RunnableStep } = Steps;
+const { RunnableStep, BaseStep } = Steps;
 const { AsyncFunction, PendingFunction } = Functions;
 
 describe('RunnableStep', () => {
@@ -13,7 +13,7 @@ describe('RunnableStep', () => {
     signature,
     fn: new AsyncFunction({
       fn: () => {
-        // TODO inject the step and programmatically call abort
+        return { status: BaseStep.PENDING };
       },
     }),
   });
@@ -47,13 +47,9 @@ describe('RunnableStep', () => {
     eq(step.isPending(), true);
   });
 
-  it(
-    'should support programatically aborted steps',
-    async () => {
-      const step = new RunnableStep({ text: 'Given A', macro: programaticallyPendingMacro });
-      const result = await step.run(new State());
-      deq(result, { status: 'pending' });
-    },
-    { skip: true, reason: 'Need to inject step into function' }
-  );
+  it('should support programatically aborted steps', async () => {
+    const step = new RunnableStep({ text: 'Given A', macro: programaticallyPendingMacro });
+    const result = await step.run(new State());
+    deq(result, { status: 'pending' });
+  });
 });
