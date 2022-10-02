@@ -18,12 +18,6 @@
 | Block comments            | All                                 | <code>\#\#\#</code><br/><code>A</code><br/><code>block</code><br/><code>comment</code><br/><code>\#\#\#</code>                                                                                                                                                                                      |
 | ~Example Tables~          |                                     | <code>Where:</code><br/><code>&nbsp;&nbsp;&nbsp;\|Height\|Width\|</code><br/><code>&nbsp;&nbsp;&nbsp;\|------\|-----\|</code><br/><code>&nbsp;&nbsp;&nbsp;\|10m&nbsp;&nbsp;&nbsp;\|3m&nbsp;&nbsp;&nbsp;\|</code><br/><code>&nbsp;&nbsp;&nbsp;\|12m&nbsp;&nbsp;&nbsp;\|4m&nbsp;&nbsp;&nbsp;\|</code> |
 
-### Languages
-
-- English
-- Pirate
-- None
-
 ### Other
 
 | Feature                                         | Supported By                       | Example                                                                                                                                                                                                                                                                          |
@@ -40,3 +34,18 @@
 | Term conversion (simple)                        | Dictionary                         | <code>.define('height', /(\d+)ft/i, new NumberConverter())</code>                                                                                                                                                                                                                |
 | ~Term conversion (DocString)~                   |                                    |                                                                                                                                                                                                                                                                                  |
 | Shared state                                    | Step Implementation, MochaPlaybook | <code>(state) => {</code><br/><code>&nbsp;&nbsp;state.set('name', 'value', State.FEATURE_SCOPE);</code><br/><code>}</code>                                                                                                                                                       |
+
+### Languages
+
+- English
+- Pirate
+- None
+
+### Parameter Converters
+
+- Boolean
+- Date
+- List
+- Lowercase
+- Number
+- Uppercase
