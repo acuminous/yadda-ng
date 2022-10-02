@@ -16,3 +16,4 @@
 | Free form steps            | Background, Scenario                | Scenario: A scenario<br/>Whatever ...                                                                                                                                    |
 | Single line comments       | All                                 | \# A comment                                                                                                                                                             |
 | Block comments             | All                                 | \#\#\#<br/>A<br/>block<br/>comment<br/>\#\#\#                                                                                                                            |
+| ~Example Tables~           |                                     | Where:<br/><table><tr><th>Height</th><th>Width</th></tr><tr><td>1m</td><td>2m</td></tr><tr><td>3m</td><td>4m</td></tr></table>                                           |
