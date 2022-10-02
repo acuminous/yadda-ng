@@ -6,7 +6,7 @@
 
 | Feature                    | Supported By                        | Examples                                                                                                                                                                           |
 | -------------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Language selection         | Feature                             | <code>#language: Français</code><code>Fonctionnalité: Une fonctionnalité</code>                                                                                                    |
+| Language selection         | Feature                             | <code>#language: Français</code><br/><code>Fonctionnalité: Une fonctionnalité</code>                                                                                               |
 | Boolean annotations        | Feature, Background, Scenario, Step | @name                                                                                                                                                                              |
 | Key Value annotations      | Feature, Background, Scenario, Step | @name=value                                                                                                                                                                        |
 | Mutliple value annotations | Feature, Background, Scenario, Step | @name=one</br>@name=two                                                                                                                                                            |
